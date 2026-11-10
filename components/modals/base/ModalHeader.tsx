@@ -15,7 +15,7 @@ export function ModalHeader({
   title, subtitle, onClose, actions, className,
 }: ModalHeaderProps) {
   return (
-    <div className={cn("p-4 flex items-center justify-between", className)}>
+    <div className={cn("card-modal-heading p-4 flex items-center justify-between", className)}>
       <div className="flex items-center gap-4">
         <div>
           <h2 className="text-xl font-bold">{title}</h2>
@@ -24,6 +24,8 @@ export function ModalHeader({
         {actions && <div className="flex items-center gap-2">{actions}</div>}
       </div>
       <button
+        type="button"
+        aria-label="关闭卡牌选择"
         onClick={onClose}
         className="text-gray-500 hover:text-gray-700 text-2xl leading-none"
       >

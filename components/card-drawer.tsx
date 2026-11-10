@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { useIsMobile } from "@/hooks/use-mobile"
 import { Badge } from "@/components/ui/badge"
 import { StandardCard, isEmptyCard } from "@/card/card-types"
 import { ImageCard } from "@/components/ui/image-card"
@@ -45,7 +46,7 @@ export function CardDrawer({ cards, inventoryCards, isOpen: externalIsOpen, onCl
   }
   // 移除旧的 activeTab 状态，已被 mainDeck 和 typeFilter 替代
   const [hoveredCard, setHoveredCard] = useState<StandardCard | null>(null)
-  const [isMobile, setIsMobile] = useState(false)
+  const isMobile = useIsMobile()
 
   // 新逻辑：根据 mainDeck 和 typeFilter 获取卡牌
   // 步骤1: 根据 mainDeck 获取源数据
@@ -104,18 +105,6 @@ export function CardDrawer({ cards, inventoryCards, isOpen: externalIsOpen, onCl
       show: validCards.some(c => isVariantCard(c))
     }
   ].filter(f => f.alwaysShow || f.show)
-
-  // 检测移动设备
-  useEffect(() => {
-    const checkIsMobile = () => {
-      setIsMobile(window.innerWidth <= 768 || 'ontouchstart' in window)
-    }
-
-    checkIsMobile()
-    window.addEventListener('resize', checkIsMobile)
-
-    return () => window.removeEventListener('resize', checkIsMobile)
-  }, [])
 
   // 当抽屉关闭时清除详情卡牌
   useEffect(() => {
@@ -206,9 +195,11 @@ export function CardDrawer({ cards, inventoryCards, isOpen: externalIsOpen, onCl
             className={`card-drawer-content fixed bottom-0 left-0 right-0 bg-white w-full h-[min(32svh,420px)] rounded-t-lg shadow-xl flex flex-col transition-transform duration-300 ease-out ${isClosing ? 'translate-y-full' : 'translate-y-0'
               }`}
             onClick={(e) => e.stopPropagation()}
+            role="dialog" aria-modal="true" aria-label="卡牌抽屉"
           >
+            <button type="button" aria-label="关闭卡牌抽屉" onClick={handleClose} className="card-drawer-close absolute top-2 right-2 z-10 h-8 w-8 rounded border bg-white text-gray-700">×</button>
             {/* 新导航：单行布局 - 主卡组固定 + 筛选滚动（移除拖拽手柄，增大按钮） */}
-            <div className="flex items-center border-b border-gray-200 flex-shrink-0">
+            <div className="card-drawer-navigation flex items-center border-b border-gray-200 flex-shrink-0 pr-10">
               {/* 左侧：固定的主卡组选择（不滚动） */}
               <div className="flex-shrink-0 flex gap-3 px-4 py-3 border-r border-gray-200">
                 <button
@@ -366,7 +357,7 @@ export function CardDrawer({ cards, inventoryCards, isOpen: externalIsOpen, onCl
       {/* 悬浮卡片预览 */}
       {hoveredCard && (
         <div
-          className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[60]"
+          className="sheet-card-preview fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[60]"
           style={{ pointerEvents: isMobile ? 'auto' : 'none' }}
           onClick={isMobile ? () => setHoveredCard(null) : undefined}
         >

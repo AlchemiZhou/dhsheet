@@ -4,6 +4,7 @@ import { useState, useMemo } from "react"
 import { CardType, CardCategory, getCardTypesByCategory, ALL_CARD_TYPES } from "@/card/card-types"
 import { getCardTypeName } from "@/card"
 import { cn } from "@/lib/utils"
+import { useIsMobile } from "@/hooks/use-mobile"
 
 interface CardTypeSidebarProps {
   activeTab: string
@@ -19,6 +20,7 @@ interface CardTypeSidebarProps {
  * - 高亮当前选中的卡牌类型
  */
 export function CardTypeSidebar({ activeTab, onTabChange }: CardTypeSidebarProps) {
+  const isMobile = useIsMobile()
   const [expandedCategories, setExpandedCategories] = useState(
     new Set(['standard', 'extended'])
   )
@@ -65,6 +67,15 @@ export function CardTypeSidebar({ activeTab, onTabChange }: CardTypeSidebarProps
       return newSet
     })
   }
+
+  if (isMobile) return <nav className="card-type-mobile flex gap-1 overflow-x-auto p-2" aria-label="卡牌类型">
+    {[...cardTypesByCategory.standard, ...cardTypesByCategory.extended].map(type => (
+      <button key={type} type="button" aria-pressed={activeTab === type} onClick={() => onTabChange(type)}
+        className={`shrink-0 rounded border px-3 py-2 text-sm ${activeTab === type ? 'border-blue-600 bg-blue-50 text-blue-700' : 'border-gray-300 text-gray-700'}`}>
+        {ALL_CARD_TYPES.get(type) || getCardTypeName(type)}
+      </button>
+    ))}
+  </nav>
 
   return (
     <div className="flex flex-col p-2">

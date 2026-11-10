@@ -355,7 +355,7 @@ export default function CharacterSheet({ currentCharacterId }: CharacterSheetPro
 
       <div className="w-full max-w-[210mm] mx-auto">
         <div
-          className="a4-page p-2 bg-white text-gray-800 shadow-lg print:shadow-none rounded-md"
+          className="a4-page sheet-primary-page p-2 bg-white text-gray-800 shadow-lg print:shadow-none rounded-md"
           style={{ width: "210mm" }}
         >
           {/* Header Section */}
@@ -377,13 +377,13 @@ export default function CharacterSheet({ currentCharacterId }: CharacterSheetPro
           />
 
           {/* Main Content - Two Section Layout */}
-          <div className="flex flex-col gap-2 mt-1">
+          <div className="sheet-main-content flex flex-col gap-2 mt-1">
             {/* Top Section */}
-            <div className="grid grid-cols-2 gap-2">
+            <div className="sheet-main-top grid grid-cols-2 gap-2">
               {/* Top Left */}
-              <div className="flex flex-col">
+              <div className="sheet-statistics flex flex-col">
                 {/* Character Image, Evasion, and Armor */}
-                <div className="flex gap-4">
+                <div className="sheet-defense-row flex gap-4">
                   {/* Character Image Upload */}
                   <div className="flex flex-col items-center">
                     <ImageUploadCrop
@@ -434,8 +434,8 @@ export default function CharacterSheet({ currentCharacterId }: CharacterSheetPro
                   </div>
 
                   {/* Armor Box and Grid */}
-                  <div className="flex flex-col">
-                    <div className="flex gap-2">
+                  <div className="sheet-armor-layout flex flex-col">
+                    <div className="sheet-armor-layout flex gap-2">
                       <div className="w-24 h-24 flex flex-col rounded-lg overflow-hidden border border-gray-800">
                         <div className="bg-gray-800 text-white text-center py-1">
                           <div className="flex items-center justify-center text-ms font-bold">
@@ -466,7 +466,7 @@ export default function CharacterSheet({ currentCharacterId }: CharacterSheetPro
                           <div className="text-[8px] text-transparent">占位</div>
                         </div>
                       </div>
-                      <div className="flex flex-col">
+                      <div className="sheet-armor-track flex flex-col">
                         <div className="flex items-center">
                           <span className="test-center text-[10px] mr-1">护甲槽</span>
                         </div>
@@ -479,11 +479,22 @@ export default function CharacterSheet({ currentCharacterId }: CharacterSheetPro
                               .map((_, i) => (
                                 <div
                                   key={`armor-box-${i}`}
+                                  role="checkbox"
+                                  aria-label={`护甲第${i + 1}槽`}
+                                  aria-checked={Boolean(armorBoxes?.[i] && i < calculatedArmorValue)}
+                                  aria-disabled={i >= calculatedArmorValue}
+                                  tabIndex={i < calculatedArmorValue ? 0 : -1}
                                   className={`w-4 h-4 border ${i < calculatedArmorValue
                                     ? "border-gray-800 cursor-pointer"
                                     : "border-gray-400 border-dashed"
                                     } ${armorBoxes?.[i] && i < calculatedArmorValue ? "sheet-filled-mark bg-gray-800" : "bg-white"}`}
                                   onClick={() => i < calculatedArmorValue && updateArmorBox(i)}
+                                  onKeyDown={event => {
+                                    if (i < calculatedArmorValue && (event.key === ' ' || event.key === 'Enter')) {
+                                      event.preventDefault()
+                                      updateArmorBox(i)
+                                    }
+                                  }}
                                 ></div>
                               ));
                           })()}
@@ -501,24 +512,38 @@ export default function CharacterSheet({ currentCharacterId }: CharacterSheetPro
               </div>
 
               {/* Top Right */}
-              <div className="flex flex-col space-y-1">
+              <div className="sheet-equipment flex flex-col space-y-1">
                 {/* Active Weapons */}
                 <div className="py-0 ">
                   <h3 className="text-xs font-bold text-center print:mb-1">装备</h3>
 
-                  <div className="flex items-center gap-0.5 mb-1">
-                    <span className="text-[10px]">熟练度</span>
-                    <ModifierFieldAnchor target="proficiency" label="熟练度" size="compact" />
+                  <div className="sheet-proficiency flex items-center gap-0.5 mb-1">
+                    <div className="flex items-center gap-0.5">
+                      <span className="text-[10px]">熟练度</span>
+                      <ModifierFieldAnchor target="proficiency" label="熟练度" size="compact" />
+                    </div>
+                    <div className="sheet-proficiency-marks flex items-center gap-0.5">
                     {Array(6)
                       .fill(0)
                       .map((_, i) => (
                         <div
                           key={`prof-${i}`}
+                          role="checkbox"
+                          aria-label={`熟练度第${i + 1}点`}
+                          aria-checked={Boolean(Array.isArray(proficiency) && proficiency[i])}
+                          tabIndex={0}
                           className={`w-3 h-3 rounded-full border-2 border-gray-800 cursor-pointer ${Array.isArray(proficiency) && proficiency[i] ? "sheet-filled-mark bg-gray-800" : "bg-white"
                             }`}
                           onClick={() => updateProficiency(i)}
+                          onKeyDown={event => {
+                            if (event.key === ' ' || event.key === 'Enter') {
+                              event.preventDefault()
+                              updateProficiency(i)
+                            }
+                          }}
                         ></div>
                       ))}
+                    </div>
                   </div>
 
                   <WeaponSection
@@ -540,9 +565,9 @@ export default function CharacterSheet({ currentCharacterId }: CharacterSheetPro
             </div>
 
             {/* Bottom Section */}
-            <div className="grid grid-cols-2 gap-2 p-1">
+            <div className="sheet-main-bottom grid grid-cols-2 gap-2 p-1">
               {/* Bottom Left */}
-              <div className="col-span-1 space-y-1 -mt-1">
+              <div className="sheet-character-details col-span-1 space-y-1 -mt-1">
                 {/* Hope */}
                 <HopeSection />
 
@@ -555,7 +580,7 @@ export default function CharacterSheet({ currentCharacterId }: CharacterSheetPro
               </div>
 
               {/* Bottom Right */}
-              <div className="col-span-1 space-y-1.5 -mt-1.5">
+              <div className="sheet-inventory col-span-1 space-y-1.5 -mt-1.5">
                 {/* Inventory */}
                 <InventorySection />
 

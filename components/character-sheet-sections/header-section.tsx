@@ -197,7 +197,7 @@ export function HeaderSection({
 
   return (
     <div className="sheet-header relative flex items-center gap-2 rounded-t-md bg-gray-800 p-2 pb-5 text-white">
-      <div className="grid min-w-0 flex-1 grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)_minmax(0,1fr)] items-end gap-x-2 gap-y-2">
+      <div className="sheet-identity-fields grid min-w-0 flex-1 grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)_minmax(0,1fr)] items-end gap-x-2 gap-y-2">
         <div className="flex min-w-0 flex-col gap-1" role="group" aria-label="职业">
           <div className="flex min-h-5 items-center justify-between gap-1"><span className="text-[9px] text-gray-300">职业</span><ProfessionDomainBadges /></div>
           {renderChoiceControl('professionRef', openProfessionModal, '选择职业')}
@@ -257,7 +257,7 @@ export function HeaderSection({
           <button type="button" onClick={onOpenTransformationModal} className="h-7 min-w-0 truncate rounded border border-gray-400 bg-white px-2 text-left text-xs text-gray-800" title={transformationName}>{transformationName || <span className="print:hidden">选择转变卡</span>}</button>
         </div>}
       </div>
-      <div className="flex shrink-0 flex-col items-center self-center">
+      <div className="sheet-level-control flex shrink-0 flex-col items-center self-center">
         <div className="sheet-level-frame w-16 h-16 bg-white text-gray-800 rounded-md border-4 border-gray-600 flex items-center justify-center">
           <div className="text-center">
             <div className="text-xs font-bold">LEVEL</div>

@@ -62,17 +62,20 @@ export function BaseCardModal({
           />
           <motion.div
             className={cn(
-              "relative bg-white rounded-lg shadow-lg w-full overflow-hidden flex flex-col",
+              "card-modal relative bg-white rounded-lg shadow-lg w-full overflow-hidden flex flex-col",
               sizeClasses[size], className
             )}
             variants={modalVariants}
             initial="hidden" animate="visible" exit="exit"
             onClick={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            aria-label="卡牌选择"
           >
             <div className="border-b border-gray-200">{header}</div>
-            <div className="flex-1 flex overflow-hidden">
+            <div className="card-modal-layout flex-1 flex overflow-hidden">
               {sidebar && (
-                <div className={cn("border-r border-gray-200 overflow-y-auto", sidebarWidth)}>
+                <div className={cn("card-modal-sidebar border-r border-gray-200 overflow-y-auto", sidebarWidth)}>
                   {sidebar}
                 </div>
               )}

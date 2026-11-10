@@ -98,12 +98,13 @@ export function CharacterManagementModal({
             onClick={onClose}
         >
             <div
-                className="bg-white rounded-lg p-6 w-full max-w-4xl max-h-[90vh] flex flex-col"
+                className="character-management-modal bg-white rounded-lg p-6 w-full max-w-4xl max-h-[90vh] flex flex-col"
+                role="dialog" aria-modal="true" aria-label="存档管理"
                 onClick={(e) => e.stopPropagation()}
             >
                 <div className="flex justify-between items-center mb-6">
                     <h2 className="text-2xl font-semibold">存档管理</h2>
-                    <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
+                    <button type="button" aria-label="关闭存档管理" onClick={onClose} className="text-gray-500 hover:text-gray-700">
                         ✕
                     </button>
                 </div>
@@ -142,7 +143,7 @@ export function CharacterManagementModal({
                             return (
                                 <div
                                     key={character.id}
-                                    className={`flex items-center justify-between p-3 rounded-lg border transition-colors ${currentCharacterId === character.id
+                                    className={`character-save-row flex items-center justify-between p-3 rounded-lg border transition-colors ${currentCharacterId === character.id
                                         ? 'bg-blue-100 border-blue-300'
                                         : 'bg-gray-50 hover:bg-gray-100 border-gray-200'
                                         }`}

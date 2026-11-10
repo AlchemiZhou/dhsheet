@@ -66,7 +66,7 @@ export function InventoryWeaponSection({
   }
 
   return (
-    <div className="py-1 mb-1">
+    <div className="sheet-equipment-slot py-1 mb-1">
 
       <div className="grid grid-cols-10 gap-1">
         <div className="col-span-4">

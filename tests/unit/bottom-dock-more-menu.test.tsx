@@ -26,6 +26,29 @@ const mainProps = {
 }
 
 describe("BottomDock more menu", () => {
+  it("keeps the guide and extension tools reachable from the mobile more menu", () => {
+    const onToggleGuide = vi.fn()
+    render(<BottomDock {...mainProps} isMobile onToggleGuide={onToggleGuide} />)
+    fireEvent.pointerDown(screen.getByRole("button", { name: "更多" }))
+    expect(screen.getByRole("menuitem", { name: "扩展管理" })).toBeTruthy()
+    fireEvent.click(screen.getByRole("menuitem", { name: "建卡指引" }))
+    expect(onToggleGuide).toHaveBeenCalledTimes(1)
+  })
+
+  it("preserves export actions in the mobile preview toolbar", () => {
+    const onExportPDF = vi.fn()
+    const onExportHTML = vi.fn()
+    const onClose = vi.fn()
+    render(<BottomDock mode="preview" isMobile onExportPDF={onExportPDF} onExportHTML={onExportHTML}
+      onExportJSON={vi.fn()} onOpenSealDiceExport={vi.fn()} onClose={onClose} />)
+    fireEvent.click(screen.getByRole("button", { name: "导出为PDF" }))
+    fireEvent.click(screen.getByRole("button", { name: "导出为HTML" }))
+    fireEvent.click(screen.getByRole("button", { name: "返回" }))
+    expect(onExportPDF).toHaveBeenCalledTimes(1)
+    expect(onExportHTML).toHaveBeenCalledTimes(1)
+    expect(onClose).toHaveBeenCalledTimes(1)
+  })
+
   it("renders the more menu after the extension button", () => {
     render(<BottomDock {...mainProps} />)
 

@@ -11,7 +11,7 @@ export function GoldSection() {
   }
 
   return (
-    <div className="py-1 mb-2">
+    <div className="sheet-gold py-1 mb-2">
       <h3 className="text-xs font-bold text-center mb-3">金币</h3>
       <div className="flex flex-row gap-6 items-end justify-center">
         {/* HANDFULS */}
@@ -24,6 +24,8 @@ export function GoldSection() {
                   key={`gold-handful-${i}`}
                   className={`w-4 h-4 border-2 border-gray-800 cursor-pointer rounded-full ${checked ? "sheet-filled-mark bg-gray-800" : "bg-white"
                     }`}
+                  role="checkbox" aria-label={`金币把第${i + 1}格`} aria-checked={checked} tabIndex={0}
+                  onKeyDown={event => { if (event.key === ' ' || event.key === 'Enter') { event.preventDefault(); handleCheckboxChange(i) } }}
                   onClick={() => handleCheckboxChange(i)}
                 ></div>
               ))}
@@ -34,6 +36,8 @@ export function GoldSection() {
                   key={`gold-handful-${i + 5}`}
                   className={`w-4 h-4 border-2 border-gray-800 cursor-pointer rounded-full ${checked ? "sheet-filled-mark bg-gray-800" : "bg-white"
                     }`}
+                  role="checkbox" aria-label={`金币把第${i + 6}格`} aria-checked={checked} tabIndex={0}
+                  onKeyDown={event => { if (event.key === ' ' || event.key === 'Enter') { event.preventDefault(); handleCheckboxChange(i + 5) } }}
                   onClick={() => handleCheckboxChange(i + 5)}
                 ></div>
               ))}
@@ -50,6 +54,8 @@ export function GoldSection() {
                   key={`gold-bag-${i + 10}`}
                   className={`w-4 h-4 border-2 border-gray-800 cursor-pointer ${checked ? "sheet-filled-mark bg-gray-800" : "bg-white"
                     }`}
+                  role="checkbox" aria-label={`金币袋第${i + 1}格`} aria-checked={checked} tabIndex={0}
+                  onKeyDown={event => { if (event.key === ' ' || event.key === 'Enter') { event.preventDefault(); handleCheckboxChange(i + 10) } }}
                   onClick={() => handleCheckboxChange(i + 10)}
                 ></div>
               ))}
@@ -60,6 +66,8 @@ export function GoldSection() {
                   key={`gold-bag-${i + 15}`}
                   className={`w-4 h-4 border-2 border-gray-800 cursor-pointer ${checked ? "sheet-filled-mark bg-gray-800" : "bg-white"
                     }`}
+                  role="checkbox" aria-label={`金币袋第${i + 6}格`} aria-checked={checked} tabIndex={0}
+                  onKeyDown={event => { if (event.key === ' ' || event.key === 'Enter') { event.preventDefault(); handleCheckboxChange(i + 15) } }}
                   onClick={() => handleCheckboxChange(i + 15)}
                 ></div>
               ))}
@@ -72,6 +80,8 @@ export function GoldSection() {
           <div
             className={`w-8 h-8 border-2 border-gray-800 cursor-pointer flex items-center justify-center ${gold[20] ? "sheet-filled-mark bg-gray-800" : "bg-white"
               }`}
+            role="checkbox" aria-label="金币箱" aria-checked={gold[20]} tabIndex={0}
+            onKeyDown={event => { if (event.key === ' ' || event.key === 'Enter') { event.preventDefault(); handleCheckboxChange(20) } }}
             onClick={() => handleCheckboxChange(20)}
           >
             {/* 可选：可加个小图标或文字 */}

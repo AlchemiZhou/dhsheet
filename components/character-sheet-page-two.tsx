@@ -188,7 +188,7 @@ export default function CharacterSheetPageTwo() {
 
       <div className="w-full max-w-[210mm] mx-auto">
         <div
-          className="a4-page p-2 bg-white text-gray-800 shadow-lg print:shadow-none rounded-md"
+          className="a4-page sheet-detail-page p-2 bg-white text-gray-800 shadow-lg print:shadow-none rounded-md"
           style={{ width: "210mm" }}
         >
           {/* Header - 调整职业名称显示框的大小 */}
@@ -201,7 +201,7 @@ export default function CharacterSheetPageTwo() {
         <CardDeckSection formData={safeFormData} />
 
           {/* Upgrade Section */}
-        <div className="mt-3 grid grid-cols-3 gap-3 text-m">
+        <div className="sheet-upgrade-grid mt-3 grid grid-cols-3 gap-3 text-m">
             {/* Tier 1: Levels 2-4 */}
             <UpgradeSection
               upgradeBandKey="tier1"

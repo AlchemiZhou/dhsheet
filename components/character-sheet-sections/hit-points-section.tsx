@@ -111,7 +111,7 @@ export function HitPointsSection() {
     }
 
     return (
-      <div role="group" aria-label={`${label}标记`} className="grid grid-cols-2 gap-3">
+      <div role="group" aria-label={`${label}标记`} className="sheet-resource-marks grid grid-cols-2 gap-3">
         {[0, 6].map((start) => (
           <div key={start} className="grid grid-cols-6 gap-1">
           {Array.from({ length: 6 }, (_, offset) => {
@@ -149,7 +149,7 @@ export function HitPointsSection() {
     )
   }
   return (
-    <div className="py-1 mb-1 print:mt-1.5">
+    <div className="sheet-resources py-1 mb-1 print:mt-1.5">
       <h3 className="text-xs font-bold text-center mb-2.5">生命值与压力</h3>
 
       <div className="flex justify-between items-center gap-1">
@@ -211,14 +211,14 @@ export function HitPointsSection() {
           const max = numericMax(formData[maxField])
           const marked = formData[field]?.slice(0, max).filter(Boolean).length ?? 0
           return (
-            <div key={field} className="px-0 py-1 print:py-1">
-              <div className="flex items-center justify-between gap-2 mb-1">
+            <div key={field} className="sheet-resource-entry px-0 py-1 print:py-1">
+              <div className="sheet-resource-heading flex items-center justify-between gap-2 mb-1">
                 <div className="flex min-w-0 items-center gap-1">
                   <span className="text-xs font-bold">{label}</span>
                   <ModifierFieldAnchor target={maxField} label={`${label}上限`} size="compact" />
                   <span className="text-[10px] text-gray-600 tabular-nums">已标记 {marked} / {max || "—"}</span>
                 </div>
-                <div className="flex shrink-0 items-center gap-1 text-[10px]">
+                <div className="sheet-resource-controls flex shrink-0 items-center gap-1 text-[10px]">
                   <span>上限</span>
                   <button
                     type="button"

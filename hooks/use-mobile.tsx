@@ -1,16 +1,15 @@
 "use client"
 
 import * as React from "react"
-
-const MOBILE_BREAKPOINT = 768
+import { MOBILE_BREAKPOINT, isMobileViewportDevice } from "@/lib/mobile-viewport"
 
 export function useIsMobile() {
   const [isMobile, setIsMobile] = React.useState<boolean>(false) // 设置为默认值false避免undefined
 
   React.useEffect(() => {
-    // 初始设置 - 同时检测屏幕宽度和触摸支持
+    // 根据可用宽度选择布局；触屏笔记本仍可使用桌面布局。
     const updateIsMobile = () => {
-      setIsMobile(window.innerWidth < MOBILE_BREAKPOINT || 'ontouchstart' in window)
+      setIsMobile(isMobileViewportDevice(window))
     }
 
     // 立即执行一次

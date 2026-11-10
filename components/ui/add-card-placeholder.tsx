@@ -14,6 +14,8 @@ export function AddCardPlaceholder({ onClick, disabled = false, isMobile = false
     <div className="flex-shrink-0 w-72">
       {/* 卡牌本体 - 完全匹配 SimpleImageCard 的结构 */}
       <div
+        role="button" aria-label="添加卡牌" aria-disabled={disabled} tabIndex={disabled ? -1 : 0}
+        onKeyDown={event => { if (!disabled && (event.key === ' ' || event.key === 'Enter')) { event.preventDefault(); onClick() } }}
         onClick={disabled ? undefined : onClick}
         className={`
           group relative flex w-full max-w-sm flex-col overflow-hidden rounded-xl shadow-md

@@ -229,7 +229,7 @@ export function ArmorSelectionModal({ isOpen, onClose, onSelect, title }: ArmorM
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4">
       <div className="absolute inset-0 bg-black bg-opacity-50" onClick={requestClose}></div>
-      <div className="relative flex max-h-[95vh] w-full max-w-6xl flex-col overflow-hidden rounded-lg bg-white shadow-lg sm:max-h-[85vh]">
+      <div className="equipment-modal relative flex max-h-[95vh] w-full max-w-6xl flex-col overflow-hidden rounded-lg bg-white shadow-lg sm:max-h-[85vh]">
         <div className="flex items-center gap-3 border-b border-gray-200 p-3 sm:p-4">
           <div className="flex flex-1 flex-wrap items-center gap-3">
             <h2 className="text-lg font-bold sm:text-xl">{title}</h2>
@@ -328,6 +328,7 @@ export function ArmorSelectionModal({ isOpen, onClose, onSelect, title }: ArmorM
             </div>
           )}
 
+          <p className="equipment-scroll-hint hidden">左右滑动可查看完整装备信息</p>
           <div className="min-h-[16rem] flex-1 overflow-auto">
             <div className="p-1 sm:p-2">
               <table className="w-full min-w-[56rem] border-collapse">

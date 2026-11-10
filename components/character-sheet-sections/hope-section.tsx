@@ -51,7 +51,7 @@ export function HopeSection() {
   }
 
   return (
-    <div className="py-1 mb-1 group">
+    <div className="sheet-hope py-1 mb-1 group">
       <div className="flex items-center justify-center gap-2 mb-2">
         <h3 className="text-xs font-bold">希望</h3>
       </div>
@@ -60,7 +60,7 @@ export function HopeSection() {
 
       <div className="relative flex justify-center items-center mb-2">
         {/* 希望格子容器 - 绝对居中 */}
-        <div className="flex gap-2 justify-center">
+        <div className="sheet-hope-marks flex gap-2 justify-center">
           {Array(Math.max(hopeMax, 6)).fill(0).map((_, i) => {
             const isWithinMax = i < hopeMax
             const isLit = i < currentHope
@@ -70,7 +70,18 @@ export function HopeSection() {
               <div
                 key={`hope-${i}`}
                 className="relative"
+                role="checkbox"
+                aria-label={`希望第${i + 1}点`}
+                aria-checked={isLit}
+                aria-disabled={!isWithinMax}
+                tabIndex={isWithinMax ? 0 : -1}
                 onClick={() => isWithinMax && handleCheckboxChange(i)}
+                onKeyDown={event => {
+                  if (isWithinMax && (event.key === ' ' || event.key === 'Enter')) {
+                    event.preventDefault()
+                    handleCheckboxChange(i)
+                  }
+                }}
               >
                 <div
                   className={`w-5 h-5 border-2 transform rotate-45 ${

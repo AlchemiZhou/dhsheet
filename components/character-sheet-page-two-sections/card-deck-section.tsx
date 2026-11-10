@@ -437,7 +437,7 @@ export function CardDeckSection({
       </div>
 
       {/* 卡组切换标签和操作提示 - 打印时隐藏 */}
-      <div className="flex items-center justify-between mb-4 border-b border-gray-200 print:hidden">
+      <div className="sheet-deck-tabs flex items-center justify-between mb-4 border-b border-gray-200 print:hidden">
         <div className="flex">
           <button
             className={`px-3 py-1.5 text-sm font-medium border-b-2 transition-colors ${activeDeck === 'focused'
@@ -465,7 +465,7 @@ export function CardDeckSection({
         </div>
       </div>
 
-      <div className="grid grid-cols-4 gap-1">
+      <div className="sheet-deck-grid grid grid-cols-4 gap-1">
         {cards &&
           Array.isArray(cards) &&
           cards.map((card: StandardCard, index: number) => {

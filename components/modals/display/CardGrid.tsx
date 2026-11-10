@@ -29,7 +29,7 @@ export function CardGrid<T extends StandardCard | ExtendedStandardCard>({
   return (
     <div
       className={cn(
-        "grid gap-4 justify-items-center",
+        "card-selection-grid grid gap-4 justify-items-center",
         hasCompleteAncestryCards
           ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
           : isTextMode

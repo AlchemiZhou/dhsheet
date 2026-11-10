@@ -37,7 +37,7 @@ function PageTabsBar({ ariaLabel, isMobile, visibleTabs }: PageTabsBarProps) {
       <TabsList
         aria-label={ariaLabel}
         className={cn(
-          "grid w-full rounded-t-lg rounded-b-none border border-b-0 border-border bg-muted/70 p-1 shadow-sm transition-colors duration-200",
+          "sheet-page-tab-list grid w-full rounded-t-lg rounded-b-none border border-b-0 border-border bg-muted/70 p-1 shadow-sm transition-colors duration-200",
           isMobile ? "h-12" : "h-11",
         )}
         style={{
@@ -133,7 +133,7 @@ export function PageDisplay({
   return (
     <div
       className={cn(
-        "relative mx-auto w-full transition-all duration-300",
+        "sheet-reader relative mx-auto w-full transition-all duration-300",
         isDualPageMode && !isMobile ? "md:max-w-[425mm]" : "md:max-w-[210mm]",
       )}
     >
@@ -164,7 +164,7 @@ export function PageDisplay({
           </div>
         </div>
       ) : (
-        <Tabs value={currentTabValue} onValueChange={onSetCurrentTab} className="w-[210mm]">
+        <Tabs value={currentTabValue} onValueChange={onSetCurrentTab} className="sheet-page-tabs w-[210mm]">
           <PageTabsBar
             ariaLabel="角色卡页面"
             isMobile={isMobile}

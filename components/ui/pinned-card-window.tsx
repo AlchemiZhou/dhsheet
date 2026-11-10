@@ -98,7 +98,7 @@ export function PinnedCardWindow({ pinnedCard }: PinnedCardWindowProps) {
       
       <div
         ref={windowRef}
-        className="fixed print:hidden"
+        className="sheet-pinned-card fixed print:hidden"
         style={{
           left: `${pinnedCard.position.x}px`,
           top: `${pinnedCard.position.y}px`,

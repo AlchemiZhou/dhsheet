@@ -21,7 +21,7 @@ export function ModalFilterBar({
 
   if (!collapsible) {
     return (
-      <div className={cn("p-4 border-b border-gray-200 flex flex-wrap gap-3", className)}>
+      <div className={cn("card-modal-filters p-4 border-b border-gray-200 flex flex-wrap gap-3", className)}>
         {children}
       </div>
     )

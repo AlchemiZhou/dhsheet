@@ -55,7 +55,7 @@ export function WeaponSection({
 
 
   return (
-    <div className="mb-2.5">
+    <div className="sheet-equipment-slot mb-2.5">
       <h4 className="flex items-center gap-1 font-bold text-[10px] bg-gray-800 text-white p-1 rounded-t-md">
         <span>{isPrimary ? "主武器" : "副武器"}</span>
         <EquipmentProviderAnchor

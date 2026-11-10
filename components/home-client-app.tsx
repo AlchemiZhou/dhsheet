@@ -7,6 +7,8 @@ import CharacterSheetPageThree from "@/components/character-sheet-page-ranger-co
 import CharacterSheetPageAdventureNotes from "@/components/character-sheet-page-adventure-notes"
 import CharacterSheetPageBeastForms from '@/components/character-sheet-page-beast-forms'
 import CharacterSheetPageMartialStances from '@/components/character-sheet-page-martial-stances'
+import { isMobileViewportDevice } from '@/lib/mobile-viewport'
+import './layout/mobile-sheet.css'
 import { BeastFormsPrintPages } from '@/components/beast-forms/beast-forms-print-pages'
 import { BeastFormsNavigationProvider } from '@/components/beast-forms/beast-forms-navigation'
 import { useBeastFormPages } from '@/components/beast-forms/use-beast-form-pages'
@@ -324,7 +326,7 @@ export default function HomeClientApp() {
   // 移动设备检测
   useEffect(() => {
     const checkIsMobile = () => {
-      setIsMobile(window.innerWidth <= 768 || 'ontouchstart' in window)
+      setIsMobile(isMobileViewportDevice(window))
     }
 
     checkIsMobile()
@@ -689,7 +691,7 @@ export default function HomeClientApp() {
         <BeastFormsNavigationProvider key={currentCharacterId}>
         <PrintProvider containerRef={printContainerRef}>
           <PrintReadyChecker onSkipWaiting={handleSkipWaiting}>
-            <div className="print-all-pages">
+            <div className="print-all-pages sheet-print-preview">
               <PrintHelper />
 
               {/* 顶部提示横条 - 只在屏幕上显示，打印时隐藏 */}
@@ -700,7 +702,7 @@ export default function HomeClientApp() {
                 >
                   <div className="flex items-center justify-center gap-3">
                   <span className="text-sm">
-                    按 <kbd className="px-2 py-1 bg-gray-700 rounded text-xs mx-1">ESC</kbd> 键或点击此处退出预览
+                    {isMobile ? '点此返回编辑 · A4 预览可横向滑动' : <>按 <kbd className="px-2 py-1 bg-gray-700 rounded text-xs mx-1">ESC</kbd> 键或点击此处退出预览</>}
                   </span>
                   </div>
                 </div>
@@ -721,7 +723,7 @@ export default function HomeClientApp() {
               />
 
               {/* 打印内容容器 - 用于图片加载检测 */}
-              <div ref={printContainerRef}>
+              <div ref={printContainerRef} className="print-pages-scroll-content">
                 <PrintPageRenderer sheetData={formData} excludePageIds={beastFormPages.status === 'empty' ? ['beast-forms'] : []} />
               </div>
             </div>
@@ -770,7 +772,7 @@ export default function HomeClientApp() {
   return (
     <CurrentCharacterIdContext.Provider value={currentCharacterId}>
       <BeastFormsNavigationProvider key={currentCharacterId}>
-      <main className={`min-w-0 w-full max-w-full mx-auto px-0 container print:pb-0 ${isMobile ? 'pb-32' : 'pb-20'
+      <main className={`sheet-app min-w-0 w-full max-w-full mx-auto px-0 container print:pb-0 ${isMobile ? 'pb-32' : 'pb-20'
         }`}>
 
       {/* 底部抽屉式卡牌展示 - 打印时隐藏 */}
@@ -792,7 +794,7 @@ export default function HomeClientApp() {
           {/* 角色卡区域 - 带相对定位 */}
           <div>
             {/* 存档与站点入口 - 打印时隐藏 */}
-            <div className={`mx-auto mb-1 print:hidden transition-all duration-300 ${isDualPageMode && !isMobile ? 'w-[425mm] min-w-[425mm]' : 'w-[210mm]'}`}>
+            <div className={`sheet-save-switcher mx-auto mb-1 print:hidden transition-all duration-300 ${isDualPageMode && !isMobile ? 'w-[425mm] min-w-[425mm]' : 'w-[210mm]'}`}>
               <SaveSwitcher
                 characterList={characterList}
                 currentCharacterId={currentCharacterId}
@@ -820,7 +822,7 @@ export default function HomeClientApp() {
           </div>
 
           {/* 文字模式切换开关 - 胶囊型，在容器外右下角 */}
-          <div className={`print:hidden mt-3 flex justify-end gap-3 transition-all duration-300 ${isDualPageMode && !isMobile ? 'w-[425mm] min-w-[425mm]' : 'w-[210mm]'}`}>
+          <div className={`sheet-display-mode print:hidden mt-3 flex justify-end gap-3 transition-all duration-300 ${isDualPageMode && !isMobile ? 'w-[425mm] min-w-[425mm]' : 'w-[210mm]'}`}>
             <div
               className="bg-gray-200 dark:bg-gray-700 rounded-full p-0.5 shadow-md cursor-pointer transition-all duration-200 hover:shadow-lg scale-90"
               onClick={toggleTextMode}

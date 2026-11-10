@@ -95,7 +95,7 @@ export function AttributesSection() {
   }
 
   return (
-    <div className="mt-2.5">
+    <div className="sheet-attributes mt-2.5">
       <div className="grid grid-cols-3 gap-x-2 gap-y-1">
         {[
           { name: "敏捷", key: "agility", skills: ["冲刺", "跳跃", "机动"] },
@@ -106,7 +106,7 @@ export function AttributesSection() {
           { name: "知识", key: "knowledge", skills: ["回忆", "分析", "理解"] },
         ].map((attr) => (
           <div key={attr.name} className="flex flex-col items-center">
-            <div className="flex items-center justify-between w-full bg-gray-800 text-white px-1 rounded-t-md py-0.5">
+            <div className="sheet-attribute-heading flex items-center justify-between w-full bg-gray-800 text-white px-1 rounded-t-md py-0.5">
               <div className="flex items-center">
                 <div className="text-[12px] font-bold">{attr.name}</div>
                 {(() => {
@@ -137,9 +137,20 @@ export function AttributesSection() {
                 return (
                   <div
                     data-testid={`attribute-upgrade-marker-${attr.key}`}
+                    role="checkbox"
+                    aria-label={`提升${attr.name}`}
+                    aria-checked={isUpgraded}
+                    data-state={isUpgraded ? 'checked' : 'unchecked'}
+                    tabIndex={0}
                     className={`w-2 h-2 rounded-full border border-white cursor-pointer ${isUpgraded ? "sheet-filled-mark bg-gray-800" : "bg-white"
                       }`}
                     onClick={() => handleBooleanChange(attr.key as keyof SheetData)}
+                    onKeyDown={event => {
+                      if (event.key === ' ' || event.key === 'Enter') {
+                        event.preventDefault()
+                        handleBooleanChange(attr.key as keyof SheetData)
+                      }
+                    }}
                   >
                   </div>
                 );

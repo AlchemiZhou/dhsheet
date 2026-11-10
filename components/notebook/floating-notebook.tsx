@@ -171,7 +171,7 @@ export function FloatingNotebook() {
   return (
     <div
       ref={containerRef}
-      className="fixed z-50 print:hidden"
+      className="sheet-notebook-window fixed z-50 print:hidden"
       style={{
         left: position.x,
         top: position.y,

@@ -93,9 +93,9 @@ function MainModeContent(props: MainModeProps) {
   return (
     <>
       {/* Group A: 卡牌相关 */}
-      <div className="flex items-center gap-2">
+      <div className="dock-actions-group flex items-center gap-2">
         {/* 卡牌抽屉按钮 */}
-        <Tooltip>
+        <Tooltip open={isMobile ? false : undefined}>
           <TooltipTrigger asChild>
             <Button
               onClick={props.onToggleCardDrawer}
@@ -108,6 +108,7 @@ function MainModeContent(props: MainModeProps) {
               aria-expanded={props.isCardDrawerOpen}
             >
               <Layers className={cn(isMobile ? "h-5 w-5" : "h-4 w-4")} />
+              {isMobile && <span>卡牌</span>}
               {props.isCardDrawerOpen && (
                 <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
@@ -125,12 +126,12 @@ function MainModeContent(props: MainModeProps) {
         </Tooltip>
 
         {/* 建卡指引按钮 */}
-        <Tooltip>
+        <Tooltip open={isMobile ? false : undefined}>
           <TooltipTrigger asChild>
             <Button
               onClick={props.onToggleGuide}
               className={cn(
-                "bg-gray-800 hover:bg-gray-700 text-white gap-1.5 text-sm",
+                "dock-mobile-secondary bg-gray-800 hover:bg-gray-700 text-white gap-1.5 text-sm",
                 isMobile ? "px-4 py-2.5" : "px-3 py-1.5"
               )}
             >
@@ -147,7 +148,7 @@ function MainModeContent(props: MainModeProps) {
         </Tooltip>
 
         {/* 笔记按钮 */}
-        <Tooltip>
+        <Tooltip open={isMobile ? false : undefined}>
           <TooltipTrigger asChild>
             <Button
               onClick={props.onToggleNotebook}
@@ -172,10 +173,10 @@ function MainModeContent(props: MainModeProps) {
       <Separator orientation="vertical" className="h-5 bg-slate-500/30" />
 
       {/* Group B: 文件操作 */}
-      <div className="flex items-center gap-1.5">
+      <div className="dock-actions-group flex items-center gap-1.5">
         {/* 导出下拉菜单 */}
         <DropdownMenu>
-          <Tooltip>
+          <Tooltip open={isMobile ? false : undefined}>
             <TooltipTrigger asChild>
               <DropdownMenuTrigger asChild>
                 <Button className={cn(
@@ -222,7 +223,7 @@ function MainModeContent(props: MainModeProps) {
 
         {/* 存档管理下拉菜单 */}
         <DropdownMenu>
-          <Tooltip>
+          <Tooltip open={isMobile ? false : undefined}>
             <TooltipTrigger asChild>
               <DropdownMenuTrigger asChild>
                 <Button className={cn(
@@ -270,14 +271,14 @@ function MainModeContent(props: MainModeProps) {
       <Separator orientation="vertical" className="h-5 bg-slate-500/30" />
 
       {/* Group C: 辅助功能 */}
-      <div className="flex items-center gap-1.5">
+      <div className="dock-actions-group flex items-center gap-1.5">
         {/* 扩展管理按钮 */}
-        <Tooltip>
+        <Tooltip open={isMobile ? false : undefined}>
           <TooltipTrigger asChild>
             <Button
               onClick={() => navigateToPage('/card-manager')}
               className={cn(
-                "bg-gray-800 hover:bg-gray-700 text-white gap-1.5 text-sm",
+                "dock-mobile-secondary bg-gray-800 hover:bg-gray-700 text-white gap-1.5 text-sm",
                 isMobile ? "px-4 py-2.5" : "px-3 py-1.5"
               )}
             >
@@ -295,7 +296,7 @@ function MainModeContent(props: MainModeProps) {
 
         {/* 更多菜单 */}
         <DropdownMenu>
-          <Tooltip>
+          <Tooltip open={isMobile ? false : undefined}>
             <TooltipTrigger asChild>
               <DropdownMenuTrigger asChild>
                 <Button
@@ -324,6 +325,11 @@ function MainModeContent(props: MainModeProps) {
             </TooltipContent>
           </Tooltip>
           <DropdownMenuContent align="end" side="top" className={cn("w-56", isMobile && "text-base")}>
+            {isMobile && <>
+              <DropdownMenuItem onClick={props.onToggleGuide} className="py-3 px-4"><Sparkles className="mr-2 h-5 w-5" />建卡指引</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => navigateToPage('/card-manager')} className="py-3 px-4"><Package className="mr-2 h-5 w-5" />扩展管理</DropdownMenuItem>
+              <DropdownMenuSeparator />
+            </>}
             <DropdownMenuItem onClick={props.onOpenAnnouncements} className={cn(isMobile && "py-3 px-4")}>
               <Megaphone className={cn("mr-2", isMobile ? "h-5 w-5" : "h-4 w-4")} />
               <span>更新公告</span>
@@ -376,46 +382,50 @@ function PreviewModeContent(props: PreviewModeProps) {
   const { isMobile } = props
 
   return (
-    <div className="flex items-center gap-4">
+    <div className="dock-preview-actions flex items-center gap-4">
       <DropdownMenu>
         <DropdownMenuTrigger asChild><Button className="bg-gray-800 text-white">打印设置</Button></DropdownMenuTrigger>
         <DropdownMenuContent side="top" className="w-56 print:hidden" onEscapeKeyDown={event => event.stopPropagation()}><SheetAppearanceSettings printOnly /></DropdownMenuContent>
       </DropdownMenu>
       <Button
         onClick={props.onExportPDF}
+        aria-label="导出为PDF"
         className={cn(
           "bg-gray-800 text-white hover:bg-gray-700 focus:outline-none whitespace-nowrap",
           isMobile ? "px-6 py-3 text-base" : "px-4 py-2 text-sm"
         )}
       >
-        导出为PDF
+        {isMobile ? 'PDF' : '导出为PDF'}
       </Button>
       <Button
         onClick={props.onExportHTML}
+        aria-label="导出为HTML"
         className={cn(
           "bg-gray-800 text-white hover:bg-gray-700 focus:outline-none whitespace-nowrap",
           isMobile ? "px-6 py-3 text-base" : "px-4 py-2 text-sm"
         )}
       >
-        导出为HTML
+        {isMobile ? 'HTML' : '导出为HTML'}
       </Button>
       <Button
         onClick={props.onExportJSON}
+        aria-label="导出为JSON"
         className={cn(
           "bg-gray-800 text-white hover:bg-gray-700 focus:outline-none whitespace-nowrap",
           isMobile ? "px-6 py-3 text-base" : "px-4 py-2 text-sm"
         )}
       >
-        导出为JSON
+        {isMobile ? 'JSON' : '导出为JSON'}
       </Button>
       <Button
         onClick={props.onOpenSealDiceExport}
+        aria-label="导出到骰子"
         className={cn(
           "bg-gray-800 text-white hover:bg-gray-700 focus:outline-none whitespace-nowrap",
           isMobile ? "px-6 py-3 text-base" : "px-4 py-2 text-sm"
         )}
       >
-        导出到骰子
+        {isMobile ? '骰子' : '导出到骰子'}
       </Button>
       <Button
         onClick={props.onClose}
@@ -438,15 +448,15 @@ export function BottomDock(props: BottomDockProps) {
 
   return (
     <div className={cn(
-      "fixed left-0 right-0 print:hidden",
+      `bottom-dock bottom-dock-${mode} fixed left-0 right-0 print:hidden`,
       isMobile ? "bottom-8" : "bottom-4",
       isPreviewMode ? "z-[60] print-control-buttons" : "z-30"
     )}>
-      <div className="flex justify-center px-4">
+      <div className="dock-wrapper flex justify-center px-4">
         <TooltipProvider>
           <div
             className={cn(
-              "flex items-center gap-2 px-2.5 py-1.5 rounded-full shadow-md border transition-all duration-200",
+              "dock-shell flex items-center gap-2 px-2.5 py-1.5 rounded-full shadow-md border transition-all duration-200",
               // 预览模式使用更简单的样式
               isPreviewMode && "gap-4"
             )}

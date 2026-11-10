@@ -1,0 +1,184 @@
+/* Editing follows the device width. A4 preview and print keep their own document layout. */
+@media screen and (max-width: 1023px) {
+  .sheet-app { padding: 8px; max-width: 100%; }
+  .sheet-save-switcher, .sheet-display-mode { max-width: 100%; }
+  .sheet-reader, .sheet-page-tabs { width: 100% !important; min-width: 0; max-width: 100%; }
+  .sheet-reader .a4-page { width: 100% !important; max-width: 100%; min-width: 0; height: auto; }
+  .sheet-reader .tabs-container { overflow-x: auto; overscroll-behavior-x: contain; }
+  .sheet-reader .sheet-page-tab-list { display: flex; width: max-content; min-width: 100%; height: 52px; }
+  .sheet-page-tab-list .sheet-tab { flex: 1 0 auto; min-width: 92px; min-height: 44px; padding: 0 14px; }
+  .sheet-page-tab-list > div:last-child { position: sticky; right: 0; min-width: 44px; background: #f5f4f1; }
+  .sheet-page-tab-list > div:last-child button { width: 44px; height: 44px; }
+  .sheet-reader > .group.absolute { display: none; }
+  .sheet-reader :is(input, textarea, select) { font-size: 16px !important; }
+  .sheet-reader [contenteditable=true] { font-size: 16px; min-height: 40px; }
+  .sheet-reader .sheet-main-content { gap: 18px; margin-top: 12px; }
+  .sheet-reader .sheet-main-top, .sheet-reader .sheet-main-bottom { display: contents; }
+  .sheet-reader .sheet-statistics { order: 1; gap: 12px; }
+  .sheet-reader .sheet-character-details { order: 2; margin: 0; }
+  .sheet-reader .sheet-equipment { order: 3; gap: 12px; }
+  .sheet-reader .sheet-inventory { order: 4; margin: 0; }
+  .sheet-reader .sheet-header { flex-direction: column; align-items: stretch; padding: 12px 12px 24px; gap: 12px; }
+  .sheet-reader .sheet-identity-fields { width: 100%; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 12px 8px; }
+  .sheet-reader .sheet-identity-fields > :nth-child(-n+2) { grid-column: 1 / -1; padding-right: 76px; }
+  .sheet-reader .sheet-identity-fields > :nth-child(5) { grid-column: 1 / -1; }
+  .sheet-reader .sheet-identity-fields > :last-child { grid-column: 1 / -1; height: auto; }
+  .sheet-reader .sheet-header :is(label,span.text-\[9px\]) { font-size: 12px; }
+  .sheet-reader .sheet-header .group.h-7, .sheet-reader .sheet-header input.h-7, .sheet-reader .sheet-header button.h-7 { min-height: 44px; height: 44px; }
+  .sheet-reader .sheet-header .group > button { min-height: 44px; font-size: 14px; }
+  .sheet-reader .sheet-header button[title="编辑名称"] { width: 36px; opacity: 1; }
+  .sheet-reader .sheet-header [role=switch] { min-height: 44px; font-size: 14px; }
+  .sheet-reader .sheet-header > [aria-label="转变"] { width: 100%; grid-template-columns: repeat(2,minmax(0,1fr)); grid-template-rows: none; gap: 8px; }
+  .sheet-reader .sheet-level-control { position: absolute; top: 12px; right: 12px; }
+  .sheet-reader .sheet-level-control > button { min-height: 44px; font-size: 11px; }
+  .sheet-reader .sheet-header .sheet-level-frame input { font-size: 22px !important; }
+  .sheet-reader .sheet-defense-row { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 12px 8px; }
+  .sheet-reader .sheet-defense-row > div { min-width: 0; }
+  .sheet-reader .sheet-defense-row .w-24 { width: 100%; max-width: 112px; }
+  .sheet-reader .sheet-armor-layout { display: contents; }
+  .sheet-reader .sheet-armor-track { grid-column: 1 / -1; gap: 6px; }
+  .sheet-reader .sheet-armor-track > .grid { grid-template-columns: repeat(6,minmax(0,1fr)); gap: 6px; }
+  .sheet-reader .sheet-armor-track [role=checkbox] { width: 100%; height: 44px; }
+  .sheet-reader .sheet-armor-track span { font-size: 14px; }
+  .sheet-reader .sheet-defense-row input { font-size: 22px !important; }
+  .sheet-reader .sheet-attributes { gap: 8px; }
+  .sheet-reader .sheet-attribute-heading { min-height: 40px; gap: 2px; }
+  .sheet-reader .sheet-attribute-heading [role=checkbox] { position: relative; width: 24px; height: 32px; border: 0; background: transparent !important; }
+  .sheet-reader .sheet-attribute-heading [role=checkbox]::after { content: ''; position: absolute; width: 12px; height: 12px; top: 10px; left: 6px; border: 1px solid #fff; border-radius: 50%; background: #fff; }
+  .sheet-reader .sheet-attribute-heading [data-state=checked]::after { background: #858585; }
+  .sheet-reader .sheet-attributes .h-14 { height: 72px; }
+  .sheet-reader .sheet-attributes input { font-size: 22px !important; }
+  .sheet-reader .sheet-resources > h3, .sheet-reader h3.text-xs { font-size: 14px; margin: 8px 0; }
+  .sheet-reader .sheet-resources > .flex > .bg-gray-800 { font-size: 11px; padding: 6px 2px; }
+  .sheet-reader .sheet-resources > .flex > input { width: 32px; height: 44px; margin: 0; }
+  .sheet-reader .sheet-resources > .mt-2 { gap: 14px; }
+  .sheet-reader .sheet-resource-heading { flex-wrap: wrap; gap: 4px; margin-bottom: 8px; }
+  .sheet-reader .sheet-resource-heading span { font-size: 12px; }
+  .sheet-reader .sheet-resource-controls { margin-left: auto; }
+  .sheet-reader .sheet-resource-controls :is(button,input) { width: 40px; height: 44px; }
+  .sheet-reader .sheet-resource-marks { grid-template-columns: 1fr; gap: 6px; }
+  .sheet-reader .sheet-resource-marks > div { gap: 6px; }
+  .sheet-reader .sheet-resource-marks [role=checkbox] { height: 44px; font-size: 24px; line-height: 38px; }
+  .sheet-reader .sheet-hope > .relative { flex-wrap: wrap; gap: 8px; }
+  .sheet-reader .sheet-hope-marks { display: grid; grid-template-columns: repeat(6,minmax(0,1fr)); gap: 4px; width: 100%; }
+  .sheet-reader .sheet-hope-marks > [role=checkbox] { display: flex; align-items: center; justify-content: center; height: 44px; }
+  .sheet-reader .sheet-hope > .relative > .absolute { position: static; margin-left: auto; }
+  .sheet-reader .sheet-hope > .relative > .absolute > span { display: none; }
+  .sheet-reader .sheet-hope > .relative > .absolute > div { opacity: 1; }
+  .sheet-reader .sheet-hope button { width: 44px; height: 44px; border: 1px solid #858585; border-radius: 4px; color: #292929; }
+  .sheet-reader .sheet-hope > .text-center > div { font-size: 14px; line-height: 1.7; }
+  .sheet-reader .sheet-proficiency { flex-wrap: wrap; gap: 8px; }
+  .sheet-reader .sheet-proficiency > div:first-child span { font-size: 14px; }
+  .sheet-reader .sheet-proficiency-marks { display: grid; grid-template-columns: repeat(6,minmax(0,1fr)); gap: 6px; width: 100%; }
+  .sheet-reader .sheet-proficiency-marks [role=checkbox] { width: 100%; max-width: 44px; height: 44px; }
+  .sheet-reader .sheet-equipment input, .sheet-reader .sheet-inventory input { min-height: 44px; }
+  .sheet-reader .sheet-equipment-slot .grid-cols-10 { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; }
+  .sheet-reader .sheet-equipment-slot .col-span-4 { grid-column: 1 / -1; }
+  .sheet-reader .sheet-equipment-slot .col-span-3 { grid-column: span 1; }
+  .sheet-reader .sheet-equipment-slot label { font-size: 12px; }
+  .sheet-reader .sheet-equipment-slot .group.h-6 { height: 44px; }
+  .sheet-reader .sheet-equipment-slot .group > button { min-height: 44px; }
+  .sheet-reader .sheet-equipment-slot .group > button[title] { display: flex; width: 44px; }
+  .sheet-reader .sheet-inventory input[type=checkbox] { width: 22px; min-height: 22px; }
+  .sheet-notebook-window button { min-height: 40px; min-width: 32px; }
+  .sheet-notebook-window textarea { font-size: 16px; }
+  .sheet-reader .sheet-equipment .bg-gray-800 { font-size: 14px; padding: 6px; }
+  .sheet-profession-features { height: auto !important; min-height: 0; overflow: visible !important; font-size: 14px !important; line-height: 1.7 !important; }
+  .sheet-reader .sheet-biography-grid, .sheet-reader .sheet-upgrade-grid { grid-template-columns: minmax(0,1fr); gap: 16px; }
+  .sheet-reader .sheet-biography-grid textarea { height: 420px !important; font-size: 16px !important; line-height: 1.4 !important; overflow: auto !important; }
+  .sheet-reader .sheet-upgrade-grid { font-size: 14px; }
+  .sheet-reader .sheet-upgrade-grid input[type=checkbox] { width: 22px; height: 22px; }
+  .sheet-reader .sheet-deck-grid { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; row-gap: 24px; }
+  .sheet-reader .sheet-deck-grid > .relative { min-height: 88px; height: auto; }
+  .sheet-reader .sheet-deck-grid button { opacity: 1; min-width: 32px; min-height: 40px; }
+  .sheet-reader .sheet-deck-tabs { flex-wrap: wrap; gap: 4px; }
+  .sheet-reader .sheet-deck-tabs button { min-height: 44px; }
+  .sheet-reader .sheet-deck-tabs > div:last-child { display: none; }
+  .sheet-reader .beast-form-sheet { height: auto; }
+  .sheet-reader .beast-form-entry { display: block; }
+  .sheet-reader .beast-form-identity { border-right: 0; border-bottom: 1px solid #858585; }
+  .sheet-reader .beast-form-traits { font-size: 14px; }
+  .sheet-reader .beast-form-table-heading { display: none; }
+  .sheet-reader .beast-form-pagination { flex-wrap: wrap; }
+  .sheet-reader .beast-form-tier-buttons { flex-wrap: wrap; }
+  .sheet-reader .beast-form-tier-buttons button { min-width: 64px; }
+  .sheet-reader .beast-form-entries { border-top: 2px solid #858585; }
+  .sheet-reader .beast-form-navigation button { min-height: 44px; }
+  .sheet-reader .martial-stance-sheet { height: auto; }
+  .sheet-reader .martial-stance-heading { flex-wrap: wrap; align-items: flex-start; gap: 8px; }
+  .sheet-reader .martial-stance-heading h1 span { display: block; margin-left: 0; }
+  .sheet-reader .martial-stance-character { max-width: 100%; text-align: left; }
+  .sheet-reader .martial-stance-tracker, .sheet-reader .martial-stance-tiers, .sheet-reader .martial-stance-rules { grid-template-columns: minmax(0,1fr); grid-template-rows: none; grid-auto-flow: row; gap: 12px; }
+  .sheet-reader .martial-stance-learning { flex-wrap: wrap; gap: 6px; }
+  .sheet-reader .martial-stance-focus { flex-wrap: wrap; gap: 5px; }
+  .sheet-reader .martial-stance-focus [role=checkbox] { width: 42px; height: 44px; line-height: 39px; }
+  .sheet-reader .martial-stance-sheet button { min-height: 44px; font-size: 13px; }
+  .sheet-reader .martial-stance-entry-heading { flex-wrap: wrap; }
+  .sheet-reader .martial-stance-known { width: 40px; height: 44px; line-height: 40px; }
+  .sheet-reader .martial-stance-effect, .sheet-reader .martial-stance-rules p { font-size: 14px; }
+  .sheet-reader .sheet-gold > .flex { flex-direction: column; align-items: stretch; gap: 16px; }
+  .sheet-reader .sheet-gold > .flex > .flex { align-items: stretch; }
+  .sheet-reader .sheet-gold .flex.gap-2 { display: grid; grid-template-columns: repeat(5,minmax(0,1fr)); gap: 6px; }
+  .sheet-reader .sheet-gold [role=checkbox] { width: 100%; max-width: 44px; height: 44px; }
+  .sheet-reader .sheet-gold .text-\[9px\] { font-size: 12px; }
+  .sheet-credit { position: static !important; margin: 20px 8px 100px; max-width: 100%; }
+  .bottom-dock { bottom: 0; padding-bottom: env(safe-area-inset-bottom,0px); }
+  .bottom-dock .dock-wrapper { padding: 6px; }
+  .bottom-dock .dock-shell { width: 100%; border-radius: 16px; background: rgba(245,244,241,.97) !important; border-color: #ccc !important; padding: 5px; gap: 5px; }
+  .bottom-dock-main .dock-shell { display: grid; grid-template-columns: repeat(5,minmax(0,1fr)); }
+  .bottom-dock .dock-actions-group { display: contents; }
+  .bottom-dock .dock-shell > [data-orientation=vertical], .bottom-dock .dock-mobile-secondary { display: none; }
+  .bottom-dock-main .dock-shell button.dock-mobile-secondary { display: none; }
+  .bottom-dock-main .dock-shell button { display: flex; flex-direction: column; justify-content: center; width: 100%; height: 56px; min-height: 44px; padding: 4px 2px; gap: 4px; border-radius: 10px; font-size: 12px; }
+  .bottom-dock-preview .dock-shell { display: block; }
+  .dock-preview-actions { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 6px; }
+  .dock-preview-actions button { height: 44px; padding: 4px; font-size: 13px; }
+  .card-modal { width: calc(100% - 16px) !important; max-height: calc(100dvh - 16px) !important; border-radius: 12px; }
+  .card-modal-layout { flex-direction: column; min-height: 0; }
+  .card-modal-sidebar { width: 100%; flex-shrink: 0; max-height: 64px; border-right: 0; border-bottom: 1px solid #e5e7eb; }
+  .card-modal-layout > .flex-1 { min-height: 0; }
+  .card-type-mobile button { min-height: 44px; flex-shrink: 0; }
+  .card-modal-heading { padding: 8px 12px; gap: 4px; }
+  .card-modal-heading > div { gap: 8px; flex-wrap: wrap; }
+  .card-modal-heading h2 { font-size: 18px; }
+  .card-modal-heading button { min-height: 44px; }
+  .card-modal-heading > button { min-width: 44px; flex-shrink: 0; }
+  .card-modal-filters { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; padding: 8px 12px; }
+  .card-modal-filters > * { min-width: 0; width: 100% !important; }
+  .card-modal-filters button { min-height: 44px; height: auto; }
+  .card-modal-filters input { min-height: 44px; font-size: 16px; }
+  .card-selection-grid { grid-template-columns: minmax(0,1fr) !important; gap: 12px; }
+  .card-modal :is(input,textarea,select),.equipment-modal :is(input,textarea,select) { font-size: 16px; }
+  .equipment-modal :is(button,input,select) { min-height: 44px; }
+  .equipment-modal :is(td,th) { height: 44px; font-size: 14px; padding: 6px 8px; }
+  .equipment-scroll-hint { display: block; padding: 6px 12px; font-size: 12px; color: #616161; }
+  .equipment-modal { width: calc(100% - 16px); max-height: calc(100dvh - 16px) !important; }
+  .sheet-dialog { width: calc(100% - 16px); max-height: calc(100dvh - 24px); overflow-y: auto; padding: 16px; border-radius: 12px; }
+  .sheet-dialog > button:last-child { min-width: 44px; min-height: 44px; top: 4px; right: 4px; display: flex; align-items: center; justify-content: center; }
+  .sheet-dialog :is(input,textarea,select),[role=menu] select { font-size: 16px; }
+  [role=menu] { max-height: min(calc(100dvh - 24px),var(--radix-dropdown-menu-content-available-height,100dvh)); overflow-y: auto; }
+  .sheet-notebook-window, .sheet-pinned-card { width: calc(100% - 16px) !important; max-width: 420px; left: 8px !important; right: 8px !important; top: 8px !important; max-height: calc(100dvh - 100px); overflow-y: auto; }
+  .card-drawer-content { height: min(70dvh,580px); max-height: calc(100dvh - 16px); }
+  .card-drawer-navigation { flex-direction: column; align-items: stretch; padding-right: 0; }
+  .card-drawer-navigation > div:first-child { padding: 8px 52px 8px 12px; border-right: 0; }
+  .card-drawer-navigation > div:first-child button { padding: 8px 12px; min-height: 44px; font-size: 14px; }
+  .card-drawer-navigation > div:last-child { padding: 6px 12px; }
+  .card-drawer-navigation > div:last-child button { padding: 6px 12px; min-height: 44px; font-size: 14px; }
+  .card-drawer-content .card-drawer-close { height: 44px; width: 44px; }
+  .card-drawer-content button[title] { opacity: 1; }
+  .character-management-modal { width: calc(100% - 16px); max-height: calc(100dvh - 16px); padding: 16px; overflow-y: auto; }
+  .character-management-modal > .mb-6 { margin-bottom: 12px; }
+  .character-management-modal h2 { font-size: 20px; }
+  .character-management-modal button { min-height: 44px; }
+  .character-management-modal > div:first-child > button { min-width: 44px; }
+  .character-save-row { flex-direction: column; align-items: stretch; gap: 12px; }
+  .character-save-row > .flex { min-width: 0; overflow-wrap: anywhere; }
+  .character-save-row > div:last-child { flex-wrap: wrap; }
+  .character-management-modal .grid-cols-2 { grid-template-columns: minmax(0,1fr); }
+  .sheet-card-preview > div { transform: none; width: min(320px,calc(100vw - 24px)); max-height: calc(100dvh - 60px); overflow-y: auto; }
+  .sheet-print-preview { overflow-x: auto; width: 100%; }
+  .print-pages-scroll-content { min-width: 210mm; padding-top: 52px; padding-bottom: 140px; }
+}
+@media screen and (min-width: 480px) and (max-width: 1023px) {
+  .card-selection-grid { grid-template-columns: repeat(2,minmax(0,1fr)) !important; }
+}
