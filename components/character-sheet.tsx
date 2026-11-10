@@ -35,6 +35,8 @@ import {
   applyCharacterImageAssetAction,
 } from "@/character/storage/character-image-actions"
 import { getActiveCharacterId } from "@/lib/multi-character-storage"
+import { findAncestryPair } from "@/character/ancestry/pair"
+import { toast } from "sonner"
 
 type WeaponSlotSelection =
   | { slotType: "primary" | "secondary" }
@@ -49,6 +51,7 @@ export default function CharacterSheet({ currentCharacterId }: CharacterSheetPro
     setSheetData: setFormData,
     replaceSheetData,
     selectCharacterChoiceCard,
+    selectAncestryPair,
     clearCharacterChoiceCard,
     handleProfessionChange: changeProfessionCard,
     setCardAbilityChoiceValuesForInstance,
@@ -69,6 +72,29 @@ export default function CharacterSheet({ currentCharacterId }: CharacterSheetPro
   const cardsInitialized = store.initialized;
   const cardsLoading = store.loading;
   const getRuntimeCardById = store.getCardById;
+  const firstAncestry = store.getCardById(safeFormData.ancestry1Ref?.id || "")
+  const secondAncestry = store.getCardById(safeFormData.ancestry2Ref?.id || "")
+  const mixedAncestry = safeFormData.mixedAncestry ?? Boolean(safeFormData.ancestry2Ref?.id &&
+    (!firstAncestry || !secondAncestry || findAncestryPair(firstAncestry, store.cards.values())?.id !== secondAncestry.id))
+
+  const setMixedAncestry = (enabled: boolean) => {
+    if (!enabled && safeFormData.ancestry1Ref?.id) {
+      const pair = firstAncestry && findAncestryPair(firstAncestry, store.cards.values())
+      if (!firstAncestry || !pair) {
+        toast.error('无法找到当前种族的完整特性，请先选择其他种族。')
+        return
+      }
+      if (safeFormData.ancestry2Ref?.id !== pair.id) {
+        const result = selectCharacterChoiceCard('ancestry2', { id: pair.id, name: pair.name }, pair)
+        if (result.kind === 'failure') { toast.error(result.message); return }
+        setupPrompt.handleSelectionResult(result)
+      }
+    } else if (!enabled && safeFormData.ancestry2Ref?.id) {
+      toast.error('请先选择第一项种族特性，再关闭混血。')
+      return
+    }
+    setFormData(prev => ({ ...prev, mixedAncestry: enabled }))
+  }
   const lastAuditedSheetLoadRevisionRef = useRef<number | null>(null)
 
   // 在组件加载时确保系统已初始化
@@ -187,6 +213,7 @@ export default function CharacterSheet({ currentCharacterId }: CharacterSheetPro
 
     if (value === "none" || !value) {
       clearCharacterChoiceCard(kind)
+      if (!mixedAncestry) clearCharacterChoiceCard("ancestry2")
       return
     }
 
@@ -197,6 +224,14 @@ export default function CharacterSheet({ currentCharacterId }: CharacterSheetPro
 
     const ancestryCard = store.getCardById(value);
     if (ancestryCard && ancestryCard.type === CardType.Ancestry) {
+      if (!mixedAncestry) {
+        const pair = findAncestryPair(ancestryCard, store.cards.values())
+        if (!pair) { toast.error('无法找到该种族完整的两项特性，请检查卡包。'); return }
+        const result = selectAncestryPair(ancestryCard, pair)
+        if (result.kind === 'failure') toast.error(result.message)
+        setupPrompt.handleSelectionResult(result)
+        return
+      }
       const result = selectCharacterChoiceCard(kind, { id: ancestryCard.id, name: ancestryCard.name }, ancestryCard)
       setupPrompt.handleSelectionResult(result)
     } else {
@@ -326,6 +361,9 @@ export default function CharacterSheet({ currentCharacterId }: CharacterSheetPro
             onOpenAncestryModal={openAncestryModal}
             onOpenCommunityModal={openCommunityModal}
             onOpenSubclassModal={openSubclassModal}
+            mixedAncestry={mixedAncestry}
+            ancestryName={firstAncestry?.class}
+            onMixedAncestryChange={setMixedAncestry}
           />
 
           {/* Main Content - Two Section Layout */}

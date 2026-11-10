@@ -14,13 +14,19 @@ interface HeaderSectionProps {
   onOpenAncestryModal: (field: string) => void;
   onOpenCommunityModal: () => void;
   onOpenSubclassModal: () => void;
+  mixedAncestry: boolean;
+  ancestryName?: string;
+  onMixedAncestryChange: (enabled: boolean) => void;
 }
 
 export function HeaderSection({
   onOpenProfessionModal,
   onOpenAncestryModal,
   onOpenCommunityModal,
-  onOpenSubclassModal
+  onOpenSubclassModal,
+  mixedAncestry,
+  ancestryName,
+  onMixedAncestryChange
 }: HeaderSectionProps) {
   const { sheetData: formData, setSheetData, updateLevel } = useSheetStore()
   const { isTextMode } = useTextModeStore()
@@ -239,7 +245,7 @@ export function HeaderSection({
         </div>
         <div className="flex gap-2">
           <div className="flex flex-col">
-            <label className="text-[9px] text-gray-300">种族</label>
+            <div className="flex items-center justify-between"><span className="text-[9px] text-gray-300">种族</span><button type="button" role="switch" aria-checked={mixedAncestry} onClick={() => onMixedAncestryChange(!mixedAncestry)} className="text-[9px] text-gray-200 hover:text-white print:hidden">混血：{mixedAncestry ? '开启' : '关闭'}</button></div>
             <div className="flex gap-1">
               {editingField === 'ancestry1Ref' ? (
                 <input
@@ -262,7 +268,7 @@ export function HeaderSection({
                       onClick={() => openAncestryModal("ancestry1")}
                       className="flex-1 text-gray-800 text-xs text-left px-2 py-0.5 hover:bg-gray-50 focus:outline-none truncate"
                     >
-                      {formData.ancestry1Ref?.name || <span className="print:hidden">选择种族</span>}
+                      {(!mixedAncestry && ancestryName) || formData.ancestry1Ref?.name || <span className="print:hidden">选择种族</span>}
                     </button>
                     {formData.ancestry1Ref?.name && (
                       <button
@@ -278,7 +284,7 @@ export function HeaderSection({
                   )}
                 </div>
               )}
-              <span className="flex items-center text-white text-xs">+</span>
+              {mixedAncestry && <><span className="flex items-center text-white text-xs">+</span>
               {editingField === 'ancestry2Ref' ? (
                 <input
                   type="text"
@@ -315,7 +321,7 @@ export function HeaderSection({
                       </button>
                   )}
                 </div>
-              )}
+              )}</>}
             </div>
           </div>
           <div className="flex flex-col">

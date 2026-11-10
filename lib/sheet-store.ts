@@ -261,6 +261,7 @@ interface SheetState {
     ) => CardSelectionActionResult;
     setCardAbilityChoiceValuesForInstance: (input: SetCardAbilityChoiceValuesInput) => StoreActionResult;
     clearCharacterChoiceCard: (kind: CharacterChoiceCardKind) => void;
+    selectAncestryPair: (first: StandardCard, second: StandardCard) => CardSelectionActionResult;
     auditCardInstancesOnLoad: (
         lookupTemplate: (templateId: string) => StandardCard | undefined,
     ) => CardInstanceAuditReport;
@@ -1126,6 +1127,19 @@ export const useSheetStore = create<SheetState>((set, get) => ({
             return { sheetData: result.sheetData };
         });
 
+        return output;
+    },
+
+    selectAncestryPair: (first, second) => {
+        let output: CardSelectionActionResult = { kind: "failure", message: "Ancestry selection did not run." };
+        set((state) => {
+            const one = selectCharacterChoiceCardInSheetData(state.sheetData, "ancestry1", { id: first.id, name: first.name }, first);
+            if (one.kind === "failure") { output = toCardSelectionActionResult(one); return state; }
+            const two = selectCharacterChoiceCardInSheetData(one.sheetData, "ancestry2", { id: second.id, name: second.name }, second);
+            if (two.kind === "failure") { output = toCardSelectionActionResult(two); return state; }
+            output = { kind: "success", cardInstanceId: two.cardInstanceId, effects: [...(one.effects ?? []), ...(two.effects ?? [])] };
+            return { sheetData: two.sheetData };
+        });
         return output;
     },
 

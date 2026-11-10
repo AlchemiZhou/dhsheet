@@ -32,6 +32,8 @@ describe("升级编辑器组件烟雾测试", () => {
         onOpenAncestryModal={vi.fn()}
         onOpenCommunityModal={vi.fn()}
         onOpenSubclassModal={vi.fn()}
+        mixedAncestry={false}
+        onMixedAncestryChange={vi.fn()}
       />,
     )
 
@@ -62,6 +64,8 @@ describe("升级编辑器组件烟雾测试", () => {
         onOpenAncestryModal={vi.fn()}
         onOpenCommunityModal={vi.fn()}
         onOpenSubclassModal={vi.fn()}
+        mixedAncestry={false}
+        onMixedAncestryChange={vi.fn()}
       />,
     )
 

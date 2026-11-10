@@ -54,6 +54,7 @@ export function useCardAutomationSetupPrompt({
   onSaveAbility,
 }: UseCardAutomationSetupPromptInput) {
   const [cardInstanceId, setCardInstanceId] = useState<string | null>(null);
+  const [queuedCardInstanceIds, setQueuedCardInstanceIds] = useState<string[]>([]);
   const [pendingCardInstanceId, setPendingCardInstanceId] = useState<{
     cardInstanceId: string;
     observedSheetData: SheetData;
@@ -98,12 +99,12 @@ export function useCardAutomationSetupPrompt({
     (result: CardAutomationSetupPromptSelectionResult) => {
       if (result.kind === "failure") return;
 
-      const setupEffect = result.effects?.find(
-        isCardAutomationSetupAvailableEffect,
-      );
+      const setupEffects = result.effects?.filter(isCardAutomationSetupAvailableEffect) ?? [];
 
-      if (setupEffect) {
-        setCardInstanceId(setupEffect.cardInstanceId);
+      if (setupEffects.length > 0) {
+        const ids = Array.from(new Set(setupEffects.map(effect => effect.cardInstanceId)));
+        setCardInstanceId(ids[0]);
+        setQueuedCardInstanceIds(ids.slice(1));
         setPendingCardInstanceId(null);
         return;
       }
@@ -125,7 +126,8 @@ export function useCardAutomationSetupPrompt({
       cardInstanceId={cardInstanceId}
       onOpenChange={(open) => {
         if (!open) {
-          setCardInstanceId(null);
+          setCardInstanceId(queuedCardInstanceIds[0] ?? null);
+          setQueuedCardInstanceIds(queuedCardInstanceIds.slice(1));
         }
       }}
       onSaveAbility={onSaveAbility}

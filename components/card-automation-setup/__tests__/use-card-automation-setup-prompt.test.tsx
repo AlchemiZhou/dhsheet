@@ -15,13 +15,16 @@ vi.mock("../card-automation-setup-dialog", () => ({
   CardAutomationSetupDialog: ({
     open,
     cardInstanceId,
+    onOpenChange,
   }: {
     open: boolean;
     cardInstanceId: string | null;
+    onOpenChange: (open: boolean) => void;
   }) =>
     open ? (
       <div role="dialog" aria-label="setup dialog">
         {cardInstanceId}
+        <button onClick={() => onOpenChange(false)}>close</button>
       </div>
     ) : null,
 }));
@@ -96,6 +99,13 @@ function PromptHarness({ sheetData }: { sheetData: SheetData }) {
     <>
       <button
         type="button"
+        onClick={() => handleSelectionResult({ kind: "success", effects: [
+          { kind: "cardAutomationSetupAvailable", cardInstanceId: "first" },
+          { kind: "cardAutomationSetupAvailable", cardInstanceId: "second" },
+        ] })}
+      >pair result</button>
+      <button
+        type="button"
         onClick={() => handleSelectionResult(selectionResultWithoutTopLevelId)}
       >
         effect result
@@ -112,6 +122,15 @@ function PromptHarness({ sheetData }: { sheetData: SheetData }) {
 }
 
 describe("useCardAutomationSetupPrompt", () => {
+  it("opens each setup in a pair in order", () => {
+    render(<PromptHarness sheetData={makeSheet()} />);
+    fireEvent.click(screen.getByRole("button", { name: "pair result" }));
+    expect(screen.getByRole("dialog")).toHaveTextContent("first");
+    fireEvent.click(screen.getByRole("button", { name: "close" }));
+    expect(screen.getByRole("dialog")).toHaveTextContent("second");
+    fireEvent.click(screen.getByRole("button", { name: "close" }));
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+  });
   it("opens from the setup effect card instance id without a top-level card id", () => {
     render(<PromptHarness sheetData={sheetWithCard("cardinst_effect")} />);
 

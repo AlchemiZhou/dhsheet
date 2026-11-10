@@ -121,6 +121,7 @@ export function cleanAndNormalizeData(data: any): SheetData {
     // 字符串字段
     ancestry1: data.ancestry1 ? String(data.ancestry1) : undefined,
     ancestry2: data.ancestry2 ? String(data.ancestry2) : undefined,
+    mixedAncestry: typeof data.mixedAncestry === 'boolean' ? data.mixedAncestry : undefined,
     profession: String(data.profession || ''),
     community: String(data.community || ''),
     subclass: data.subclass ? String(data.subclass) : undefined,

@@ -158,6 +158,28 @@ describe("CharacterSheet equipment fields", () => {
     expect(sheet().armorMax).toBe(3)
   })
 
+  it("selects both ancestry traits by default and switches to mixed selection", async () => {
+    const user = userEvent.setup()
+    const first = { ...createEmptyCard("ancestry"), id: "elf-one", name: "特性一", type: CardType.Ancestry, class: "精灵", hint: "森林", level: 1 }
+    const second = { ...first, id: "elf-two", name: "特性二", level: 2 }
+    useCardStore.setState({ initialized: true, loading: false, cards: new Map([[first.id, first], [second.id, second]]), cardsByType: new Map([[CardType.Ancestry, [first.id, second.id]]]) })
+    useTextModeStore.getState().setTextMode(true)
+    resetSheetStore()
+    render(<CharacterSheet />)
+    expect(screen.getByRole("switch", { name: "混血：关闭" })).toHaveAttribute("aria-checked", "false")
+    await user.click(screen.getByRole("button", { name: "选择种族" }))
+    await user.click(await screen.findByText("特性一"))
+    expect(sheet().ancestry1Ref?.id).toBe("elf-one")
+    expect(sheet().ancestry2Ref?.id).toBe("elf-two")
+    await user.click(screen.getByRole("switch", { name: "混血：关闭" }))
+    expect(screen.getByRole("switch", { name: "混血：开启" })).toHaveAttribute("aria-checked", "true")
+    expect(sheet().mixedAncestry).toBe(true)
+    expect(screen.getByRole("button", { name: "特性二" })).toBeInTheDocument()
+    await user.click(screen.getByRole("switch", { name: "混血：开启" }))
+    expect(sheet().mixedAncestry).toBe(false)
+    expect(sheet().ancestry2Ref?.id).toBe("elf-two")
+  })
+
   it("instantiates selected ancestry cards through semantic character choice actions", async () => {
     const user = userEvent.setup()
     const humanCard = {
@@ -180,6 +202,7 @@ describe("CharacterSheet equipment fields", () => {
     resetSheetStore({
       level: "1",
       stressMax: 6,
+      mixedAncestry: true,
     })
     const selectCharacterChoiceCard = store().selectCharacterChoiceCard
     const selectSpy = vi
