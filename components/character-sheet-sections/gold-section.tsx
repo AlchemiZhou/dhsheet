@@ -22,7 +22,7 @@ export function GoldSection() {
               {gold.slice(0, 5).map((checked: boolean, i: number) => (
                 <div
                   key={`gold-handful-${i}`}
-                  className={`w-4 h-4 border-2 border-gray-800 cursor-pointer rounded-full ${checked ? "bg-gray-800" : "bg-white"
+                  className={`w-4 h-4 border-2 border-gray-800 cursor-pointer rounded-full ${checked ? "sheet-filled-mark bg-gray-800" : "bg-white"
                     }`}
                   onClick={() => handleCheckboxChange(i)}
                 ></div>
@@ -32,7 +32,7 @@ export function GoldSection() {
               {gold.slice(5, 10).map((checked: boolean, i: number) => (
                 <div
                   key={`gold-handful-${i + 5}`}
-                  className={`w-4 h-4 border-2 border-gray-800 cursor-pointer rounded-full ${checked ? "bg-gray-800" : "bg-white"
+                  className={`w-4 h-4 border-2 border-gray-800 cursor-pointer rounded-full ${checked ? "sheet-filled-mark bg-gray-800" : "bg-white"
                     }`}
                   onClick={() => handleCheckboxChange(i + 5)}
                 ></div>
@@ -48,7 +48,7 @@ export function GoldSection() {
               {gold.slice(10, 15).map((checked: boolean, i: number) => (
                 <div
                   key={`gold-bag-${i + 10}`}
-                  className={`w-4 h-4 border-2 border-gray-800 cursor-pointer ${checked ? "bg-gray-800" : "bg-white"
+                  className={`w-4 h-4 border-2 border-gray-800 cursor-pointer ${checked ? "sheet-filled-mark bg-gray-800" : "bg-white"
                     }`}
                   onClick={() => handleCheckboxChange(i + 10)}
                 ></div>
@@ -58,7 +58,7 @@ export function GoldSection() {
               {gold.slice(15, 20).map((checked: boolean, i: number) => (
                 <div
                   key={`gold-bag-${i + 15}`}
-                  className={`w-4 h-4 border-2 border-gray-800 cursor-pointer ${checked ? "bg-gray-800" : "bg-white"
+                  className={`w-4 h-4 border-2 border-gray-800 cursor-pointer ${checked ? "sheet-filled-mark bg-gray-800" : "bg-white"
                     }`}
                   onClick={() => handleCheckboxChange(i + 15)}
                 ></div>
@@ -70,7 +70,7 @@ export function GoldSection() {
         <div className="flex flex-col items-center">
           <div className="text-[9px] mb-1">箱</div>
           <div
-            className={`w-8 h-8 border-2 border-gray-800 cursor-pointer flex items-center justify-center ${gold[20] ? "bg-gray-800" : "bg-white"
+            className={`w-8 h-8 border-2 border-gray-800 cursor-pointer flex items-center justify-center ${gold[20] ? "sheet-filled-mark bg-gray-800" : "bg-white"
               }`}
             onClick={() => handleCheckboxChange(20)}
           >

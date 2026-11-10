@@ -3,6 +3,7 @@ import type { Metadata } from "next"
 import Script from "next/script"
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
+import { SheetAppearanceProvider } from '@/components/sheet-appearance-provider'
 import { CardSystemInitializer } from "@/components/card-system-initializer"
 import { Toaster } from "@/components/ui/toaster"
 import { FadeNotificationContainer } from "@/components/ui/fade-notification"
@@ -169,7 +170,7 @@ export default function RootLayout({
           <ProgressModalProvider>
             <CardSystemInitializer />
             <PrintHelper />
-            {children}
+            <SheetAppearanceProvider>{children}</SheetAppearanceProvider>
             <Toaster />
             <FadeNotificationContainer />
             {/* 水印 */}

@@ -120,7 +120,7 @@ export function HitPointsSection() {
               <div
                 key={`${String(field)}-${i}`}
                 className={`w-4 h-4 border-2 ${isWithinMax ? "border-gray-800 cursor-pointer" : "border-gray-400 border-dashed"
-                  } ${isChecked ? "bg-gray-800" : "bg-white"} ${i > 0 && i % 6 === 0 ? "ml-1" : ""
+                  } ${isChecked ? "sheet-filled-mark bg-gray-800" : "bg-white"} ${i > 0 && i % 6 === 0 ? "ml-1" : ""
                   }`}
                 onClick={() => {
                   if (isWithinMax) {

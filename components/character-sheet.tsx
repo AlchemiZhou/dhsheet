@@ -37,6 +37,7 @@ import {
 import { getActiveCharacterId } from "@/lib/multi-character-storage"
 import { findAncestryPair } from "@/character/ancestry/pair"
 import { toast } from "sonner"
+import { getSelectedTransformationCard } from "@/character/transformation/actions"
 
 type WeaponSlotSelection =
   | { slotType: "primary" | "secondary" }
@@ -52,6 +53,8 @@ export default function CharacterSheet({ currentCharacterId }: CharacterSheetPro
     replaceSheetData,
     selectCharacterChoiceCard,
     selectAncestryPair,
+    selectTransformationCard,
+    setTransformationEnabled,
     clearCharacterChoiceCard,
     handleProfessionChange: changeProfessionCard,
     setCardAbilityChoiceValuesForInstance,
@@ -120,7 +123,7 @@ export default function CharacterSheet({ currentCharacterId }: CharacterSheetPro
   const [currentWeaponSlot, setCurrentWeaponSlot] = useState<WeaponSlotSelection>({ slotType: "primary" })
   const [armorModalOpen, setArmorModalOpen] = useState(false)
   const [modalOpen, setModalOpen] = useState(false)
-  const [currentModal, setCurrentModal] = useState<{ type: "profession" | "ancestry" | "community" | "subclass"; field?: string; levelFilter?: number }>({ type: "profession" })
+  const [currentModal, setCurrentModal] = useState<{ type: "profession" | "ancestry" | "community" | "subclass" | "transformation"; field?: string; levelFilter?: number }>({ type: "profession" })
   const [armorMaxDraft, setArmorMaxDraft] = useState<string | null>(null)
   const [evasionDraft, setEvasionDraft] = useState<string | null>(null)
   const setupPrompt = useCardAutomationSetupPrompt({
@@ -162,7 +165,7 @@ export default function CharacterSheet({ currentCharacterId }: CharacterSheetPro
 
 
   // Helper function to map modal string type to CardType enum
-  const getModalCardType = (modalType: "profession" | "ancestry" | "community" | "subclass"): Exclude<CardType, CardType.Domain> => {
+  const getModalCardType = (modalType: "profession" | "ancestry" | "community" | "subclass" | "transformation"): Exclude<CardType, CardType.Domain> => {
     switch (modalType) {
       case "profession":
         return CardType.Profession;
@@ -172,6 +175,8 @@ export default function CharacterSheet({ currentCharacterId }: CharacterSheetPro
         return CardType.Community;
       case "subclass":
         return CardType.Subclass;
+      case "transformation":
+        return CardType.Variant;
       // No default needed as modalType is a constrained union type
     }
   };
@@ -303,7 +308,7 @@ export default function CharacterSheet({ currentCharacterId }: CharacterSheetPro
   }
 
   const openGenericModal = (
-    type: "profession" | "ancestry" | "community" | "subclass", // Add subclass type
+    type: "profession" | "ancestry" | "community" | "subclass" | "transformation", // Add subclass type
     field?: string,
     levelFilter?: number,
   ) => {
@@ -362,6 +367,13 @@ export default function CharacterSheet({ currentCharacterId }: CharacterSheetPro
             mixedAncestry={mixedAncestry}
             ancestryName={firstAncestry?.class}
             onMixedAncestryChange={setMixedAncestry}
+            transformationEnabled={safeFormData.transformationEnabled === true}
+            transformationName={getSelectedTransformationCard(safeFormData)?.name}
+            onOpenTransformationModal={() => openGenericModal('transformation')}
+            onTransformationEnabledChange={enabled => {
+              const result = setTransformationEnabled(enabled)
+              if (result.kind === 'failure') toast.error(result.message)
+            }}
           />
 
           {/* Main Content - Two Section Layout */}
@@ -470,7 +482,7 @@ export default function CharacterSheet({ currentCharacterId }: CharacterSheetPro
                                   className={`w-4 h-4 border ${i < calculatedArmorValue
                                     ? "border-gray-800 cursor-pointer"
                                     : "border-gray-400 border-dashed"
-                                    } ${armorBoxes?.[i] && i < calculatedArmorValue ? "bg-gray-800" : "bg-white"}`}
+                                    } ${armorBoxes?.[i] && i < calculatedArmorValue ? "sheet-filled-mark bg-gray-800" : "bg-white"}`}
                                   onClick={() => i < calculatedArmorValue && updateArmorBox(i)}
                                 ></div>
                               ));
@@ -502,7 +514,7 @@ export default function CharacterSheet({ currentCharacterId }: CharacterSheetPro
                       .map((_, i) => (
                         <div
                           key={`prof-${i}`}
-                          className={`w-3 h-3 rounded-full border-2 border-gray-800 cursor-pointer ${Array.isArray(proficiency) && proficiency[i] ? "bg-gray-800" : "bg-white"
+                          className={`w-3 h-3 rounded-full border-2 border-gray-800 cursor-pointer ${Array.isArray(proficiency) && proficiency[i] ? "sheet-filled-mark bg-gray-800" : "bg-white"
                             }`}
                           onClick={() => updateProficiency(i)}
                         ></div>
@@ -600,6 +612,12 @@ export default function CharacterSheet({ currentCharacterId }: CharacterSheetPro
               handleProfessionChange(cardId)
             } else if (currentModal.type === "ancestry" && field) {
               handleAncestryChange(field, cardId)
+            } else if (currentModal.type === "transformation") {
+              const card = cardId === 'none' ? undefined : store.getCardById(cardId)
+              if (cardId !== 'none' && !card) { toast.error('找不到该转变卡，请重新选择。'); return }
+              const result = selectTransformationCard(card ?? undefined)
+              if (result.kind === 'failure') toast.error(result.message)
+              setupPrompt.handleSelectionResult(result)
             } else if (currentModal.type === "community") {
               handleCommunityChange(cardId)
             } else if (currentModal.type === "subclass") {
@@ -612,6 +630,8 @@ export default function CharacterSheet({ currentCharacterId }: CharacterSheetPro
               ? "选择职业"
               : currentModal.type === "ancestry"
                 ? "选择种族"
+                : currentModal.type === "transformation"
+                  ? "选择转变卡"
                 : currentModal.type === "community"
                   ? "选择社群"
                   : "选择子职业"
@@ -620,6 +640,7 @@ export default function CharacterSheet({ currentCharacterId }: CharacterSheetPro
           field={currentModal.field}
           levelFilter={currentModal.levelFilter}
           completeAncestry={currentModal.type === 'ancestry' && !mixedAncestry}
+          transformationOnly={currentModal.type === 'transformation'}
         />
       )}
       {setupPrompt.dialog}

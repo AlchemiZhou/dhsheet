@@ -81,7 +81,7 @@ export function HopeSection() {
                 ></div>
                 {isLit && (
                   <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                    <div className="w-3 h-3 bg-gray-800 transform rotate-45"></div>
+                    <div className="sheet-filled-mark w-3 h-3 bg-gray-800 transform rotate-45"></div>
                   </div>
                 )}
               </div>

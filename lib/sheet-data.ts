@@ -179,6 +179,8 @@ export interface SheetData {
   ancestry1?: string
   ancestry2?: string
   mixedAncestry?: boolean
+  transformationEnabled?: boolean
+  transformationInstanceId?: string
   profession: string
   community: string
   subclass?: string

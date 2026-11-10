@@ -137,7 +137,7 @@ export function AttributesSection() {
                 return (
                   <div
                     data-testid={`attribute-upgrade-marker-${attr.key}`}
-                    className={`w-2 h-2 rounded-full border border-white cursor-pointer ${isUpgraded ? "bg-gray-800" : "bg-white"
+                    className={`w-2 h-2 rounded-full border border-white cursor-pointer ${isUpgraded ? "sheet-filled-mark bg-gray-800" : "bg-white"
                       }`}
                     onClick={() => handleBooleanChange(attr.key as keyof SheetData)}
                   >

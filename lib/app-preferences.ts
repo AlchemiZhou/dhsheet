@@ -23,6 +23,7 @@ export interface AppPreferencesDocument {
   ui: {
     cardDisplayMode: CardDisplayMode
     dualPage: DualPagePreferences
+    sheetAppearance?: SheetAppearancePreferences
   }
   announcements: {
     lastReadAnnouncementId?: string
@@ -186,6 +187,7 @@ function normalizePreferences(value: unknown): AppPreferencesDocument | null {
 
   normalized.ui.cardDisplayMode = normalizeCardDisplayMode(ui.cardDisplayMode)
   normalized.ui.dualPage = normalizeDualPage(ui.dualPage)
+  if (ui.sheetAppearance !== undefined) normalized.ui.sheetAppearance = normalizeSheetAppearance(ui.sheetAppearance)
 
   if (typeof announcements.lastReadAnnouncementId === "string" && announcements.lastReadAnnouncementId.length > 0) {
     normalized.announcements.lastReadAnnouncementId = announcements.lastReadAnnouncementId
@@ -312,6 +314,13 @@ export function getCardDisplayMode(storage?: AppPreferencesStorage): CardDisplay
   return getAppPreferences(storage).ui.cardDisplayMode
 }
 
+export function getSheetAppearance(storage?: AppPreferencesStorage): SheetAppearancePreferences {
+  return normalizeSheetAppearance(getAppPreferences(storage).ui.sheetAppearance)
+}
+export function setSheetAppearance(value: SheetAppearancePreferences, storage?: AppPreferencesStorage): void {
+  updatePreferences(preferences => ({ ...preferences, ui: { ...preferences.ui, sheetAppearance: normalizeSheetAppearance(value) } }), storage)
+}
+
 export function setCardDisplayMode(mode: CardDisplayMode, storage?: AppPreferencesStorage): void {
   updatePreferences(
     (preferences) => ({
@@ -419,3 +428,4 @@ export function setCardSourceDisabled(
     { includeCardDisabledSourceIds: true },
   )
 }
+import { normalizeSheetAppearance, type SheetAppearancePreferences } from '@/character/appearance/theme'

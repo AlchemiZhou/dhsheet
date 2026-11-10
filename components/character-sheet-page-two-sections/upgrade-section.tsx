@@ -389,16 +389,16 @@ export function UpgradeSection({
                           ? 'border-l-2 border-t-2 border-b-2 border-r border-gray-800'
                           : 'border-r-2 border-t-2 border-b-2 border-l border-gray-800'
                         } ${isUpgradeChecked(checkKey, index)
-                            ? "bg-gray-800"
+                            ? "sheet-filled-mark bg-gray-800"
                             : "bg-white"
                         }`
                         : option.doubleBox
                           ? `border-2 border-gray-800 ${isUpgradeChecked(checkKey, index)
-                            ? "bg-gray-800"
+                            ? "sheet-filled-mark bg-gray-800"
                             : "bg-white"
                           }`
                           : `border border-gray-800 ${isUpgradeChecked(checkKey, index)
-                            ? "bg-gray-800"
+                            ? "sheet-filled-mark bg-gray-800"
                             : "bg-white"
                           }`
                       }`}
@@ -448,16 +448,16 @@ export function UpgradeSection({
                             ? 'border-l-2 border-t-2 border-b-2 border-r border-gray-800'
                             : 'border-r-2 border-t-2 border-b-2 border-l border-gray-800'
                           } ${isUpgradeChecked(checkKey, index)
-                              ? "bg-gray-800"
+                              ? "sheet-filled-mark bg-gray-800"
                               : "bg-white"
                           }`
                           : option.doubleBox
                             ? `border-2 border-gray-800 ${isUpgradeChecked(checkKey, index)
-                              ? "bg-gray-800"
+                              ? "sheet-filled-mark bg-gray-800"
                               : "bg-white"
                             }`
                             : `border border-gray-800 ${isUpgradeChecked(checkKey, index)
-                              ? "bg-gray-800"
+                              ? "sheet-filled-mark bg-gray-800"
                               : "bg-white"
                             }`
                         }`}

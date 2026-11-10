@@ -48,7 +48,7 @@ function PageTabsBar({ ariaLabel, isMobile, visibleTabs }: PageTabsBarProps) {
           <TabsTrigger
             key={tab.id}
             value={tab.tabValue || tab.id}
-            className="h-full min-w-0 rounded-sm px-2 py-0 text-sm text-muted-foreground transition-colors duration-200 hover:bg-background/60 hover:text-foreground data-[state=active]:text-foreground"
+            className="sheet-tab h-full min-w-0 rounded-sm px-2 py-0 text-sm text-muted-foreground transition-colors duration-200 hover:bg-background/60 hover:text-foreground data-[state=active]:text-foreground"
           >
             <span className="truncate">{tab.label}</span>
           </TabsTrigger>

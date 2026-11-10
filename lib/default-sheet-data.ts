@@ -13,6 +13,7 @@ export const defaultSheetData: SheetData = {
     ancestry1: "",
     ancestry2: "",
     mixedAncestry: false,
+    transformationEnabled: false,
     profession: "",
     community: "",
     subclass: "",

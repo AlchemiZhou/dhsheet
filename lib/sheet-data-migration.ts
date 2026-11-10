@@ -1274,6 +1274,8 @@ export function normalizeCurrentSheetData(data: Partial<SheetData> | any): Sheet
     imageAssets: sanitizeImageAssets(data?.imageAssets),
     pageVisibility: normalizePageVisibility(data?.pageVisibility),
     schemaVersion: CURRENT_SCHEMA_VERSION,
+    transformationEnabled: data?.transformationEnabled === true,
+    transformationInstanceId: typeof data?.transformationInstanceId === 'string' ? data.transformationInstanceId : undefined,
   }
 
   normalized.cards = Array.isArray(data.cards)

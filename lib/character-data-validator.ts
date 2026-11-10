@@ -52,6 +52,8 @@ export function validateSheetData(data: any): data is SheetData {
   }
 
   // hope 字段支持 number 或 boolean[] 两种格式（向后兼容）
+  if (data.transformationEnabled !== undefined && typeof data.transformationEnabled !== 'boolean') return false
+  if (data.transformationInstanceId !== undefined && typeof data.transformationInstanceId !== 'string') return false
   if (typeof data.hope !== 'number' && !Array.isArray(data.hope)) {
     console.warn('Field hope should be a number or boolean array')
     return false
@@ -122,6 +124,8 @@ export function cleanAndNormalizeData(data: any): SheetData {
     ancestry1: data.ancestry1 ? String(data.ancestry1) : undefined,
     ancestry2: data.ancestry2 ? String(data.ancestry2) : undefined,
     mixedAncestry: data.mixedAncestry === true,
+    transformationEnabled: data.transformationEnabled === true,
+    transformationInstanceId: typeof data.transformationInstanceId === 'string' ? data.transformationInstanceId : undefined,
     profession: String(data.profession || ''),
     community: String(data.community || ''),
     subclass: data.subclass ? String(data.subclass) : undefined,

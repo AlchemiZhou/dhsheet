@@ -4,6 +4,7 @@ import { create } from "zustand";
 import { defaultSheetData } from "./default-sheet-data";
 import type { SheetData, AttributeValue, ArmorTemplateData, SheetCardReference } from "./sheet-data";
 import { createEmptyCard, isEmptyCard, type StandardCard } from "@/card/card-types";
+import { selectTransformation, setTransformationMode } from '@/character/transformation/actions';
 import { parseArmorMax, parseArmorThreshold, parseArmorThresholdSide } from "@/automation/equipment/armor-utils";
 import {
     createDefaultEquipmentModifierContribution,
@@ -262,6 +263,8 @@ interface SheetState {
     setCardAbilityChoiceValuesForInstance: (input: SetCardAbilityChoiceValuesInput) => StoreActionResult;
     clearCharacterChoiceCard: (kind: CharacterChoiceCardKind) => void;
     selectAncestryPair: (first: StandardCard, second: StandardCard) => CardSelectionActionResult;
+    selectTransformationCard: (template?: StandardCard) => CardSelectionActionResult;
+    setTransformationEnabled: (enabled: boolean) => CardSelectionActionResult;
     auditCardInstancesOnLoad: (
         lookupTemplate: (templateId: string) => StandardCard | undefined,
     ) => CardInstanceAuditReport;
@@ -1139,6 +1142,25 @@ export const useSheetStore = create<SheetState>((set, get) => ({
             if (two.kind === "failure") { output = toCardSelectionActionResult(two); return state; }
             output = { kind: "success", cardInstanceId: two.cardInstanceId, effects: [...(one.effects ?? []), ...(two.effects ?? [])] };
             return { sheetData: two.sheetData };
+        });
+        return output;
+    },
+
+    selectTransformationCard: (template) => {
+        let output: CardSelectionActionResult = { kind: 'failure', message: '转变卡选择未执行。' };
+        set(state => {
+            const result = selectTransformation(state.sheetData, template);
+            output = toCardSelectionActionResult(result);
+            return result.kind === 'failure' ? state : { sheetData: result.sheetData };
+        });
+        return output;
+    },
+    setTransformationEnabled: (enabled) => {
+        let output: CardSelectionActionResult = { kind: 'failure', message: '转变切换未执行。' };
+        set(state => {
+            const result = setTransformationMode(state.sheetData, enabled);
+            output = toCardSelectionActionResult(result);
+            return result.kind === 'failure' ? state : { sheetData: result.sheetData };
         });
         return output;
     },

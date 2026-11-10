@@ -9,6 +9,7 @@ import { useSheetStore } from "@/lib/sheet-store"
 import { useTextModeStore } from "@/lib/text-mode-store"
 import { PageHeader } from "@/components/page-header"
 import { getSheetAncestryCard } from '@/character/ancestry/complete-card'
+import { ProfessionDomainBadges } from '@/components/profession-domain-badges'
 
 interface HeaderSectionProps {
   onOpenProfessionModal: () => void;
@@ -18,6 +19,10 @@ interface HeaderSectionProps {
   mixedAncestry: boolean;
   ancestryName?: string;
   onMixedAncestryChange: (enabled: boolean) => void;
+  transformationEnabled?: boolean;
+  transformationName?: string;
+  onTransformationEnabledChange?: (enabled: boolean) => void;
+  onOpenTransformationModal?: () => void;
 }
 
 export function HeaderSection({
@@ -27,7 +32,11 @@ export function HeaderSection({
   onOpenSubclassModal,
   mixedAncestry,
   ancestryName,
-  onMixedAncestryChange
+  onMixedAncestryChange,
+  transformationEnabled = false,
+  transformationName,
+  onTransformationEnabledChange,
+  onOpenTransformationModal,
 }: HeaderSectionProps) {
   const { sheetData: formData, setSheetData, updateLevel } = useSheetStore()
   const { isTextMode } = useTextModeStore()
@@ -158,7 +167,7 @@ export function HeaderSection({
       />
     }
     return <div
-      className="group flex h-7 min-h-7 min-w-0 flex-1 overflow-hidden rounded border border-gray-400 bg-white"
+      className={`group flex h-7 min-h-7 min-w-0 flex-1 overflow-hidden rounded border border-gray-400 bg-white ${field === 'professionRef' ? 'profession-choice' : ''}`}
       onMouseEnter={(e) => handleMouseEnter(reference, e.currentTarget)}
       onMouseLeave={handleMouseLeave}
     >
@@ -183,10 +192,10 @@ export function HeaderSection({
   }
 
   return (
-    <div className="relative flex items-center gap-4 rounded-t-md bg-gray-800 p-2 pb-5 text-white">
-      <div className="grid min-w-0 flex-1 grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)_minmax(0,1fr)] items-end gap-x-3 gap-y-2">
+    <div className="sheet-header relative flex items-center gap-2 rounded-t-md bg-gray-800 p-2 pb-5 text-white">
+      <div className="grid min-w-0 flex-1 grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)_minmax(0,1fr)] items-end gap-x-2 gap-y-2">
         <div className="flex min-w-0 flex-col gap-1" role="group" aria-label="职业">
-          <span className="text-[9px] text-gray-300">职业</span>
+          <div className="flex min-h-5 items-center justify-between gap-1"><span className="text-[9px] text-gray-300">职业</span><ProfessionDomainBadges /></div>
           {renderChoiceControl('professionRef', openProfessionModal, '选择职业')}
         </div>
         <div className="flex min-w-0 flex-col gap-1">
@@ -234,8 +243,18 @@ export function HeaderSection({
           </button>
         </div>
       </div>
+      <div className="grid w-28 shrink-0 grid-rows-2 gap-y-2 self-stretch" role="group" aria-label="转变">
+        <div className="flex flex-col justify-end gap-1 print:hidden">
+          <span className="text-[9px] text-gray-300">转变</span>
+          <button type="button" role="switch" aria-checked={transformationEnabled} onClick={() => onTransformationEnabledChange?.(!transformationEnabled)} className={`h-7 rounded border px-2 text-left text-[11px] font-semibold ${transformationEnabled ? 'border-red-300 bg-red-600 text-white hover:bg-red-500' : 'border-gray-300 bg-white text-gray-800 hover:bg-gray-100'}`}>转变：{transformationEnabled ? '开启' : '关闭'}</button>
+        </div>
+        {transformationEnabled && <div className="flex min-w-0 flex-col justify-end gap-1">
+          <span className="text-[9px] text-gray-300">转变卡</span>
+          <button type="button" onClick={onOpenTransformationModal} className="h-7 min-w-0 truncate rounded border border-gray-400 bg-white px-2 text-left text-xs text-gray-800" title={transformationName}>{transformationName || <span className="print:hidden">选择转变卡</span>}</button>
+        </div>}
+      </div>
       <div className="flex shrink-0 flex-col items-center self-center">
-        <div className="w-16 h-16 bg-white text-gray-800 rounded-md border-4 border-gray-600 flex items-center justify-center">
+        <div className="sheet-level-frame w-16 h-16 bg-white text-gray-800 rounded-md border-4 border-gray-600 flex items-center justify-center">
           <div className="text-center">
             <div className="text-xs font-bold">LEVEL</div>
             <input
@@ -276,7 +295,8 @@ export function HeaderSection({
           Level Up!
         </button>
       </div>
-      <div className="absolute bottom-0.5 left-2 [&>div]:m-0 [&>div]:p-0"><PageHeader /></div>
+      <div className="absolute bottom-1 left-2 [&>div]:m-0 [&>div]:p-0"><PageHeader /></div>
+      <div className="sheet-domain-band" aria-hidden="true"><span /><span /></div>
       {hoveredCard && (
         <div className="z-50 pointer-events-none" style={previewPosition}>
           <CardHoverPreview card={hoveredCard} isTextMode={isTextMode} />

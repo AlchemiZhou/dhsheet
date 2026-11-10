@@ -11,6 +11,7 @@ import { ContentStates, CardGrid } from "./display"
 import { MultiSelectFilter } from "./filters"
 import { findAncestryPair } from '@/character/ancestry/pair'
 import { createCompleteAncestryCard } from '@/character/ancestry/complete-card'
+import { isTransformationCard } from '@/character/transformation/actions'
 
 interface GenericCardSelectionModalProps {
   isOpen: boolean
@@ -21,6 +22,7 @@ interface GenericCardSelectionModalProps {
   field?: string
   levelFilter?: number
   completeAncestry?: boolean
+  transformationOnly?: boolean
 }
 
 export function GenericCardSelectionModal({
@@ -32,6 +34,7 @@ export function GenericCardSelectionModal({
   field,
   levelFilter,
   completeAncestry = false,
+  transformationOnly = false,
 }: GenericCardSelectionModalProps) {
   const { sheetData: formData } = useSheetStore()
   const runtimeInitialized = useUnifiedCardStore((state) => state.initialized)
@@ -66,10 +69,11 @@ export function GenericCardSelectionModal({
 
     return Array.from(runtimeCards.values()).filter((card) => {
       if (card.type !== cardType) return false
+      if (transformationOnly && !isTransformationCard(card)) return false
       if (!card.batchId) return true
       return runtimeBatches.get(card.batchId)?.disabled !== true
     }) as StandardCard[]
-  }, [cardType, isOpen, runtimeBatches, runtimeCards, runtimeInitialized])
+  }, [cardType, isOpen, runtimeBatches, runtimeCards, runtimeInitialized, transformationOnly])
 
   const professionCards = useMemo(() => {
     if (!isOpen || !runtimeInitialized || cardType !== "subclass") return []
@@ -207,7 +211,7 @@ export function GenericCardSelectionModal({
           loading={cardsLoading}
           error={cardsError}
           empty={displayCards.length === 0}
-          emptyMessage={`没有找到符合条件的卡牌 (卡牌类型: ${cardType})`}
+          emptyMessage={transformationOnly ? '暂无转变卡，请在底部“扩展”中导入含转变卡的卡包。' : `没有找到符合条件的卡牌 (卡牌类型: ${cardType})`}
           loadingMessage="加载卡牌中..."
         >
           <CardGrid

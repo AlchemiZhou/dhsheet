@@ -33,6 +33,7 @@ import {
 import { navigateToPage, cn } from "@/lib/utils"
 import { DualPageToggle } from "@/components/ui/dual-page-toggle"
 import { MAX_CHARACTERS } from "@/lib/multi-character-storage"
+import { SheetAppearanceSettings } from '@/components/sheet-appearance-settings'
 
 export const DAGGERHEART_SUPPORT_URL = "https://zhongchou.modian.com/item/159038.html"
 
@@ -178,6 +179,7 @@ function MainModeContent(props: MainModeProps) {
             <TooltipTrigger asChild>
               <DropdownMenuTrigger asChild>
                 <Button className={cn(
+                  "sheet-main-action",
                   "bg-gray-800 hover:bg-gray-700 text-white gap-1.5 text-sm",
                   isMobile ? "px-4 py-2.5" : "px-3 py-1.5"
                 )}>
@@ -330,6 +332,8 @@ function MainModeContent(props: MainModeProps) {
               )}
             </DropdownMenuItem>
             <DropdownMenuSeparator />
+            <SheetAppearanceSettings />
+            <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => navigateToPage("/about")} className={cn(isMobile && "py-3 px-4")}>
               <Info className={cn("mr-2", isMobile ? "h-5 w-5" : "h-4 w-4")} />
               关于本站
@@ -373,6 +377,10 @@ function PreviewModeContent(props: PreviewModeProps) {
 
   return (
     <div className="flex items-center gap-4">
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild><Button className="bg-gray-800 text-white">打印设置</Button></DropdownMenuTrigger>
+        <DropdownMenuContent side="top" className="w-56 print:hidden" onEscapeKeyDown={event => event.stopPropagation()}><SheetAppearanceSettings printOnly /></DropdownMenuContent>
+      </DropdownMenu>
       <Button
         onClick={props.onExportPDF}
         className={cn(
