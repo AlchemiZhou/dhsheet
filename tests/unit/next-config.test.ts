@@ -33,13 +33,14 @@ describe('Next config', () => {
     expect(config.basePath).toBe('')
   })
 
-  it('keeps the GitHub Pages prefix in GitHub Actions builds', async () => {
+  it('uses the renamed DHsheet path for Pages assets and navigation', async () => {
     const config = await loadNextConfig({
       GITHUB_ACTIONS: 'true',
       LOCAL_BUILD: undefined,
     })
 
-    expect(config.assetPrefix).toBe('/DaggerHeart-CharacterSheet')
-    expect(config.basePath).toBe('/DaggerHeart-CharacterSheet')
+    expect(config.assetPrefix).toBe('/DHsheet')
+    expect(config.basePath).toBe('/DHsheet')
+    expect(config.env.NEXT_PUBLIC_BASE_PATH).toBe('/DHsheet')
   })
 })

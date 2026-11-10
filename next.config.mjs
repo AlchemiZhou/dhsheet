@@ -8,7 +8,7 @@ let basePath = ''
 
 // 如果在 GitHub Actions 中运行，则设置 assetPrefix 和 basePath
 if (isGithubActions) {
-  const repo = 'DaggerHeart-CharacterSheet'
+  const repo = 'DHsheet'
   assetPrefix = `/${repo}`
   basePath = `/${repo}`
 }
