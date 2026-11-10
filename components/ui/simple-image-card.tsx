@@ -1,4 +1,5 @@
 "use client"
+import { getCompactCardTitle, getCompactCardTier } from "@/card/display/compact-card"
 
 import { StandardCard } from "@/card/card-types"
 import { getCardTypeName } from "@/card/card-ui-config"
@@ -53,9 +54,9 @@ export function SimpleImageCard({ card, onClick, isSelected, priority = false }:
     }
     const cardId = card.id || `temp-id-${Math.random().toString(36).substring(2, 9)}`
 
-    const displayName = card.name || "未命名卡牌";
+    const displayName = getCompactCardTitle(card) || "未命名卡牌";
     const displayItem1 = card.cardSelectDisplay?.item1 || "";
-    const displayItem2 = card.cardSelectDisplay?.item2 || "";
+    const displayItem2 = getCompactCardTier(card);
     const displayItem3 = card.cardSelectDisplay?.item3 || "";
     const displayItem4 = card.cardSelectDisplay?.item4 || "";
 

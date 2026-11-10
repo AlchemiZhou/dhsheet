@@ -10,6 +10,7 @@ import React, { useState, useEffect, useRef } from "react"
 import Image from "next/image"
 import { getCardImageUrl } from "@/lib/utils"
 import { CardMarkdown } from "@/components/ui/card-markdown"
+import { getCompactCardTitle, getCompactCardTier } from "@/card/display/compact-card"
 
 // Helper function to get display type name, moved outside of the component
 const getDisplayTypeName = (card: StandardCard) => {
@@ -190,12 +191,12 @@ export function ImageCard({ card, onClick, isSelected, showSource = true, priori
     const cardId = card.id || `temp-id-${Math.random().toString(36).substring(2, 9)}`
 
     // Prepare derived values for display, handling potential undefined fields and fallbacks
-    const displayName = card.name || "未命名卡牌";
+    const displayName = getCompactCardTitle(card) || "未命名卡牌";
     const displayDescription = card.description || "无描述。";
 
     // Get display items, providing empty strings as fallbacks
     const displayItem1 = card.cardSelectDisplay?.item1 || "";
-    const displayItem2 = card.cardSelectDisplay?.item2 || "";
+    const displayItem2 = getCompactCardTier(card);
     const displayItem3 = card.cardSelectDisplay?.item3 || "";
     const displayItem4 = card.cardSelectDisplay?.item4 || "";
 

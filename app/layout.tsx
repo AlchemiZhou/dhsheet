@@ -180,6 +180,8 @@ export default function RootLayout({
               作者：RidRisR
               <br />
               翻译及校对：PolearmMaster, 末楔, 里予, 一得, RisRisR
+              <br />
+              由 炼金术士阿刻米 特调
             </div>
           </ProgressModalProvider>
         </ThemeProvider>

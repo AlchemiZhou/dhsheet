@@ -3,6 +3,7 @@ import { createEmptyEquipmentData } from "@/automation/equipment/defaults";
 import type { SheetData } from "./sheet-data";
 import { CURRENT_SCHEMA_VERSION } from "./sheet-schema-version";
 import { CHARACTER_RESOURCE_LIMIT } from "@/character/resources/limits";
+import { createMartialStancesState } from "@/character/martial-stances/state";
 
 export const defaultSheetData: SheetData = {
     schemaVersion: CURRENT_SCHEMA_VERSION,
@@ -100,8 +101,10 @@ export const defaultSheetData: SheetData = {
         rangerCompanion: false,  // 默认隐藏游侠伙伴页
         armorTemplate: false,    // 默认隐藏护甲模板页
         adventureNotes: false,   // 默认隐藏冒险笔记页
-        beastForms: false
+        beastForms: false,
+        martialStances: false,
     },
+    martialStances: createMartialStancesState(),
 
     // 护甲模板默认数据
     armorTemplate: {

@@ -1,4 +1,5 @@
 "use client"
+import { getCompactCardTitle } from '@/card/display/compact-card'
 
 import type React from "react"
 import { useState } from "react"
@@ -154,6 +155,9 @@ export function HeaderSection({
     displayName?: string,
   ) => {
     const reference = formData[field]
+    const subclassCard = formData.cards?.[1]
+    const choiceName = field === 'subclassRef' && subclassCard && subclassCard.name === reference?.name
+      ? getCompactCardTitle(subclassCard) : reference?.name
     if (editingField === field) {
       return <input
         type="text"
@@ -176,7 +180,7 @@ export function HeaderSection({
         onClick={onSelect}
         className="min-w-0 flex-1 truncate px-2 py-0.5 text-left text-xs text-gray-800 hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500"
       >
-        {displayName || reference?.name || <span className="print:hidden">{placeholder}</span>}
+        {displayName || choiceName || <span className="print:hidden">{placeholder}</span>}
       </button>
       {reference?.name && <button
         type="button"

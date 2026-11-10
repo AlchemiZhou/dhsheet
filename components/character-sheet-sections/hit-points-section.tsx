@@ -211,7 +211,7 @@ export function HitPointsSection() {
           const max = numericMax(formData[maxField])
           const marked = formData[field]?.slice(0, max).filter(Boolean).length ?? 0
           return (
-            <div key={field} className="rounded-md border border-gray-300 px-2 py-1.5 print:px-1 print:py-1">
+            <div key={field} className="px-0 py-1 print:py-1">
               <div className="flex items-center justify-between gap-2 mb-1">
                 <div className="flex min-w-0 items-center gap-1">
                   <span className="text-xs font-bold">{label}</span>

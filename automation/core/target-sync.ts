@@ -1,5 +1,6 @@
 import { tryParseNumberExpression } from "@/lib/number-utils"
 import type { SheetData } from "@/lib/sheet-data"
+import { applyMartialStanceHealthInvariant } from "@/character/martial-stances/actions"
 import { applyHpStressMaxInvariant } from "./hp-stress-invariants"
 import { sanitizeOtherAdjustments } from "./other-adjustments"
 import { calculateReferenceSummary } from "./reference-calculator"
@@ -174,5 +175,6 @@ export function applyAutoCalculationForTargets(sheetData: SheetData): SheetData 
   // Also normalize legacy saves and locked targets; the slot limit applies
   // independently of automatic calculation being enabled.
   next = applyHpStressMaxInvariant(applyHpStressMaxInvariant(next, "hpMax"), "stressMax")
+  next = applyMartialStanceHealthInvariant(next)
   return changed || next !== sheetData ? next : sheetData
 }
