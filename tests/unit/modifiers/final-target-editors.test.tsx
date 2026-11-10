@@ -13,6 +13,38 @@ import { createManualBaseContribution, getUnattributedDeltaId } from "@/automati
 import { countChecked, resetSheetStore, sheet, store } from "../automation/test-helpers"
 
 describe("final target editors", () => {
+  it("renders twelve slots per resource, stops both increment buttons at twelve and preserves cumulative marking", async () => {
+    resetSheetStore({ hpMax: 12, stressMax: 12 })
+    render(<HitPointsSection />)
+
+    expect(screen.getAllByRole("checkbox", { name: /^生命第/ })).toHaveLength(12)
+    expect(screen.getAllByRole("checkbox", { name: /^压力第/ })).toHaveLength(12)
+    expect(screen.getByTitle("增加HP上限")).toBeDisabled()
+    expect(screen.getByTitle("增加压力上限")).toBeDisabled()
+    await userEvent.click(screen.getByRole("checkbox", { name: "生命第12格" }))
+    expect(countChecked(sheet().hp)).toBe(12)
+    expect(screen.getByText("已标记 12 / 12")).toBeInTheDocument()
+    await userEvent.keyboard("{Enter}")
+    expect(countChecked(sheet().hp)).toBe(0)
+  })
+
+  it("rejects either maximum above twelve and keeps both upgrade editors within the same limit", async () => {
+    resetSheetStore({ hpMax: 6, stressMax: 6 })
+    const view = render(<HitPointsSection />)
+    for (const label of ["生命最大值", "压力最大值"]) {
+      const input = screen.getByRole("textbox", { name: label })
+      await userEvent.clear(input)
+      await userEvent.type(input, "13")
+      await userEvent.tab()
+      expect(input).toHaveValue("6")
+    }
+    view.unmount()
+    resetSheetStore({ hpMax: 12, stressMax: 12 })
+    render(<><HPMaxEditor /><StressMaxEditor /></>)
+    expect(screen.getByRole("button", { name: "增加生命值上限 (+1)" })).toBeDisabled()
+    expect(screen.getByRole("button", { name: "增加压力上限 (+1)" })).toBeDisabled()
+  })
+
   it("reconciles experience value blur through final target commit", async () => {
     resetSheetStore({
       experience: ["Warrior", "", "", "", ""],

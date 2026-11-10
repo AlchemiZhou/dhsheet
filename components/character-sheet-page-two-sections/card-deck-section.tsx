@@ -29,6 +29,7 @@ import { useIsMobile } from "@/hooks/use-mobile"
 import { cn } from "@/lib/utils"
 import { projectCardAutomationSetupRequirements } from "@/card/automation/setup-projection"
 import { getSheetAncestryCard, isCompleteAncestryCard } from '@/character/ancestry/complete-card'
+import { getCompactCardTitle, getCompactCardTier } from '@/card/display/compact-card'
 
 interface CardDeckSectionProps {
   formData: SheetData
@@ -151,7 +152,7 @@ function Card({
             }}
             title={!isMobile ? "点击钉住卡牌" : undefined}
           >
-            {standardCard?.name || card.name}
+            {standardCard ? getCompactCardTitle(standardCard) : card.name}
           </span>
           <div className="flex-1"></div>
           {hasSetupRequirements && standardCard?.instanceId && (
@@ -187,7 +188,7 @@ function Card({
           <span className="truncate max-w-[33%]">
             {standardCard?.cardSelectDisplay?.item1 || ""}
           </span>
-          <span className="truncate max-w-[33%]">{standardCard?.cardSelectDisplay?.item2 || ""}</span>
+          <span className="truncate max-w-[33%]">{standardCard ? getCompactCardTier(standardCard) : ""}</span>
           <span className="truncate max-w-[33%]">{standardCard?.cardSelectDisplay?.item3 || ""}</span>
         </div>
       )}

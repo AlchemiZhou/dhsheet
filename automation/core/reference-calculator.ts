@@ -1,5 +1,6 @@
 import { tryParseNumberExpression } from "@/lib/number-utils"
 import type { SheetData } from "@/lib/sheet-data"
+import { limitCharacterResourceMax } from "@/character/resources/limits"
 import { entryKind, entryTarget, entryValue } from "./entry-utils"
 import { sanitizeOtherAdjustments } from "./other-adjustments"
 import { readTargetValue } from "./target-accessors"
@@ -71,7 +72,7 @@ export function calculateReferenceSummary(input: CalculateReferenceSummaryInput)
   }
 
   const referenceTotal = entryValue(activeBase) + enabledModifiers.reduce((sum, entry) => sum + entryValue(entry), 0)
-  const calculatedFinalTotal = referenceTotal + otherTotal
+  const calculatedFinalTotal = limitCharacterResourceMax(input.target, referenceTotal + otherTotal)
   const finalValue = tryParseNumberExpression(readTargetValue(input.sheetData, input.target))
 
   return {

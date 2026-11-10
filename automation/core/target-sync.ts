@@ -171,5 +171,8 @@ export function applyAutoCalculationForTargets(sheetData: SheetData): SheetData 
     }
   })
 
-  return changed ? next : sheetData
+  // Also normalize legacy saves and locked targets; the slot limit applies
+  // independently of automatic calculation being enabled.
+  next = applyHpStressMaxInvariant(applyHpStressMaxInvariant(next, "hpMax"), "stressMax")
+  return changed || next !== sheetData ? next : sheetData
 }

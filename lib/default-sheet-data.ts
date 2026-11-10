@@ -2,6 +2,7 @@ import { createEmptyCard, type StandardCard } from "@/card/card-types";
 import { createEmptyEquipmentData } from "@/automation/equipment/defaults";
 import type { SheetData } from "./sheet-data";
 import { CURRENT_SCHEMA_VERSION } from "./sheet-schema-version";
+import { CHARACTER_RESOURCE_LIMIT } from "@/character/resources/limits";
 
 export const defaultSheetData: SheetData = {
     schemaVersion: CURRENT_SCHEMA_VERSION,
@@ -39,8 +40,8 @@ export const defaultSheetData: SheetData = {
     hope: 0,      // 默认0点希望
     hopeMax: 6,   // 默认最大6点
 
-    hp: Array(18).fill(false),
-    stress: Array(18).fill(false),
+    hp: Array(CHARACTER_RESOURCE_LIMIT).fill(false),
+    stress: Array(CHARACTER_RESOURCE_LIMIT).fill(false),
     hpMax: "",
     stressMax: "",
 

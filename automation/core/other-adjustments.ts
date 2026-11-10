@@ -1,4 +1,5 @@
 import type { ModifierTargetId, OtherAdjustment, OtherAdjustmentKind } from "@/automation/core/types"
+import { limitCharacterResourceMax } from "@/character/resources/limits"
 
 const KIND_ID_SEGMENTS: Record<OtherAdjustmentKind, string> = {
   unknownMigrationDifference: "unknown-migration-difference",
@@ -175,5 +176,8 @@ export function deriveUnattributedDifference(input: {
     return undefined
   }
 
-  return input.finalValue - input.referenceTotal - sumOtherAdjustments(input.otherAdjustments, input.target)
+  return input.finalValue - limitCharacterResourceMax(
+    input.target,
+    input.referenceTotal + sumOtherAdjustments(input.otherAdjustments, input.target),
+  )
 }

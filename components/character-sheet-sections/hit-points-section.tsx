@@ -4,6 +4,7 @@ import type React from "react"
 import { useState } from "react"
 import { useSheetStore } from "@/lib/sheet-store"
 import { ModifierFieldAnchor } from "@/components/modifiers/modifier-field-anchor"
+import { CHARACTER_RESOURCE_LIMIT } from "@/character/resources/limits"
 
 export function HitPointsSection() {
   const { sheetData: formData, setSheetData, commitModifierTargetValue } = useSheetStore()
@@ -19,7 +20,7 @@ export function HitPointsSection() {
   }
   const numericMax = (value: unknown) => {
     const parsed = Number(value)
-    return Number.isFinite(parsed) && parsed > 0 ? parsed : 0
+    return Number.isFinite(parsed) && parsed > 0 ? Math.min(parsed, CHARACTER_RESOURCE_LIMIT) : 0
   }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -49,7 +50,7 @@ export function HitPointsSection() {
     if (commit) {
       if (/^\d+$/.test(value)) {
         const intValue = parseInt(value) || 0
-        if (intValue >= 1 && intValue <= 18) {
+        if (intValue >= 1 && intValue <= CHARACTER_RESOURCE_LIMIT) {
           commitModifierTargetValue(maxField, intValue)
         }
       }
@@ -73,7 +74,7 @@ export function HitPointsSection() {
   const handleIncreaseMax = (field: "hp" | "stress") => {
     const maxField = `${field}Max` as "hpMax" | "stressMax"
     const currentMax = numericMax(formData[maxField])
-    if (currentMax < 18) {
+    if (currentMax < CHARACTER_RESOURCE_LIMIT) {
       handleMaxChange(field, String(currentMax + 1), true)
     }
   }
@@ -87,8 +88,9 @@ export function HitPointsSection() {
     }
   }
 
-  const renderBoxes = (field: "hp" | "stress", max: number, total: number) => {
-    const fieldArray = Array.isArray(formData[field]) ? (formData[field] as boolean[]) : Array(total).fill(false)
+  const renderBoxes = (field: "hp" | "stress", max: number) => {
+    const label = field === "hp" ? "生命" : "压力"
+    const fieldArray = Array.from({ length: CHARACTER_RESOURCE_LIMIT }, (_, i) => Boolean(formData[field]?.[i]))
 
     const handleClick = (index: number) => {
       const newFieldData = [...fieldArray]
@@ -109,27 +111,40 @@ export function HitPointsSection() {
     }
 
     return (
-      <div className="flex gap-1 flex-wrap">
-        {Array(total)
-          .fill(0)
-          .map((_, i) => {
+      <div role="group" aria-label={`${label}标记`} className="grid grid-cols-2 gap-3">
+        {[0, 6].map((start) => (
+          <div key={start} className="grid grid-cols-6 gap-1">
+          {Array.from({ length: 6 }, (_, offset) => {
+            const i = start + offset
             const isWithinMax = i < max
             const isChecked = fieldArray[i] || false
 
             return (
               <div
                 key={`${String(field)}-${i}`}
-                className={`w-4 h-4 border-2 ${isWithinMax ? "border-gray-800 cursor-pointer" : "border-gray-400 border-dashed"
-                  } ${isChecked ? "sheet-filled-mark bg-gray-800" : "bg-white"} ${i > 0 && i % 6 === 0 ? "ml-1" : ""
-                  }`}
+                role="checkbox"
+                aria-label={`${label}第${i + 1}格`}
+                aria-checked={isChecked}
+                aria-disabled={!isWithinMax}
+                tabIndex={isWithinMax ? 0 : -1}
+                className={`h-4 min-w-0 rounded-[3px] border-2 text-center text-[11px] leading-3 font-bold select-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 ${isWithinMax ? "border-gray-800 cursor-pointer hover:ring-1 hover:ring-gray-400" : "border-gray-400 border-dashed"
+                  } ${isChecked ? "sheet-filled-mark bg-gray-800 text-white" : "bg-white text-gray-800"}`}
                 onClick={() => {
                   if (isWithinMax) {
                     handleClick(i)
                   }
                 }}
-              />
+                onKeyDown={(event) => {
+                  if (isWithinMax && (event.key === " " || event.key === "Enter")) {
+                    event.preventDefault()
+                    handleClick(i)
+                  }
+                }}
+              >{isChecked ? "×" : ""}</div>
             )
           })}
+          </div>
+        ))}
       </div>
     )
   }
@@ -188,107 +203,58 @@ export function HitPointsSection() {
         </div>
       </div>
 
-      <div className="mt-1 space-y-1">
-        <div className="flex items-center justify-between group">
-          <span className="font-bold mr-2 text-xs">
-            生命
-            <ModifierFieldAnchor target="hpMax" label="生命上限" size="compact" />
-            {formData.cards?.[0]?.professionSpecial?.["起始生命"] && (
-              <span className="text-[10px] text-gray-600 ml-1">
-                (职业初始: {formData.cards?.[0]?.professionSpecial?.["起始生命"] ?? "未知"})
-              </span>
-            )}
-          </span>
-          <div className="flex items-center">
-            {/* 渐进式显示的上限调整按钮 */}
-            <div className="flex items-center gap-0.5 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-200 print:hidden">
-              <button
-                onClick={() => handleDecreaseMax("hp")}
-                disabled={numericMax(formData.hpMax) <= 1}
-                className="w-6 h-6 sm:w-5 sm:h-5 flex items-center justify-center hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed text-base sm:text-sm text-gray-400 sm:text-gray-800 transition-colors"
-                title="减少HP上限"
-              >
-                −
-              </button>
-              <button
-                onClick={() => handleIncreaseMax("hp")}
-                disabled={numericMax(formData.hpMax) >= 18}
-                className="w-6 h-6 sm:w-5 sm:h-5 flex items-center justify-center hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed text-base sm:text-sm text-gray-400 sm:text-gray-800 transition-colors"
-                title="增加HP上限"
-              >
-                ＋
-              </button>
+      <div className="mt-2 grid gap-1.5 print:gap-1">
+        {(["hp", "stress"] as const).map((field) => {
+          const label = field === "hp" ? "生命" : "压力"
+          const buttonLabel = field === "hp" ? "HP" : "压力"
+          const maxField = `${field}Max` as "hpMax" | "stressMax"
+          const max = numericMax(formData[maxField])
+          const marked = formData[field]?.slice(0, max).filter(Boolean).length ?? 0
+          return (
+            <div key={field} className="rounded-md border border-gray-300 px-2 py-1.5 print:px-1 print:py-1">
+              <div className="flex items-center justify-between gap-2 mb-1">
+                <div className="flex min-w-0 items-center gap-1">
+                  <span className="text-xs font-bold">{label}</span>
+                  <ModifierFieldAnchor target={maxField} label={`${label}上限`} size="compact" />
+                  <span className="text-[10px] text-gray-600 tabular-nums">已标记 {marked} / {max || "—"}</span>
+                </div>
+                <div className="flex shrink-0 items-center gap-1 text-[10px]">
+                  <span>上限</span>
+                  <button
+                    type="button"
+                    onClick={() => handleDecreaseMax(field)}
+                    disabled={max <= 1}
+                    className="w-5 h-5 rounded border border-gray-300 bg-white hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed text-sm print:hidden"
+                    title={`减少${buttonLabel}上限`}
+                  >−</button>
+                  <input
+                    aria-label={`${label}最大值`}
+                    type="text"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
+                    value={maxInputValue(field)}
+                    onChange={(event) => handleMaxChange(field, event.target.value)}
+                    onBlur={(event) => handleMaxChange(field, event.currentTarget.value, true)}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter") event.currentTarget.blur()
+                    }}
+                    onFocus={(event) => event.target.select()}
+                    className="w-7 h-5 text-center font-semibold tabular-nums border border-gray-400 rounded bg-white print:hidden"
+                  />
+                  <span className="hidden print:inline font-semibold tabular-nums">{max || "—"}</span>
+                  <button
+                    type="button"
+                    onClick={() => handleIncreaseMax(field)}
+                    disabled={max >= CHARACTER_RESOURCE_LIMIT}
+                    className="w-5 h-5 rounded border border-gray-300 bg-white hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed text-sm print:hidden"
+                    title={`增加${buttonLabel}上限`}
+                  >＋</button>
+                </div>
+              </div>
+              {renderBoxes(field, max)}
             </div>
-
-            <span className="text-[9px] mr-1 print:hidden">最大值:</span> {/* 打印时隐藏 */}
-            <input
-              type="text"
-              inputMode="numeric"
-              pattern="[0-9]*"
-              value={maxInputValue("hp")}
-              onChange={(e) => handleMaxChange("hp", e.target.value)}
-              onBlur={(e) => handleMaxChange("hp", e.currentTarget.value, true)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  handleMaxChange("hp", e.currentTarget.value, true)
-                  e.currentTarget.blur()
-                }
-              }}
-              onFocus={(e) => e.target.select()}
-              placeholder=""
-              className="w-8 text-center border border-gray-400 rounded text-xs print:hidden" // 打印时隐藏
-            />
-          </div>
-        </div>
-        {renderBoxes("hp", numericMax(formData.hpMax), 18)}
-
-        <div className="flex items-center justify-between group">
-          <span className="font-bold mr-2 text-xs">
-            压力
-            <ModifierFieldAnchor target="stressMax" label="压力上限" size="compact" />
-          </span>
-          <div className="flex items-center">
-            {/* 渐进式显示的上限调整按钮 */}
-            <div className="flex items-center gap-0.5 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-200 print:hidden">
-              <button
-                onClick={() => handleDecreaseMax("stress")}
-                disabled={numericMax(formData.stressMax) <= 1}
-                className="w-6 h-6 sm:w-5 sm:h-5 flex items-center justify-center hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed text-base sm:text-sm text-gray-400 sm:text-gray-800 transition-colors"
-                title="减少压力上限"
-              >
-                −
-              </button>
-              <button
-                onClick={() => handleIncreaseMax("stress")}
-                disabled={numericMax(formData.stressMax) >= 18}
-                className="w-6 h-6 sm:w-5 sm:h-5 flex items-center justify-center hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed text-base sm:text-sm text-gray-400 sm:text-gray-800 transition-colors"
-                title="增加压力上限"
-              >
-                ＋
-              </button>
-            </div>
-
-            <span className="text-[9px] mr-1 print:hidden">最大值:</span> {/* 打印时隐藏 */}
-            <input
-              type="text"
-              inputMode="numeric"
-              pattern="[0-9]*"
-              value={maxInputValue("stress")}
-              onChange={(e) => handleMaxChange("stress", e.target.value)}
-              onBlur={(e) => handleMaxChange("stress", e.currentTarget.value, true)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  handleMaxChange("stress", e.currentTarget.value, true)
-                  e.currentTarget.blur()
-                }
-              }}
-              onFocus={(e) => e.target.select()}
-              placeholder=""
-              className="w-8 text-center border border-gray-400 rounded text-xs print:hidden" // 打印时隐藏
-            />
-          </div>
-        </div>
-        {renderBoxes("stress", numericMax(formData.stressMax), 18)}
+          )
+        })}
       </div>
     </div>
   )

@@ -1,5 +1,6 @@
 import { tryParseNumberExpression } from "@/lib/number-utils"
 import type { SheetData } from "@/lib/sheet-data"
+import { CHARACTER_RESOURCE_LIMIT, limitCharacterResourceMax } from "@/character/resources/limits"
 import {
   createManualFinalAdjustment,
   createUnattributedDifference,
@@ -120,7 +121,10 @@ function writeMaterializedUnattributedDifference(
 ): SheetData {
   const unattributedAdjustmentId = getOtherAdjustmentId(target, "unattributedDifference")
   const otherTotalExcludingUnattributed = sumSavedOtherExcluding(sheetData, target, "unattributedDifference")
-  const delta = finalValue - referenceTotal - otherTotalExcludingUnattributed
+  const calculatedValue = referenceTotal + otherTotalExcludingUnattributed
+  const delta = finalValue === limitCharacterResourceMax(target, calculatedValue)
+    ? 0
+    : finalValue - calculatedValue
   const withoutUnattributed = removeOtherAdjustment(sheetData.otherAdjustments, unattributedAdjustmentId)
   const otherAdjustments = delta === 0
     ? withoutUnattributed
@@ -140,6 +144,14 @@ function reconcileDeltaForNumericFinal(
 ): SheetData {
   const summary = getReferenceSummary(withoutUnattributedDelta(sheetData, target), target)
   const activeBase = summary.activeBase ?? summary.bases[0]
+
+  // Re-submitting the capped value must not introduce a negative adjustment
+  // that would remain after an upgrade or card bonus is removed.
+  if ((target === "hpMax" || target === "stressMax")
+    && finalValue === CHARACTER_RESOURCE_LIMIT
+    && summary.calculatedFinalTotal === finalValue) {
+    return writeTargetValue(sheetData, target, finalValue)
+  }
 
   if (!activeBase) {
     const manualBase = createManualBaseContribution(target, finalValue)
@@ -179,8 +191,9 @@ export function reconcileFinalInput(
   target: ModifierTargetId,
   rawValue: unknown,
 ): SheetData {
-  const finalValue = tryParseNumberExpression(rawValue)
-  if (finalValue === undefined) return sheetData
+  const parsedValue = tryParseNumberExpression(rawValue)
+  if (parsedValue === undefined) return sheetData
+  const finalValue = limitCharacterResourceMax(target, parsedValue)
 
   return reconcileDeltaForNumericFinal(
     sheetData,

@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { useSheetStore } from "@/lib/sheet-store"
 import { ChevronUp, X } from "lucide-react"
 import { isValidNumber, parseToNumber } from "@/lib/number-utils"
+import { CHARACTER_RESOURCE_LIMIT } from "@/character/resources/limits"
 
 interface HPMaxEditorProps {
   onClose?: () => void
@@ -29,7 +30,7 @@ export function HPMaxEditor({ onClose }: HPMaxEditorProps) {
     // 失焦时应用更改
     if (isValidNumber(inputValue)) {
       const numValue = parseToNumber(inputValue, 0)
-      const finalValue = Math.min(Math.max(numValue, 1), 18)
+      const finalValue = Math.min(Math.max(numValue, 1), CHARACTER_RESOURCE_LIMIT)
       updateHPMax(finalValue)
       setInputValue(String(finalValue))
     } else {
@@ -42,14 +43,14 @@ export function HPMaxEditor({ onClose }: HPMaxEditorProps) {
     if (inputValue.trim() !== "" && !isValidNumber(inputValue)) return
 
     const currentValue = inputValue.trim() === "" ? 0 : parseToNumber(inputValue, 0)
-    const newValue = Math.min(currentValue + 1, 18)
+    const newValue = Math.min(currentValue + 1, CHARACTER_RESOURCE_LIMIT)
 
     setInputValue(String(newValue))
     updateHPMax(newValue)
   }
 
   // 判断是否可以增加
-  const canIncrement = inputValue.trim() === "" || (isValidNumber(inputValue) && parseToNumber(inputValue, 0) < 18)
+  const canIncrement = inputValue.trim() === "" || (isValidNumber(inputValue) && parseToNumber(inputValue, 0) < CHARACTER_RESOURCE_LIMIT)
 
   return (
     <div className="w-24">

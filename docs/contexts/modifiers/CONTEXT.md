@@ -149,6 +149,8 @@ _Avoid_: manual adjustment
 - A character choice reference identifies a selected template, while the **Character Choice Card** in the matching **Protected Loadout Slot** is the runtime card instance authority.
 - A **Calculated Final Value** is calculated from the **Reference Total** plus **Other** adjustments.
 - A **Final Value** is the concrete sheet value that users see and edit.
+- Player-character HP and Stress maxima are capped at 12 at final-value calculation and writeback. Known sources retain their original values so removing bonuses recalculates correctly. Companion slots are independent.
+- Re-submitting a capped HP or Stress value, or re-enabling automatic calculation at that cap, must not create an artificial negative Other adjustment.
 - **Source State** is the input layer for automatic calculation.
 - **Derived State** is recalculated from **Source State** and should be reproducible.
 - **Stored State** is persisted sheet data and may temporarily differ from **Derived State**.

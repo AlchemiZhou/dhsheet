@@ -41,6 +41,7 @@ import type { ArmorSlot, WeaponSlot } from "@/automation/equipment/types"
 import { tryParseNumber } from "@/lib/number-utils"
 import { collectModifierEntries, getReferenceSummary } from "@/automation/core/registry"
 import { reconcileModifierState } from "@/automation/core/reconcile"
+import { applyHpStressMaxInvariant } from "@/automation/core/hp-stress-invariants"
 import {
   createUnknownMigrationDifference,
   getOtherAdjustmentId,
@@ -1290,6 +1291,7 @@ export function normalizeCurrentSheetData(data: Partial<SheetData> | any): Sheet
   normalized = normalizeCurrentModifierCollections(normalized)
   normalized = reconcileModifierState(normalized)
   normalized = cleanupLegacyUpgradeFields(normalized)
+  normalized = applyHpStressMaxInvariant(applyHpStressMaxInvariant(normalized, "hpMax"), "stressMax")
 
   return cleanupDeprecatedFields(normalized)
 }

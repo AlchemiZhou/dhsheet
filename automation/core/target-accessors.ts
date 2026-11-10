@@ -1,5 +1,6 @@
 import type { AttributeValue, SheetData } from "@/lib/sheet-data"
 import type { ModifierTargetId } from "./types"
+import { limitCharacterResourceMax } from "@/character/resources/limits"
 
 const ATTRIBUTE_TARGETS = {
   "agility.value": "agility",
@@ -67,7 +68,7 @@ export function writeTargetValue(sheetData: SheetData, target: ModifierTargetId,
   }
 
   if (target === "hpMax" || target === "stressMax") {
-    return { ...sheetData, [target]: value === "" ? "" : Number(value) }
+    return { ...sheetData, [target]: value === "" ? "" : limitCharacterResourceMax(target, Number(value)) }
   }
 
   if (target === "proficiency") {
