@@ -8,6 +8,7 @@ import { CardHoverPreview } from "@/components/ui/card-hover-preview"
 import { useSheetStore } from "@/lib/sheet-store"
 import { useTextModeStore } from "@/lib/text-mode-store"
 import { PageHeader } from "@/components/page-header"
+import { getSheetAncestryCard } from '@/character/ancestry/complete-card'
 
 interface HeaderSectionProps {
   onOpenProfessionModal: () => void;
@@ -126,13 +127,14 @@ export function HeaderSection({
     minFontSize: 10
   })
 
+  const completeAncestryCard = getSheetAncestryCard(formData)
   const {
     hoveredCard,
     previewPosition,
     handleMouseEnter,
     handleMouseLeave
   } = useCardPreview({
-    cards: formData.cards || [],
+    cards: (formData.cards || []).map(card => completeAncestryCard && card.id === completeAncestryCard.id ? completeAncestryCard : card),
     previewSize: getCardPreviewSize(isTextMode),
   })
 
@@ -245,8 +247,8 @@ export function HeaderSection({
         </div>
         <div className="flex gap-2">
           <div className="flex flex-col">
-            <div className="flex items-center justify-between"><span className="text-[9px] text-gray-300">种族</span><button type="button" role="switch" aria-checked={mixedAncestry} onClick={() => onMixedAncestryChange(!mixedAncestry)} className="text-[9px] text-gray-200 hover:text-white print:hidden">混血：{mixedAncestry ? '开启' : '关闭'}</button></div>
-            <div className="flex gap-1">
+            <div className="mb-1 flex items-center justify-between gap-2"><span className="text-[9px] text-gray-300">种族</span><button type="button" role="switch" aria-checked={mixedAncestry} onClick={() => onMixedAncestryChange(!mixedAncestry)} className={`inline-flex items-center gap-1.5 rounded-md border px-2 py-1 text-[11px] font-semibold shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white print:hidden ${mixedAncestry ? 'border-sky-300 bg-sky-600 text-white hover:bg-sky-500' : 'border-gray-300 bg-white text-gray-800 hover:bg-sky-100'}`}><span aria-hidden="true" className={`relative h-3.5 w-6 rounded-full ${mixedAncestry ? 'bg-sky-200' : 'bg-gray-300'}`}><span className={`absolute left-0 top-0.5 h-2.5 w-2.5 rounded-full bg-white shadow transition-transform ${mixedAncestry ? 'translate-x-3' : 'translate-x-0.5'}`} /></span>混血：{mixedAncestry ? '开启' : '关闭'}</button></div>
+            <div className="flex w-52 gap-1">
               {editingField === 'ancestry1Ref' ? (
                 <input
                   type="text"
@@ -259,7 +261,7 @@ export function HeaderSection({
                 />
               ) : (
                   <div
-                    className="group relative flex w-24 border border-gray-400 rounded h-7 bg-white overflow-hidden"
+                    className={`group relative flex ${mixedAncestry ? 'w-24' : 'w-full'} border border-gray-400 rounded h-7 bg-white overflow-hidden`}
                     onMouseEnter={(e) => handleMouseEnter(formData.ancestry1Ref, e.currentTarget)}
                     onMouseLeave={handleMouseLeave}
                   >

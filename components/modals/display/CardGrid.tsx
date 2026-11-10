@@ -6,6 +6,8 @@ import { ImageCard } from "@/components/ui/image-card"
 import { SelectableCard } from "@/components/ui/selectable-card"
 import { useTextModeStore } from "@/lib/text-mode-store"
 import { cn } from "@/lib/utils"
+import { isCompleteAncestryCard } from '@/character/ancestry/complete-card'
+import { CompleteAncestryCardView } from '@/components/ui/complete-ancestry-card'
 
 interface CardGridProps<T extends StandardCard | ExtendedStandardCard> {
   cards: T[]
@@ -34,7 +36,9 @@ export function CardGrid<T extends StandardCard | ExtendedStandardCard>({
       )}
     >
       {cards.map((card, index) =>
-        isTextMode ? (
+        isCompleteAncestryCard(card) ? (
+          <CompleteAncestryCardView key={card.id} card={card} onClick={() => onCardClick?.(card)} selected={card.id === selectedCardId} />
+        ) : isTextMode ? (
           <SelectableCard
             key={card.id}
             card={card}

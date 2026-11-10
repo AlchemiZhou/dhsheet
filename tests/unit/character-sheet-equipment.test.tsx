@@ -168,7 +168,7 @@ describe("CharacterSheet equipment fields", () => {
     render(<CharacterSheet />)
     expect(screen.getByRole("switch", { name: "混血：关闭" })).toHaveAttribute("aria-checked", "false")
     await user.click(screen.getByRole("button", { name: "选择种族" }))
-    await user.click(await screen.findByText("特性一"))
+    await user.click(await screen.findByRole('button', { name: '选择精灵，包含两项种族特性' }))
     expect(sheet().ancestry1Ref?.id).toBe("elf-one")
     expect(sheet().ancestry2Ref?.id).toBe("elf-two")
     await user.click(screen.getByRole("switch", { name: "混血：关闭" }))

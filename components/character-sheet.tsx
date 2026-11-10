@@ -621,6 +621,7 @@ export default function CharacterSheet({ currentCharacterId }: CharacterSheetPro
           cardType={getModalCardType(currentModal.type)} // Use the helper function here
           field={currentModal.field}
           levelFilter={currentModal.levelFilter}
+          completeAncestry={currentModal.type === 'ancestry' && !mixedAncestry}
         />
       )}
       {setupPrompt.dialog}

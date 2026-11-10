@@ -28,6 +28,7 @@ import { useCardActions, useSheetStore } from "@/lib/sheet-store"
 import { useIsMobile } from "@/hooks/use-mobile"
 import { cn } from "@/lib/utils"
 import { projectCardAutomationSetupRequirements } from "@/card/automation/setup-projection"
+import { getSheetAncestryCard, isCompleteAncestryCard } from '@/character/ancestry/complete-card'
 
 interface CardDeckSectionProps {
   formData: SheetData
@@ -70,6 +71,7 @@ interface CardProps {
   onPinCard: (card: StandardCard) => void;
   onCardDelete: (index: number) => void;
   hasSetupRequirements: boolean;
+  hasSecondSetupRequirements: boolean;
   onSetupClick: (instanceId: string) => void;
   isTextMode: boolean;
   isMobile: boolean;
@@ -88,6 +90,7 @@ function Card({
   onPinCard,
   onCardDelete,
   hasSetupRequirements,
+  hasSecondSetupRequirements,
   onSetupClick,
   isTextMode,
   isMobile,
@@ -157,6 +160,9 @@ function Card({
               onClick={() => onSetupClick(standardCard.instanceId!)}
             />
           )}
+          {hasSecondSetupRequirements && isCompleteAncestryCard(standardCard) && standardCard.ancestryTraits[1].instanceId && (
+            <CardAutomationSetupMarker cardName={standardCard.ancestryTraits[1].name} onClick={() => onSetupClick(standardCard.ancestryTraits[1].instanceId!)} />
+          )}
           {!isSpecial && (
             <button
               className="ml-2 text-gray-400 hover:text-red-500 transition-all duration-200 !text-sm opacity-0 group-hover:opacity-100"
@@ -190,7 +196,7 @@ function Card({
       {isSpecial && (
         <div className="absolute -top-4 left-0 right-0 text-center">
           <span className="text-[10px] font-medium bg-yellow-100 px-1 py-0 rounded-t-sm border border-yellow-300 border-b-0">
-            {getSpecialSlotLabel(index)}
+            {isCompleteAncestryCard(standardCard) ? '种族' : getSpecialSlotLabel(index)}
           </span>
         </div>
       )}
@@ -313,6 +319,7 @@ export function CardDeckSection({
 
   // 确保 formData 和当前卡组存在
   const cards: StandardCard[] = getCurrentDeckCards(activeDeck);
+  const completeAncestryCard = activeDeck === 'focused' ? getSheetAncestryCard(formData) : undefined
 
   // 移除：所有与 selectedCards 和 focused_card_ids 相关的逻辑
 
@@ -461,6 +468,8 @@ export function CardDeckSection({
         {cards &&
           Array.isArray(cards) &&
           cards.map((card: StandardCard, index: number) => {
+            if (completeAncestryCard && index === 3) return null
+            if (completeAncestryCard && index === 2) card = completeAncestryCard
             if (!card) {
               card = createEmptyCard();
             }
@@ -477,6 +486,7 @@ export function CardDeckSection({
             return (
               <div
                 key={`card-${activeDeck}-${index}`}
+                className={completeAncestryCard && index === 2 ? 'col-span-2' : undefined}
                 ref={(el) => {
                   cardRefs.current[index] = el;
                 }}
@@ -494,6 +504,7 @@ export function CardDeckSection({
                   onPinCard={pinCard}
                   onCardDelete={handleCardDelete}
                   hasSetupRequirements={hasSetupRequirements}
+                  hasSecondSetupRequirements={Boolean(isCompleteAncestryCard(card) && card.ancestryTraits[1].instanceId && projectCardAutomationSetupRequirements(formData, { cardInstanceId: card.ancestryTraits[1].instanceId }).length > 0)}
                   onSetupClick={setupPrompt.openForCard}
                   isTextMode={isTextMode}
                   isMobile={isMobile}

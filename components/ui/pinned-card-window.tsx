@@ -2,6 +2,8 @@
 
 import React, { useState, useRef, useCallback, useEffect } from 'react'
 import { ImageCard } from '@/components/ui/image-card'
+import { isCompleteAncestryCard } from '@/character/ancestry/complete-card'
+import { CompleteAncestryCardView } from './complete-ancestry-card'
 import { usePinnedCardsStore, type PinnedCard } from '@/lib/pinned-cards-store'
 
 interface PinnedCardWindowProps {
@@ -124,12 +126,12 @@ export function PinnedCardWindow({ pinnedCard }: PinnedCardWindowProps) {
         </div>
         {/* 卡牌内容 */}
         <div className="p-2">
-          <ImageCard
+          {isCompleteAncestryCard(pinnedCard.card) ? <CompleteAncestryCardView card={pinnedCard.card} /> : <ImageCard
             card={pinnedCard.card}
             onClick={() => {}} // 空函数，因为是只读展示
             isSelected={false}
             showSource={false}
-          />
+          />}
         </div>
         </div>
       </div>

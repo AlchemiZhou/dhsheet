@@ -8,6 +8,8 @@ import React, { useState } from "react"
 import { getCardImageUrl, getCardImageUrlAsync } from "@/lib/utils"
 import { SelectableCard } from "@/components/ui/selectable-card"
 import { CardMarkdown } from "@/components/ui/card-markdown"
+import { isCompleteAncestryCard } from '@/character/ancestry/complete-card'
+import { CompleteAncestryCardView } from './complete-ancestry-card'
 
 interface CardHoverPreviewProps {
     card: StandardCard
@@ -49,6 +51,7 @@ export function CardHoverPreview({ card, isTextMode = false }: CardHoverPreviewP
     }, [imageError, card, imageSrc]);
     
     if (!card) return null
+    if (isCompleteAncestryCard(card)) return <div className="w-80"><CompleteAncestryCardView card={card} /></div>
 
     // 文字模式下使用 SelectableCard 组件
     if (isTextMode) {

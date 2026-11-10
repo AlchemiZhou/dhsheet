@@ -9,6 +9,8 @@ import { useUnifiedCardStore } from "@/card/stores/unified-card-store"
 import { BaseCardModal, ModalHeader, ModalFilterBar } from "./base"
 import { ContentStates, CardGrid } from "./display"
 import { MultiSelectFilter } from "./filters"
+import { findAncestryPair } from '@/character/ancestry/pair'
+import { createCompleteAncestryCard } from '@/character/ancestry/complete-card'
 
 interface GenericCardSelectionModalProps {
   isOpen: boolean
@@ -18,6 +20,7 @@ interface GenericCardSelectionModalProps {
   cardType: Exclude<CardType, CardType.Domain>
   field?: string
   levelFilter?: number
+  completeAncestry?: boolean
 }
 
 export function GenericCardSelectionModal({
@@ -28,6 +31,7 @@ export function GenericCardSelectionModal({
   cardType,
   field,
   levelFilter,
+  completeAncestry = false,
 }: GenericCardSelectionModalProps) {
   const { sheetData: formData } = useSheetStore()
   const runtimeInitialized = useUnifiedCardStore((state) => state.initialized)
@@ -124,6 +128,15 @@ export function GenericCardSelectionModal({
     )
   }, [filteredInitialCards, selectedClasses])
 
+  const displayCards = useMemo(() => {
+    if (!completeAncestry || cardType !== CardType.Ancestry) return finalFilteredCards
+    return finalFilteredCards.flatMap(first => {
+      const second = findAncestryPair(first, baseCards)
+      const complete = second && createCompleteAncestryCard(first, second)
+      return complete ? [complete] : []
+    })
+  }, [baseCards, cardType, completeAncestry, finalFilteredCards])
+
   const handleCardClick = (card: StandardCard) => {
     onSelect(card.id, field)
   }
@@ -193,12 +206,12 @@ export function GenericCardSelectionModal({
         <ContentStates
           loading={cardsLoading}
           error={cardsError}
-          empty={finalFilteredCards.length === 0}
+          empty={displayCards.length === 0}
           emptyMessage={`没有找到符合条件的卡牌 (卡牌类型: ${cardType})`}
           loadingMessage="加载卡牌中..."
         >
           <CardGrid
-            cards={finalFilteredCards}
+            cards={displayCards}
             onCardClick={handleCardClick}
             className="gap-6"
           />
