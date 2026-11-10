@@ -158,6 +158,13 @@ describe("CharacterSheet equipment fields", () => {
     expect(sheet().armorMax).toBe(3)
   })
 
+  it('defaults to mixed ancestry off even when an old character has two ancestry references', () => {
+    useCardStore.setState({ initialized: true, loading: false })
+    resetSheetStore({ mixedAncestry: undefined, ancestry1Ref: { id: 'old-one', name: '旧特性一' }, ancestry2Ref: { id: 'old-two', name: '旧特性二' } })
+    render(<CharacterSheet />)
+    expect(screen.getByRole('switch', { name: '混血：关闭' })).toHaveAttribute('aria-checked', 'false')
+  })
+
   it("selects both ancestry traits by default and switches to mixed selection", async () => {
     const user = userEvent.setup()
     const first = { ...createEmptyCard("ancestry"), id: "elf-one", name: "特性一", type: CardType.Ancestry, class: "精灵", hint: "森林", level: 1 }
@@ -173,6 +180,7 @@ describe("CharacterSheet equipment fields", () => {
     expect(sheet().ancestry2Ref?.id).toBe("elf-two")
     await user.click(screen.getByRole("switch", { name: "混血：关闭" }))
     expect(screen.getByRole("switch", { name: "混血：开启" })).toHaveAttribute("aria-checked", "true")
+    expect(screen.getByRole("switch", { name: "混血：开启" })).toHaveClass('bg-red-600')
     expect(sheet().mixedAncestry).toBe(true)
     expect(screen.getByRole("button", { name: "特性二" })).toBeInTheDocument()
     await user.click(screen.getByRole("switch", { name: "混血：开启" }))

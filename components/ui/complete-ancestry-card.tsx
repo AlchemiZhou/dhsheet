@@ -2,13 +2,26 @@
 
 import type { CompleteAncestryCard } from '@/character/ancestry/complete-card'
 import { CardMarkdown } from './card-markdown'
+import { useEffect, useState } from 'react'
+import { getCardImageUrlAsync } from '@/lib/utils'
 
 export function CompleteAncestryCardView({ card, onClick, selected = false }: {
   card: CompleteAncestryCard
   onClick?: () => void
   selected?: boolean
 }) {
+  const [imageUrl, setImageUrl] = useState<string | null>(null)
+  const illustration = card.ancestryTraits.find(trait => trait.imageUrl || trait.hasLocalImage) ?? card.ancestryTraits[0]
+  useEffect(() => {
+    let cancelled = false
+    setImageUrl(null)
+    void getCardImageUrlAsync(illustration).then(url => {
+      if (!cancelled && !url.endsWith('/empty-card.webp')) setImageUrl(url)
+    }).catch(() => { if (!cancelled) setImageUrl(null) })
+    return () => { cancelled = true }
+  }, [illustration])
   const content = <>
+    {imageUrl && <img src={imageUrl} alt={`${card.name}种族插图`} loading="lazy" decoding="async" className="mb-4 block h-auto w-full rounded-lg object-contain" onError={() => setImageUrl(null)} />}
     <div className="flex items-center justify-between gap-2 border-b border-slate-200 pb-3">
       <h3 className="text-xl font-bold text-slate-900">{card.name}</h3>
       <span className="rounded-full bg-slate-100 px-2 py-1 text-xs text-slate-600">完整种族 · 双特性</span>
@@ -21,7 +34,7 @@ export function CompleteAncestryCardView({ card, onClick, selected = false }: {
       </section>)}
     </div>
   </>
-  const className = `flex w-full max-w-sm flex-col justify-start rounded-xl border-2 bg-white p-4 text-left shadow-md ${selected ? 'border-blue-500 ring-2 ring-blue-200' : 'border-slate-300'} ${onClick ? 'cursor-pointer hover:border-blue-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500' : ''}`
+  const className = `flex w-full max-w-lg flex-col justify-start rounded-xl border-2 bg-white p-4 text-left shadow-md ${selected ? 'border-blue-500 ring-2 ring-blue-200' : 'border-slate-300'} ${onClick ? 'cursor-pointer hover:border-blue-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500' : ''}`
   return onClick
     ? <button type="button" className={className} onClick={onClick} aria-label={`选择${card.name}，包含两项种族特性`}>{content}</button>
     : <article className={className}>{content}</article>

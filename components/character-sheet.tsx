@@ -73,9 +73,7 @@ export default function CharacterSheet({ currentCharacterId }: CharacterSheetPro
   const cardsLoading = store.loading;
   const getRuntimeCardById = store.getCardById;
   const firstAncestry = store.getCardById(safeFormData.ancestry1Ref?.id || "")
-  const secondAncestry = store.getCardById(safeFormData.ancestry2Ref?.id || "")
-  const mixedAncestry = safeFormData.mixedAncestry ?? Boolean(safeFormData.ancestry2Ref?.id &&
-    (!firstAncestry || !secondAncestry || findAncestryPair(firstAncestry, store.cards.values())?.id !== secondAncestry.id))
+  const mixedAncestry = safeFormData.mixedAncestry === true
 
   const setMixedAncestry = (enabled: boolean) => {
     if (!enabled && safeFormData.ancestry1Ref?.id) {

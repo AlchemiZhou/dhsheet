@@ -7,11 +7,21 @@ import { defaultSheetData } from '@/lib/default-sheet-data'
 import { CardDeckSection } from '@/components/character-sheet-page-two-sections/card-deck-section'
 import { resetSheetStore, sheet, store } from './automation/test-helpers'
 import { useCardStore } from '@/card/stores/unified-card-store'
+import * as imageUtils from '@/lib/utils'
 
 const first: ExtendedStandardCard = { ...createEmptyCard('ancestry'), type: 'ancestry', id: 'first', name: '敏锐感知', class: '精灵', hint: '森林之子', level: 1, batchId: 'pack', description: '你能察觉细微的变化。' }
 const second: ExtendedStandardCard = { ...first, id: 'second', name: '精灵休眠', level: 2, description: '你可以通过冥想休息。' }
 
 describe('完整种族卡', () => {
+  it('展示完整插图，按原比例伸展且不裁切', async () => {
+    const imageSpy = vi.spyOn(imageUtils, 'getCardImageUrlAsync').mockResolvedValue('/test-illustration.png')
+    try {
+      render(<CardGrid cards={[createCompleteAncestryCard({ ...first, imageUrl: '/elf.webp' }, second)!]} isTextMode={false} />)
+      const image = await screen.findByRole('img', { name: '精灵种族插图' })
+      expect(image).toHaveAttribute('src', '/test-illustration.png')
+      expect(image).toHaveClass('h-auto', 'object-contain')
+    } finally { imageSpy.mockRestore() }
+  })
   it('将同种族两项特性投影为一张卡，保留原始卡且不合并自动效果', () => {
     const card = createCompleteAncestryCard(first, second)!
     expect(card.name).toBe('精灵')

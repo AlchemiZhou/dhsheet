@@ -30,9 +30,9 @@ describe('完整种族选择', () => {
     expect(sheet().ancestry2Ref?.id).toBe('second')
   })
 
-  it('保留导入角色的混血开关，并保留旧存档的未设置状态', () => {
+  it('保留导入角色的混血开关，未设置时默认关闭', () => {
     expect(cleanAndNormalizeData({ mixedAncestry: true }).mixedAncestry).toBe(true)
     expect(cleanAndNormalizeData({ mixedAncestry: false }).mixedAncestry).toBe(false)
-    expect(cleanAndNormalizeData({}).mixedAncestry).toBeUndefined()
+    expect(cleanAndNormalizeData({}).mixedAncestry).toBe(false)
   })
 })
