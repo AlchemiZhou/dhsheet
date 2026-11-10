@@ -138,238 +138,103 @@ export function HeaderSection({
     previewSize: getCardPreviewSize(isTextMode),
   })
 
-  return (
-    <div
-      className="bg-gray-800 text-white p-2 flex justify-between items-center rounded-t-md relative"
+  const renderChoiceControl = (
+    field: 'professionRef' | 'subclassRef' | 'communityRef' | 'ancestry1Ref' | 'ancestry2Ref',
+    onSelect: () => void,
+    placeholder: string,
+    displayName?: string,
+  ) => {
+    const reference = formData[field]
+    if (editingField === field) {
+      return <input
+        type="text"
+        aria-label={`编辑${placeholder.replace('选择', '')}名称`}
+        value={editingValue}
+        onChange={(e) => setEditingValue(e.target.value)}
+        onKeyDown={handleEditKeyDown}
+        onBlur={saveEditingName}
+        className="h-7 w-full min-w-0 rounded border border-gray-400 bg-white px-2 text-xs text-gray-800 focus:border-blue-500 focus:outline-none"
+        autoFocus
+      />
+    }
+    return <div
+      className="group flex h-7 min-h-7 min-w-0 flex-1 overflow-hidden rounded border border-gray-400 bg-white"
+      onMouseEnter={(e) => handleMouseEnter(reference, e.currentTarget)}
+      onMouseLeave={handleMouseLeave}
     >
-      <div className="flex flex-col">
-        <label className="text-[9px] text-gray-300">职业</label>
-        <div className="flex items-center gap-2">
-          {editingField === 'professionRef' ? (
-            <input
-              type="text"
-              value={editingValue}
-              onChange={(e) => setEditingValue(e.target.value)}
-              onKeyDown={handleEditKeyDown}
-              onBlur={saveEditingName}
-              className="w-56 bg-white border border-gray-400 text-gray-800 rounded p-1 h-7 text-xs px-2 focus:outline-none focus:border-blue-500"
-              autoFocus
-            />
-          ) : (
-            <div
-              className="group flex w-56 border border-gray-400 rounded h-7 bg-white overflow-hidden"
-              onMouseEnter={(e) => handleMouseEnter(formData.professionRef, e.currentTarget)}
-              onMouseLeave={handleMouseLeave}
-            >
-                <button
-                  type="button"
-                  onClick={openProfessionModal}
-                  className="flex-1 text-gray-800 text-xs text-left px-2 py-0.5 hover:bg-gray-50 focus:outline-none"
-                >
-                  {formData.professionRef?.name || <span className="print:hidden">选择职业</span>}
-                </button>
-              {formData.professionRef?.name && (
-                <>
-                  <div className="w-px bg-gray-300 opacity-0 group-hover:opacity-100"></div>
-                  <button
-                    type="button"
-                    onClick={() => startEditingName('professionRef', formData.professionRef?.name || '')}
-                    className="w-8 flex items-center justify-center hover:bg-gray-50 focus:outline-none print:hidden opacity-0 group-hover:opacity-100 transition-opacity"
-                    title="编辑名称"
-                  >
-                    <svg className="w-3 h-3 text-gray-500" viewBox="0 0 16 16" fill="currentColor">
-                      <path d="M11.498 1.5a.5.5 0 0 1 .707 0l2.295 2.295a.5.5 0 0 1 0 .707l-9.435 9.435a.5.5 0 0 1-.354.146H1.5a.5.5 0 0 1-.5-.5v-3.211a.5.5 0 0 1 .146-.354L10.582 1.5h.916zm-1 2.207-8.646 8.646v2.36h2.36l8.647-8.647L10.498 3.707z" />
-                    </svg>
-                  </button>
-                </>
-              )}
-            </div>
-          )}
+      <button
+        type="button"
+        onClick={onSelect}
+        className="min-w-0 flex-1 truncate px-2 py-0.5 text-left text-xs text-gray-800 hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500"
+      >
+        {displayName || reference?.name || <span className="print:hidden">{placeholder}</span>}
+      </button>
+      {reference?.name && <button
+        type="button"
+        onClick={() => startEditingName(field, reference.name)}
+        className="flex w-7 shrink-0 items-center justify-center border-l border-gray-300 text-gray-500 opacity-0 transition-opacity hover:bg-gray-50 focus:outline-none group-hover:opacity-100 group-focus-within:opacity-100 print:hidden"
+        title="编辑名称"
+      >
+        <svg className="h-3 w-3" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+          <path d="M11.498 1.5a.5.5 0 0 1 .707 0l2.295 2.295a.5.5 0 0 1 0 .707l-9.435 9.435a.5.5 0 0 1-.354.146H1.5a.5.5 0 0 1-.5-.5v-3.211a.5.5 0 0 1 .146-.354L10.582 1.5h.916zm-1 2.207-8.646 8.646v2.36h2.36l8.647-8.647L10.498 3.707z" />
+        </svg>
+      </button>}
+    </div>
+  }
+
+  return (
+    <div className="relative flex items-center gap-4 rounded-t-md bg-gray-800 p-2 pb-5 text-white">
+      <div className="grid min-w-0 flex-1 grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)_minmax(0,1fr)] items-end gap-x-3 gap-y-2">
+        <div className="flex min-w-0 flex-col gap-1" role="group" aria-label="职业">
+          <span className="text-[9px] text-gray-300">职业</span>
+          {renderChoiceControl('professionRef', openProfessionModal, '选择职业')}
         </div>
-        <PageHeader />
-      </div>
-      <div className="flex flex-col items-center gap-1">
-        <div className="flex gap-2">
-          <div className="flex flex-col">
-            <label className="text-[9px] text-gray-300">名称</label>
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleInputChange}
-              {...getElementProps(formData.name, 'character-name')}
-              className="bg-white text-gray-800 border border-gray-400 rounded p-1 focus:outline-none w-40 print-empty-hide"
-            />
-          </div>
-          <div className="flex flex-col">
-            <label className="text-[9px] text-gray-300">社群</label>
-            {editingField === 'communityRef' ? (
-              <input
-                type="text"
-                value={editingValue}
-                onChange={(e) => setEditingValue(e.target.value)}
-                onKeyDown={handleEditKeyDown}
-                onBlur={saveEditingName}
-                className="w-40 bg-white border border-gray-400 text-gray-800 rounded p-1 h-7 text-xs px-2 focus:outline-none focus:border-blue-500"
-                autoFocus
-              />
-            ) : (
-              <div
-                className="group flex w-40 border border-gray-400 rounded h-7 bg-white overflow-hidden"
-                onMouseEnter={(e) => handleMouseEnter(formData.communityRef, e.currentTarget)}
-                onMouseLeave={handleMouseLeave}
-              >
-                  <button
-                    type="button"
-                    onClick={openCommunityModal}
-                    className="flex-1 text-gray-800 text-xs text-left px-2 py-0.5 hover:bg-gray-50 focus:outline-none"
-                  >
-                    {formData.communityRef?.name || <span className="print:hidden">选择社群</span>}
-                  </button>
-                {formData.communityRef?.name && (
-                  <>
-                    <div className="w-px bg-gray-300 opacity-0 group-hover:opacity-100"></div>
-                    <button
-                      type="button"
-                      onClick={() => startEditingName('communityRef', formData.communityRef?.name || '')}
-                      className="w-8 flex items-center justify-center hover:bg-gray-50 focus:outline-none print:hidden opacity-0 group-hover:opacity-100 transition-opacity"
-                      title="编辑名称"
-                    >
-                      <svg className="w-3 h-3 text-gray-500" viewBox="0 0 16 16" fill="currentColor">
-                        <path d="M11.498 1.5a.5.5 0 0 1 .707 0l2.295 2.295a.5.5 0 0 1 0 .707l-9.435 9.435a.5.5 0 0 1-.354.146H1.5a.5.5 0 0 1-.5-.5v-3.211a.5.5 0 0 1 .146-.354L10.582 1.5h.916zm-1 2.207-8.646 8.646v2.36h2.36l8.647-8.647L10.498 3.707z" />
-                      </svg>
-                    </button>
-                  </>
-                )}
-              </div>
-            )}
+        <div className="flex min-w-0 flex-col gap-1">
+          <label htmlFor="character-name" className="text-[9px] text-gray-300">名称</label>
+          <input
+            id="character-name"
+            type="text"
+            name="name"
+            value={formData.name}
+            onChange={handleInputChange}
+            {...getElementProps(formData.name, 'character-name')}
+            className="h-7 w-full min-w-0 rounded border border-gray-400 bg-white px-2 text-xs text-gray-800 focus:outline-none print-empty-hide"
+          />
+        </div>
+        <div className="flex min-w-0 flex-col gap-1" role="group" aria-label="社群">
+          <span className="text-[9px] text-gray-300">社群</span>
+          {renderChoiceControl('communityRef', openCommunityModal, '选择社群')}
+        </div>
+        <div className="flex min-w-0 flex-col gap-1" role="group" aria-label="子职业">
+          <span className="text-[9px] text-gray-300">子职业</span>
+          {renderChoiceControl('subclassRef', openSubclassModal, '选择子职业')}
+        </div>
+        <div className="flex min-w-0 flex-col gap-1" role="group" aria-label="种族">
+          <span className="text-[9px] text-gray-300">种族</span>
+          <div className="flex min-w-0 items-center gap-1">
+            {renderChoiceControl('ancestry1Ref', () => openAncestryModal('ancestry1'), '选择种族', !mixedAncestry ? ancestryName : undefined)}
+            {mixedAncestry && <>
+              <span className="shrink-0 text-xs">+</span>
+              {renderChoiceControl('ancestry2Ref', () => openAncestryModal('ancestry2'), '选择种族')}
+            </>}
           </div>
         </div>
-        <div className="flex gap-2">
-          <div className="flex flex-col">
-            <div className="mb-1 flex items-center justify-between gap-2"><span className="text-[9px] text-gray-300">种族</span><button type="button" role="switch" aria-checked={mixedAncestry} onClick={() => onMixedAncestryChange(!mixedAncestry)} className={`inline-flex items-center gap-1.5 rounded-md border px-2 py-1 text-[11px] font-semibold shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white print:hidden ${mixedAncestry ? 'border-red-300 bg-red-600 text-white hover:bg-red-500' : 'border-gray-300 bg-white text-gray-800 hover:bg-sky-100'}`}><span aria-hidden="true" className={`relative h-3.5 w-6 rounded-full ${mixedAncestry ? 'bg-red-200' : 'bg-gray-300'}`}><span className={`absolute left-0 top-0.5 h-2.5 w-2.5 rounded-full bg-white shadow transition-transform ${mixedAncestry ? 'translate-x-3' : 'translate-x-0.5'}`} /></span>混血：{mixedAncestry ? '开启' : '关闭'}</button></div>
-            <div className="flex w-52 gap-1">
-              {editingField === 'ancestry1Ref' ? (
-                <input
-                  type="text"
-                  value={editingValue}
-                  onChange={(e) => setEditingValue(e.target.value)}
-                  onKeyDown={handleEditKeyDown}
-                  onBlur={saveEditingName}
-                  className="w-20 bg-white border border-gray-400 text-gray-800 rounded p-1 h-7 text-xs px-2 focus:outline-none focus:border-blue-500"
-                  autoFocus
-                />
-              ) : (
-                  <div
-                    className={`group relative flex ${mixedAncestry ? 'w-24' : 'w-full'} border border-gray-400 rounded h-7 bg-white overflow-hidden`}
-                    onMouseEnter={(e) => handleMouseEnter(formData.ancestry1Ref, e.currentTarget)}
-                    onMouseLeave={handleMouseLeave}
-                  >
-                    <button
-                      type="button"
-                      onClick={() => openAncestryModal("ancestry1")}
-                      className="flex-1 text-gray-800 text-xs text-left px-2 py-0.5 hover:bg-gray-50 focus:outline-none truncate"
-                    >
-                      {(!mixedAncestry && ancestryName) || formData.ancestry1Ref?.name || <span className="print:hidden">选择种族</span>}
-                    </button>
-                    {formData.ancestry1Ref?.name && (
-                      <button
-                        type="button"
-                        onClick={() => startEditingName('ancestry1Ref', formData.ancestry1Ref?.name || '')}
-                        className="absolute right-0 top-0 bottom-0 w-8 flex items-center justify-center bg-white hover:bg-gray-50 focus:outline-none print:hidden opacity-0 group-hover:opacity-100 transition-opacity border-l border-gray-300"
-                        title="编辑名称"
-                      >
-                        <svg className="w-3 h-3 text-gray-500" viewBox="0 0 16 16" fill="currentColor">
-                          <path d="M11.498 1.5a.5.5 0 0 1 .707 0l2.295 2.295a.5.5 0 0 1 0 .707l-9.435 9.435a.5.5 0 0 1-.354.146H1.5a.5.5 0 0 1-.5-.5v-3.211a.5.5 0 0 1 .146-.354L10.582 1.5h.916zm-1 2.207-8.646 8.646v2.36h2.36l8.647-8.647L10.498 3.707z" />
-                        </svg>
-                      </button>
-                  )}
-                </div>
-              )}
-              {mixedAncestry && <><span className="flex items-center text-white text-xs">+</span>
-              {editingField === 'ancestry2Ref' ? (
-                <input
-                  type="text"
-                  value={editingValue}
-                  onChange={(e) => setEditingValue(e.target.value)}
-                  onKeyDown={handleEditKeyDown}
-                  onBlur={saveEditingName}
-                  className="w-24 bg-white border border-gray-400 text-gray-800 rounded p-1 h-7 text-xs px-2 focus:outline-none focus:border-blue-500"
-                  autoFocus
-                />
-              ) : (
-                  <div
-                    className="group relative flex w-24 border border-gray-400 rounded h-7 bg-white overflow-hidden"
-                    onMouseEnter={(e) => handleMouseEnter(formData.ancestry2Ref, e.currentTarget)}
-                    onMouseLeave={handleMouseLeave}
-                  >
-                    <button
-                      type="button"
-                      onClick={() => openAncestryModal("ancestry2")}
-                      className="flex-1 text-gray-800 text-xs text-left px-2 py-0.5 hover:bg-gray-50 focus:outline-none truncate"
-                    >
-                      {formData.ancestry2Ref?.name || <span className="print:hidden">选择种族</span>}
-                    </button>
-                    {formData.ancestry2Ref?.name && (
-                      <button
-                        type="button"
-                        onClick={() => startEditingName('ancestry2Ref', formData.ancestry2Ref?.name || '')}
-                        className="absolute right-0 top-0 bottom-0 w-8 flex items-center justify-center bg-white hover:bg-gray-50 focus:outline-none print:hidden opacity-0 group-hover:opacity-100 transition-opacity border-l border-gray-300"
-                        title="编辑名称"
-                      >
-                        <svg className="w-3 h-3 text-gray-500" viewBox="0 0 16 16" fill="currentColor">
-                          <path d="M11.498 1.5a.5.5 0 0 1 .707 0l2.295 2.295a.5.5 0 0 1 0 .707l-9.435 9.435a.5.5 0 0 1-.354.146H1.5a.5.5 0 0 1-.5-.5v-3.211a.5.5 0 0 1 .146-.354L10.582 1.5h.916zm-1 2.207-8.646 8.646v2.36h2.36l8.647-8.647L10.498 3.707z" />
-                        </svg>
-                      </button>
-                  )}
-                </div>
-              )}</>}
-            </div>
-          </div>
-          <div className="flex flex-col">
-            <label className="text-[9px] text-gray-300">子职业</label>
-            {editingField === 'subclassRef' ? (
-              <input
-                type="text"
-                value={editingValue}
-                onChange={(e) => setEditingValue(e.target.value)}
-                onKeyDown={handleEditKeyDown}
-                onBlur={saveEditingName}
-                className="w-40 bg-white border border-gray-400 text-gray-800 rounded p-1 h-7 text-xs px-2 focus:outline-none focus:border-blue-500"
-                autoFocus
-              />
-            ) : (
-              <div className="group flex w-40 border border-gray-400 rounded h-7 bg-white overflow-hidden">
-                  <button
-                    type="button"
-                    onClick={openSubclassModal}
-                    onMouseEnter={(e) => handleMouseEnter(formData.subclassRef, e.currentTarget)}
-                    onMouseLeave={handleMouseLeave}
-                    className="flex-1 text-gray-800 text-xs text-left px-2 py-0.5 hover:bg-gray-50 focus:outline-none"
-                  >
-                    {formData.subclassRef?.name || <span className="print:hidden">选择子职业</span>}
-                  </button>
-                {formData.subclassRef?.name && (
-                  <>
-                    <div className="w-px bg-gray-300 opacity-0 group-hover:opacity-100"></div>
-                    <button
-                      type="button"
-                      onClick={() => startEditingName('subclassRef', formData.subclassRef?.name || '')}
-                      className="w-8 flex items-center justify-center hover:bg-gray-50 focus:outline-none print:hidden opacity-0 group-hover:opacity-100 transition-opacity"
-                      title="编辑名称"
-                    >
-                      <svg className="w-3 h-3 text-gray-500" viewBox="0 0 16 16" fill="currentColor">
-                        <path d="M11.498 1.5a.5.5 0 0 1 .707 0l2.295 2.295a.5.5 0 0 1 0 .707l-9.435 9.435a.5.5 0 0 1-.354.146H1.5a.5.5 0 0 1-.5-.5v-3.211a.5.5 0 0 1 .146-.354L10.582 1.5h.916zm-1 2.207-8.646 8.646v2.36h2.36l8.647-8.647L10.498 3.707z" />
-                      </svg>
-                    </button>
-                  </>
-                )}
-              </div>
-            )}
-          </div>
+        <div className="flex h-7 min-w-0 items-center print:invisible">
+          <button
+            type="button"
+            role="switch"
+            aria-checked={mixedAncestry}
+            onClick={() => onMixedAncestryChange(!mixedAncestry)}
+            className={`inline-flex h-7 items-center gap-1.5 rounded-md border px-2 text-[11px] font-semibold shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white ${mixedAncestry ? 'border-red-300 bg-red-600 text-white hover:bg-red-500' : 'border-gray-300 bg-white text-gray-800 hover:bg-sky-100'}`}
+          >
+            <span aria-hidden="true" className={`relative h-3.5 w-6 shrink-0 rounded-full ${mixedAncestry ? 'bg-red-200' : 'bg-gray-300'}`}>
+              <span className={`absolute left-0 top-0.5 h-2.5 w-2.5 rounded-full bg-white shadow transition-transform ${mixedAncestry ? 'translate-x-3' : 'translate-x-0.5'}`} />
+            </span>
+            混血：{mixedAncestry ? '开启' : '关闭'}
+          </button>
         </div>
       </div>
-      <div className="flex flex-col items-center">
+      <div className="flex shrink-0 flex-col items-center self-center">
         <div className="w-16 h-16 bg-white text-gray-800 rounded-md border-4 border-gray-600 flex items-center justify-center">
           <div className="text-center">
             <div className="text-xs font-bold">LEVEL</div>
@@ -411,17 +276,10 @@ export function HeaderSection({
           Level Up!
         </button>
       </div>
-
-      {/* 卡牌悬停预览 */}
+      <div className="absolute bottom-0.5 left-2 [&>div]:m-0 [&>div]:p-0"><PageHeader /></div>
       {hoveredCard && (
-        <div
-          className="z-50 pointer-events-none"
-          style={previewPosition}
-        >
-          <CardHoverPreview
-            card={hoveredCard}
-            isTextMode={isTextMode}
-          />
+        <div className="z-50 pointer-events-none" style={previewPosition}>
+          <CardHoverPreview card={hoveredCard} isTextMode={isTextMode} />
         </div>
       )}
     </div>
