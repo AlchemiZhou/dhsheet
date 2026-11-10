@@ -27,8 +27,8 @@ export const SHEET_APPEARANCE_STYLES = `
  .sheet-appearance.sheet-print-mono .a4-page img { filter:grayscale(1)!important; }
  .sheet-appearance .a4-page { background:#fff!important; color:#292929!important; }
  .sheet-appearance .a4-page :is(.text-gray-800,.text-gray-700) { color:#292929!important; }
- .sheet-appearance .a4-page .bg-gray-800, .sheet-appearance .a4-page .bg-gray-700 { background:#fff!important; color:#292929!important; }
- .sheet-appearance .a4-page .bg-gray-800 *, .sheet-appearance .a4-page .bg-gray-700 * { color:#292929!important; }
+ /* Keep structural heading bars, including when browser background printing is off. */
+ .sheet-appearance .a4-page .bg-gray-800, .sheet-appearance .a4-page .bg-gray-700 { background:#3D3D3D!important; color:#fff!important; -webkit-print-color-adjust:exact!important; print-color-adjust:exact!important; }
  .sheet-appearance .a4-page .profession-choice > :first-child { color:var(--sheet-primary)!important; }
  .sheet-appearance .sheet-level-frame, .sheet-appearance .sheet-profession-features { border-color:var(--sheet-secondary)!important; }
  .sheet-appearance .a4-page .domain-badge { color:var(--domain-color)!important; background:#fff!important; border-color:var(--domain-color)!important; }
@@ -36,8 +36,10 @@ export const SHEET_APPEARANCE_STYLES = `
  .sheet-appearance .a4-page input, .sheet-appearance .a4-page textarea, .sheet-appearance .a4-page select { color:#292929!important; border-color:#858585!important; }
  .sheet-appearance .a4-page input[type=checkbox] { appearance:auto!important; accent-color:#303030; }
  .sheet-appearance .a4-page [role=checkbox][data-state=checked] { background:#fff!important; color:#292929!important; border-color:#292929!important; }
- .sheet-appearance .a4-page .bg-gray-800:is(.sheet-filled-mark,.cursor-pointer) { border:4px solid #292929!important; }
- .sheet-appearance .sheet-header { border-bottom:1px solid #858585; }
+ .sheet-appearance .a4-page .sheet-filled-mark { background:#292929!important; -webkit-print-color-adjust:exact!important; print-color-adjust:exact!important; }
+ .sheet-appearance .sheet-header { border:1px solid #3D3D3D; }
+ /* Screen scroll boxes must expand to their actual content on paper. */
+ .sheet-appearance .sheet-profession-features { height:auto; min-height:32mm; overflow:visible; }
  .sheet-appearance .tabs-container, .sheet-appearance [role=switch] { display:none!important; }
 }
 `

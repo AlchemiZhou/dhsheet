@@ -684,6 +684,15 @@ function extractPrintPreviewHTML(onProgress?: ProgressCallback): Promise<string>
       // 克隆容器以避免影响原页面
       const clonedContainer = printContainer.cloneNode(true) as HTMLElement
 
+      // Preserve values that are hidden on screen but explicitly shown on paper
+      // (for example the HP/Stress maximum next to the printed resource track).
+      const printDisplays = new Set(['print:block', 'print:inline', 'print:inline-block', 'print:flex', 'print:inline-flex', 'print:grid', 'print:table', 'print:contents'])
+      clonedContainer.querySelectorAll('.hidden').forEach(element => {
+        if (!element.classList.contains('print:hidden') && Array.from(element.classList).some(name => printDisplays.has(name))) {
+          element.classList.remove('hidden')
+        }
+      })
+
       // 清理不需要的元素
       const elementsToRemove = [
         '.fixed.top-4.left-4', // 控制按钮
@@ -1066,8 +1075,6 @@ function generateInlineCSS(extractedStyles: string): string {
     input[type="checkbox"], input[type="radio"] {
       cursor: pointer;
       pointer-events: auto;
-      width: 18px;
-      height: 18px;
       accent-color: #333;
     }
 
@@ -1114,8 +1121,7 @@ function generateInlineCSS(extractedStyles: string): string {
 
       @page {
         size: A4;
-        margin: 5mm 5mm 2mm 5mm;
-        scale: 0.9;
+        margin: 5mm 5mm 0mm 5mm;
       }
     }
 

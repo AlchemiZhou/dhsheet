@@ -88,4 +88,17 @@ describe('character export image preparation', () => {
     expect(embeddedData.characterImage).toMatch(/^data:image\/png;base64,/)
     expect((embeddedData as { imageAssets?: unknown }).imageAssets).toBeUndefined()
   })
+
+  it('keeps print-only resource values while removing ordinary hidden controls without changing the live sheet', async () => {
+    document.body.innerHTML = `<div class="print-all-pages">
+      <span class="resource-print-value hidden print:inline">上限 6</span>
+      <div class="ordinary-hidden-control hidden">hidden control</div>
+    </div>`
+    const html = await getHTMLContent(sheet(), { includeStyles: false })
+    const exported = new DOMParser().parseFromString(html, 'text/html')
+    expect(exported.querySelector('.resource-print-value')?.textContent).toBe('上限 6')
+    expect(exported.querySelector('.resource-print-value')?.classList.contains('hidden')).toBe(false)
+    expect(exported.querySelector('.ordinary-hidden-control')).toBeNull()
+    expect(document.querySelector('.resource-print-value')?.classList.contains('hidden')).toBe(true)
+  })
 })

@@ -232,5 +232,6 @@ function main() {
   console.log('📝 下一步：在 html-exporter.ts 中导入 embedded-styles');
 }
 
-// 运行主函数
-main();
+if (require.main === module) main();
+
+module.exports = { processCSS, generateTypeScriptModule };
