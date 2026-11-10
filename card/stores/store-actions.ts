@@ -228,10 +228,11 @@ export const createStoreActions = (set: SetFunction, get: GetFunction): UnifiedC
   },
 
   reloadCustomRuntimeFromStorage: async () => {
+    const customSources = get()._loadCustomRuntimeSourceSnapshots();
     const builtinSource = await loadBuiltinCardRuntimeSource({
       disabledSourceIds: getCardDisabledSourceIds(),
+      installedCardIds: new Set(customSources.flatMap(source => source.cards.map(card => card.id))),
     });
-    const customSources = get()._loadCustomRuntimeSourceSnapshots();
     const assembled = assembleCardRuntimeSources([builtinSource, ...customSources]);
 
     set({
@@ -360,6 +361,8 @@ export const createStoreActions = (set: SetFunction, get: GetFunction): UnifiedC
     });
 
     get()._syncToLocalStorage();
+    // Restore bundled expansion cards previously supplied by a removed import.
+    await get().reloadCustomRuntimeFromStorage();
   },
 
   getAllBatches: () => {

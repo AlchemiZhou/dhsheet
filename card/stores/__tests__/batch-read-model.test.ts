@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest"
 import { CardSource } from "../../card-types"
+import hopeFear from "@/data/cards/builtin-hope-fear.json"
 import { getVariantTypeNames } from "../../card-predefined-field"
 import { getVariantLevelOptions } from "../../card-ui-config"
 import { setBuiltinCardRuntimeSourceDisabled } from "../../runtime/source-disabled-state"
@@ -56,7 +57,7 @@ describe("card batch read model", () => {
 
       const beastforms = store.loadAllCards().filter((card) => card.variantSpecial?.realType === "野兽形态")
       expect(beastforms).toHaveLength(disabled ? 0 : 24)
-      expect(getVariantTypeNames()).toEqual(disabled ? [] : ["野兽形态"])
+      expect(getVariantTypeNames()).toEqual(disabled ? [] : ["野兽形态", ...hopeFear.customFieldDefinitions.variants])
       expect(getVariantLevelOptions("野兽形态").map((option) => option.value)).toEqual(
         disabled ? [] : ["1", "2", "3", "4"],
       )
