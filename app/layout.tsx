@@ -1,4 +1,6 @@
 import type React from "react"
+import { readFileSync } from 'node:fs'
+import { join } from 'node:path'
 import type { Metadata } from "next"
 import Script from "next/script"
 import "./globals.css"
@@ -14,6 +16,9 @@ import { getUmamiAnalyticsConfig } from "@/lib/analytics"
 import { APP_DESCRIPTION, APP_SHORT_DESCRIPTION, APP_TITLE, SITE_URL } from "@/lib/seo"
 import PrintHelper from "./print-helper"
 import { CardArtworkToggle } from "@/components/card-artwork-toggle"
+
+// Inline before app chunks so script-load failures can be captured immediately.
+const startupCheckSource = readFileSync(join(process.cwd(), 'public/startup-check.js'), 'utf8')
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -152,6 +157,7 @@ export default function RootLayout({
   return (
     <html lang="zh-CN" suppressHydrationWarning>
       <head>
+        <script dangerouslySetInnerHTML={{ __html: startupCheckSource }} />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
@@ -165,6 +171,7 @@ export default function RootLayout({
         />
       </head>
       <body suppressHydrationWarning>
+        <noscript>此车卡器需要启用 JavaScript 才能使用。请在浏览器设置中允许此网站运行 JavaScript。</noscript>
         <ServiceWorkerLifecycle />
         <MobileViewportScaler />
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>

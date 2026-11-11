@@ -1,4 +1,5 @@
 import type { StandardCard } from "@/card/card-types"
+import { v4 as uuidv4 } from 'uuid'
 import { createEmptyCard, isEmptyCard } from "@/card/card-types"
 import {
   projectCardAutomationSetupDraft,
@@ -35,7 +36,7 @@ const DEFAULT_CARD_ZONE_SIZE = 20
 const PROTECTED_LOADOUT_SLOT_COUNT = 5
 
 export function createRandomCardInstanceId(): string {
-  return `cardinst_${crypto.randomUUID()}`
+  return `cardinst_${uuidv4()}`
 }
 
 function cloneSerializable<T>(value: T): T {

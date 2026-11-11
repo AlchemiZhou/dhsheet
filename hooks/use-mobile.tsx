@@ -20,9 +20,15 @@ export function useIsMobile() {
     const onChange = () => {
       updateIsMobile()
     }
-    mql.addEventListener("change", onChange)
+    // Older Safari / Android WebViews expose MediaQueryList.addListener only.
+    const modernListener = typeof mql.addEventListener === 'function'
+    if (modernListener) mql.addEventListener("change", onChange)
+    else mql.addListener(onChange)
 
-    return () => mql.removeEventListener("change", onChange)
+    return () => {
+      if (modernListener) mql.removeEventListener("change", onChange)
+      else mql.removeListener(onChange)
+    }
   }, [])
 
   return isMobile

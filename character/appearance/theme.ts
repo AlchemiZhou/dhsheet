@@ -36,7 +36,7 @@ export function normalizeSheetAppearance(raw: unknown): SheetAppearancePreferenc
   const value = raw && typeof raw === 'object' ? raw as Partial<SheetAppearancePreferences> : {}
   return {
     mode: value.mode === 'neutral' || value.mode === 'profession' ? value.mode : 'auto',
-    profession: value.profession && Object.hasOwn(PROFESSION_THEMES, value.profession) ? value.profession : 'bard',
+    profession: value.profession && Object.prototype.hasOwnProperty.call(PROFESSION_THEMES, value.profession) ? value.profession : 'bard',
     printMode: value.printMode === 'mono' ? 'mono' : 'color',
   }
 }

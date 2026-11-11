@@ -1,4 +1,5 @@
 import type { SheetData } from '@/lib/sheet-data'
+import cloneValue from '@ungap/structured-clone'
 import {
   deleteCharacterImage,
   getCharacterImage,
@@ -35,7 +36,7 @@ export interface ProjectSheetForStorageOptions {
 }
 
 function withoutExternalImageAssets(sheet: SheetData): SheetData {
-  const copy = structuredClone(sheet)
+  const copy = cloneValue(sheet)
   delete copy.imageAssets
   return copy
 }
@@ -49,8 +50,8 @@ export async function projectSheetForStorage(
   sheetData: SheetData,
   options: ProjectSheetForStorageOptions = {},
 ): Promise<SheetStorageProjectionResult> {
-  const storedSheet: SheetData = structuredClone(sheetData)
-  const runtimeSheet: SheetData = structuredClone(sheetData)
+  const storedSheet: SheetData = cloneValue(sheetData)
+  const runtimeSheet: SheetData = cloneValue(sheetData)
   const imageAssets: CharacterImageAssetMap = { ...(storedSheet.imageAssets ?? {}) }
   const writtenImageKeys: string[] = []
   const clearEmptyImageFields = new Set(options.clearEmptyImageFields ?? [])
@@ -88,8 +89,8 @@ export async function projectSheetForStorage(
 export async function hydrateSheetForRuntimeWithDiagnostics(
   storedSheet: SheetData,
 ): Promise<SheetRuntimeHydrationResult> {
-  const cleanedStoredSheet: SheetData = structuredClone(storedSheet)
-  const runtimeSheet: SheetData = structuredClone(storedSheet)
+  const cleanedStoredSheet: SheetData = cloneValue(storedSheet)
+  const runtimeSheet: SheetData = cloneValue(storedSheet)
   const storedImageAssets: CharacterImageAssetMap = { ...(cleanedStoredSheet.imageAssets ?? {}) }
   const runtimeImageAssets: CharacterImageAssetMap = { ...(runtimeSheet.imageAssets ?? {}) }
   const missingImages: MissingCharacterImageAsset[] = []

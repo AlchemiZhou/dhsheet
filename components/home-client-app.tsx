@@ -304,6 +304,8 @@ export default function HomeClientApp() {
   // 客户端挂载检测
   useEffect(() => {
     setIsClient(true)
+    document.documentElement.setAttribute('data-dhsheet-client', 'ready')
+    window.dispatchEvent(new Event('dhsheet:client-ready'))
   }, [])
 
   // 快捷键提示仅面向桌面端
@@ -638,7 +640,7 @@ export default function HomeClientApp() {
   // 允许页面在客户端初始化的同时显示加载状态
   if (!isClient) {
     return (
-      <div className="flex flex-col justify-center items-center h-screen">
+      <div id="dhsheet-client-startup" className="flex flex-col justify-center items-center h-screen">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mb-4"></div>
         <div className="text-lg">初始化中...</div>
         <div className="text-sm text-gray-500 mt-2">正在启动客户端...</div>
