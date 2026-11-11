@@ -27,6 +27,7 @@ export interface AppPreferencesDocument {
     professionAutoSetup?: boolean
     referencePrint?: boolean
     mobileExperienceNoticeDismissed?: boolean
+    cardArtworkEnabled?: boolean
   }
   announcements: {
     lastReadAnnouncementId?: string
@@ -192,6 +193,7 @@ function normalizePreferences(value: unknown): AppPreferencesDocument | null {
   normalized.ui.dualPage = normalizeDualPage(ui.dualPage)
   if (typeof ui.professionAutoSetup === "boolean") normalized.ui.professionAutoSetup = ui.professionAutoSetup
   if (typeof ui.referencePrint === "boolean") normalized.ui.referencePrint = ui.referencePrint
+  if (typeof ui.cardArtworkEnabled === "boolean") normalized.ui.cardArtworkEnabled = ui.cardArtworkEnabled
   if (typeof ui.mobileExperienceNoticeDismissed === "boolean") normalized.ui.mobileExperienceNoticeDismissed = ui.mobileExperienceNoticeDismissed
   if (ui.sheetAppearance !== undefined) normalized.ui.sheetAppearance = normalizeSheetAppearance(ui.sheetAppearance)
 
@@ -447,6 +449,13 @@ export function setReferencePrint(value: boolean, storage?: AppPreferencesStorag
 
 export function getMobileExperienceNoticeDismissed(storage?: AppPreferencesStorage): boolean {
   return getAppPreferences(storage).ui.mobileExperienceNoticeDismissed === true
+}
+
+export function getCardArtworkEnabled(storage?: AppPreferencesStorage): boolean {
+  return getAppPreferences(storage).ui.cardArtworkEnabled === true
+}
+export function setCardArtworkEnabled(value: boolean, storage?: AppPreferencesStorage): void {
+  updatePreferences(p => ({ ...p, ui: { ...p.ui, cardArtworkEnabled: value } }), storage)
 }
 export function setMobileExperienceNoticeDismissed(value: boolean, storage?: AppPreferencesStorage): void {
   updatePreferences(p => ({ ...p, ui: { ...p.ui, mobileExperienceNoticeDismissed: value } }), storage)

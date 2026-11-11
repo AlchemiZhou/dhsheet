@@ -1,4 +1,6 @@
 "use client"
+import { useCardArtworkStore } from '@/lib/card-artwork-store'
+import { SelectableCard } from './selectable-card'
 
 import { CardType, StandardCard, ExtendedStandardCard } from "@/card/card-types"
 import { CardSource } from "@/card/card-types"
@@ -90,7 +92,13 @@ interface ImageCardProps {
     refreshTrigger?: number; // 用于手动触发刷新动画
 }
 
-export function ImageCard({ card, onClick, isSelected, showSource = true, priority = false, refreshTrigger }: ImageCardProps) {
+export function ImageCard(props: ImageCardProps) {
+    const enabled = useCardArtworkStore(state => state.enabled)
+    if (!props.card) return null
+    return enabled ? <IllustratedImageCard {...props} /> : <SelectableCard card={props.card} onClick={() => props.onClick(props.card.id)} isSelected={props.isSelected} showSource={props.showSource} />
+}
+
+function IllustratedImageCard({ card, onClick, isSelected, showSource = true, priority = false, refreshTrigger }: ImageCardProps) {
     const [_isHovered, setIsHovered] = useState(false)
     const [_isAltPressed, setIsAltPressed] = useState(false)
     const [cardSource, setCardSource] = useState<string>("加载中...")

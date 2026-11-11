@@ -13,6 +13,7 @@ import { MobileViewportScaler } from "@/components/mobile-viewport-scaler"
 import { getUmamiAnalyticsConfig } from "@/lib/analytics"
 import { APP_DESCRIPTION, APP_SHORT_DESCRIPTION, APP_TITLE, SITE_URL } from "@/lib/seo"
 import PrintHelper from "./print-helper"
+import { CardArtworkToggle } from "@/components/card-artwork-toggle"
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -174,14 +175,14 @@ export default function RootLayout({
             <Toaster />
             <FadeNotificationContainer />
             {/* 水印 */}
-            <div className="sheet-credit fixed bottom-2 left-2 text-gray-500 text-xs opacity-75 pointer-events-none">
+            <div className="sheet-credit fixed bottom-2 left-2 z-40 text-gray-500 text-xs opacity-75 pointer-events-none print:hidden">
               本作品完全开源且免费
               <br />
               作者：RidRisR
               <br />
               翻译及校对：PolearmMaster, 末楔, 里予, 一得, RisRisR
               <br />
-              由 炼金术士阿刻米 特调
+              <CardArtworkToggle />
             </div>
           </ProgressModalProvider>
         </ThemeProvider>

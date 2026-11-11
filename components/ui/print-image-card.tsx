@@ -1,4 +1,6 @@
 "use client"
+import { useCardArtworkStore } from '@/lib/card-artwork-store'
+import { CardContent } from './card-content'
 
 import { StandardCard, ExtendedStandardCard, isVariantCard, getVariantRealType, CardType } from "@/card/card-types"
 import { getCardTypeName } from "@/card/card-ui-config"
@@ -28,6 +30,12 @@ interface PrintImageCardProps {
  * 图片加载状态由 usePrintReady hook 通过 DOM 观察获取。
  */
 export function PrintImageCard({ card }: PrintImageCardProps) {
+    const enabled = useCardArtworkStore(state => state.enabled)
+    if (!card) return null
+    return enabled ? <IllustratedPrintImageCard card={card} /> : <div className="border rounded p-2 bg-white text-xs h-full flex flex-col"><CardContent card={card} /></div>
+}
+
+function IllustratedPrintImageCard({ card }: PrintImageCardProps) {
     const [imageSrc, setImageSrc] = React.useState<string | null>(null)
     const [imageError, setImageError] = React.useState(false)
 

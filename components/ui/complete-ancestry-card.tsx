@@ -1,4 +1,5 @@
 "use client"
+import { useCardArtworkStore } from '@/lib/card-artwork-store'
 
 import type { CompleteAncestryCard } from '@/character/ancestry/complete-card'
 import { CardMarkdown } from './card-markdown'
@@ -10,18 +11,20 @@ export function CompleteAncestryCardView({ card, onClick, selected = false }: {
   onClick?: () => void
   selected?: boolean
 }) {
+  const enabled = useCardArtworkStore(state => state.enabled)
   const [imageUrl, setImageUrl] = useState<string | null>(null)
   const illustration = card.ancestryTraits.find(trait => trait.imageUrl || trait.hasLocalImage) ?? card.ancestryTraits[0]
   useEffect(() => {
     let cancelled = false
     setImageUrl(null)
+    if (!enabled) return
     void getCardImageUrlAsync(illustration).then(url => {
       if (!cancelled && !url.endsWith('/empty-card.webp')) setImageUrl(url)
     }).catch(() => { if (!cancelled) setImageUrl(null) })
     return () => { cancelled = true }
-  }, [illustration])
+  }, [illustration, enabled])
   const content = <>
-    {imageUrl && <img src={imageUrl} alt={`${card.name}种族插图`} loading="lazy" decoding="async" className="mb-4 block h-auto w-full rounded-lg object-contain" onError={() => setImageUrl(null)} />}
+    {enabled && imageUrl && <img src={imageUrl} alt={`${card.name}种族插图`} loading="lazy" decoding="async" className="mb-4 block h-auto w-full rounded-lg object-contain" onError={() => setImageUrl(null)} />}
     <div className="flex items-center justify-between gap-2 border-b border-slate-200 pb-3">
       <h3 className="text-xl font-bold text-slate-900">{card.name}</h3>
       <span className="rounded-full bg-slate-100 px-2 py-1 text-xs text-slate-600">完整种族 · 双特性</span>

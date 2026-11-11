@@ -1,4 +1,5 @@
 "use client"
+import { useCardArtworkStore } from '@/lib/card-artwork-store'
 
 import type { StandardCard } from "@/card/card-types"
 import { getCardTypeName } from "@/card/card-ui-config"
@@ -28,6 +29,13 @@ const getDisplayTypeName = (card: StandardCard) => {
 }
 
 export function CardHoverPreview({ card, isTextMode = false }: CardHoverPreviewProps) {
+    const enabled = useCardArtworkStore(state => state.enabled)
+    if (!card) return null
+    if (isCompleteAncestryCard(card)) return <div className="w-80"><CompleteAncestryCardView card={card} /></div>
+    return isTextMode || !enabled ? <div className="shadow-lg"><SelectableCard card={card} onClick={() => {}} isSelected={false} /></div> : <IllustratedCardHoverPreview card={card} />
+}
+
+function IllustratedCardHoverPreview({ card, isTextMode = false }: CardHoverPreviewProps) {
     const [imageError, setImageError] = useState(false)
     const [imageSrc, setImageSrc] = useState<string>('')
     

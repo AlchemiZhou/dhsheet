@@ -1,4 +1,5 @@
 "use client"
+import { useCardArtworkStore } from '@/lib/card-artwork-store'
 
 import React, { useMemo } from "react"
 import { isEmptyCard, StandardCard } from "@/card/card-types"
@@ -18,7 +19,9 @@ interface CardDeckPrintSectionProps {
 }
 
 const CardDeckPrintSection: React.FC<CardDeckPrintSectionProps> = ({ cards, title }) => {
-    const { isTextMode } = useTextModeStore()
+    const { isTextMode: preferredTextMode } = useTextModeStore()
+    const artworkEnabled = useCardArtworkStore(state => state.enabled)
+    const isTextMode = preferredTextMode || !artworkEnabled
 
     // 按行分组，每行 3 张
     const cardRows = useMemo(() => {

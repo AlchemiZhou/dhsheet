@@ -1,4 +1,6 @@
 "use client"
+import { useCardArtworkStore } from '@/lib/card-artwork-store'
+import { SelectableCard } from './selectable-card'
 import { getCompactCardTitle, getCompactCardTier } from "@/card/display/compact-card"
 
 import { StandardCard } from "@/card/card-types"
@@ -25,7 +27,13 @@ interface SimpleImageCardProps {
     priority?: boolean;
 }
 
-export function SimpleImageCard({ card, onClick, isSelected, priority = false }: SimpleImageCardProps) {
+export function SimpleImageCard(props: SimpleImageCardProps) {
+    const enabled = useCardArtworkStore(state => state.enabled)
+    if (!props.card) return null
+    return enabled ? <IllustratedSimpleImageCard {...props} /> : <SelectableCard card={props.card} onClick={() => props.onClick(props.card.id)} isSelected={props.isSelected} />
+}
+
+function IllustratedSimpleImageCard({ card, onClick, isSelected, priority = false }: SimpleImageCardProps) {
     const [imageError, setImageError] = useState(false)
     const [imageSrc, setImageSrc] = useState<string | null>(null)
 
