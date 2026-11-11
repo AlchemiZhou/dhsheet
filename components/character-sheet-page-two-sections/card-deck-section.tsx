@@ -128,12 +128,14 @@ function Card({
         } ${getBorderColor(isSpecial)}`}
       onClick={() => onCardClick(index)}
       onContextMenu={(e) => onCardRightClick(index, e)}
-      onMouseEnter={() => {
-        if (card?.name) {
+      onPointerEnter={(event) => {
+        // Touch browsers may synthesize mouse events before opening the picker.
+        if (!isMobile && event.pointerType === 'mouse' && card?.name) {
           onHover(index);
         }
       }}
-      onMouseLeave={() => {
+      onPointerDown={() => onHover(null)}
+      onPointerLeave={() => {
         onHover(null);
       }}
     >
@@ -227,7 +229,7 @@ function Card({
       )}
 
       {/* Hover preview */}
-      {hoveredCard === index && card?.name && (
+      {!isMobile && hoveredCard === index && card?.name && (
         <div className="absolute z-50 pointer-events-none" style={getPreviewPosition(index)}>
           <CardHoverPreview card={standardCard} isTextMode={isTextMode} />
         </div>
@@ -294,15 +296,18 @@ export function CardDeckSection({
     refreshCardAudit()
   }, [refreshCardAudit, runtimeInitialized, runtimeLoading, sheetLoadRevision])
 
-  // 优化的hover处理函数，确保立即响应
-  const handleCardHover = useCallback((cardIndex: number | null) => {
-    setHoveredCard(cardIndex);
-  }, []);
-
   // 移除：selectedCards 状态和聚焦逻辑
   const cardRefs = useRef<(HTMLDivElement | null)[]>([])
   const [cardSelectionModalOpen, setCardSelectionModalOpen] = useState(false)
   const [selectedCardIndex, setSelectedCardIndex] = useState<number | null>(null)
+
+  const handleCardHover = useCallback((cardIndex: number | null) => {
+    setHoveredCard(isMobile || cardSelectionModalOpen ? null : cardIndex);
+  }, [isMobile, cardSelectionModalOpen]);
+
+  useEffect(() => {
+    setHoveredCard(null);
+  }, [isMobile, activeDeck]);
 
   // 获取当前卡组数据的辅助函数
   const getCurrentDeckCards = (deckType: 'focused' | 'inventory'): StandardCard[] => {
@@ -364,6 +369,7 @@ export function CardDeckSection({
 
   // 处理卡牌点击事件
   const handleCardClick = (index: number) => {
+    setHoveredCard(null);
     // 特殊卡位不允许修改
     if (isSpecialSlot(index)) return
 
@@ -501,7 +507,7 @@ export function CardDeckSection({
                   onCardRightClick={handleCardRightClick}
                   onHover={handleCardHover}
                   getPreviewPosition={getPreviewPosition}
-                  hoveredCard={hoveredCard}
+                  hoveredCard={cardSelectionModalOpen ? null : hoveredCard}
                   onPinCard={pinCard}
                   onCardDelete={handleCardDelete}
                   hasSetupRequirements={hasSetupRequirements}
