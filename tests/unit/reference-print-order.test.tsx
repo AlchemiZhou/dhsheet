@@ -25,6 +25,8 @@ describe('reference print document order', () => {
     expect(root.lastElementChild?.textContent).toContain('旧存档中的重要记忆')
     expect(root.lastElementChild?.classList.contains('last-printed-page')).toBe(true)
     expect(root.querySelector('.page-four')?.classList.contains('last-printed-page')).toBe(false)
+    expect(root.classList.contains('reference-print-document')).toBe(true)
+    expect(root.querySelector('.page-four')?.classList.contains('reference-content-page')).toBe(true)
     rerender(<PrintPageRenderer sheetData={{ ...sheet, characterBackground: '' }} />)
     expect(root.querySelector('.reference-continuation')).toBeNull()
     expect(root.querySelector('.page-four')?.classList.contains('last-printed-page')).toBe(true)

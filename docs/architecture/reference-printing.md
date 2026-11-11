@@ -8,6 +8,8 @@
 
 `public/print-templates` contains 26 page backgrounds and the original form font subset with its license. The font loads only in print preview. Standalone HTML embeds backgrounds and one font copy, so it remains portable. Color and monochrome use the existing print setting.
 
+The artwork, live fields and marks share a 200 mm canvas centered with 5 mm paper insets. Ordinary pages use their own local print scale to fit 5 mm margins, preventing Chromium from shrinking the entire mixed-page document. Missing outer artwork strokes are continued inside the canvas. Equipment feature text fills the original two writing rows separately, including the second row's label indentation; unfit text retains its complete continuation entry.
+
 Regenerate assets and `data/character/profession-presets.json` from the 13 supplied fillable PDFs:
 
 ```sh

@@ -16,10 +16,24 @@
   max-width: none;
   object-fit: fill;
 }
+.reference-canvas {
+  position: absolute;
+  left: 5mm;
+  top: 5mm;
+  width: 210mm;
+  height: 297mm;
+  transform: scale(var(--reference-scale));
+  transform-origin: top left;
+}
+.reference-sheet .reference-frame-edge {
+  fill: none;
+  stroke: #545454;
+  stroke-width: 0.85;
+}
 .reference-sheet .reference-field {
   position: absolute;
   box-sizing: border-box;
-  padding: 0;
+  padding: 0 2pt;
   margin: 0;
   border: 0;
   color: var(--reference-ink, #243d34);
@@ -34,6 +48,7 @@
   justify-content: center;
 }
 .reference-sheet .reference-question {
+  padding: 0;
   font-family: Arial, "Noto Sans CJK SC", sans-serif;
   font-weight: 600;
   color: #292929;
@@ -104,6 +119,15 @@
     width: 210mm !important;
     padding: 0 !important;
     margin: 0 !important;
+  }
+  /* A 210 mm card sheet on a page with 5 mm margins shrinks the whole PDF,
+     including the zero-margin reference pages. Fit only the ordinary pages. */
+  .reference-print-document > .reference-content-page {
+    width: 200mm !important;
+  }
+  .reference-print-document > .reference-content-page .a4-page {
+    width: 210mm !important;
+    zoom: var(--reference-content-scale);
   }
   .reference-sheet {
     width: 210mm !important;

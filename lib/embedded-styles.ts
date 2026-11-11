@@ -1,6 +1,6 @@
 /**
  * 自动生成的CSS内容文件
- * 生成时间: 2026-11-11T08:40:55.658Z
+ * 生成时间: 2026-11-11T09:38:57.201Z
  * 
  * 该文件包含了应用的所有CSS样式，用于HTML导出功能
  * 请勿手动编辑此文件，它会在构建时自动生成
@@ -11,7 +11,7 @@
 
 /**
  * 完整的CSS内容（包含Tailwind CSS和应用样式）
- * 大小: 147.06 KB
+ * 大小: 147.72 KB
  */
 export const embeddedStyles = `*, ::before, ::after {
   --tw-border-spacing-x: 0;
@@ -4285,10 +4285,24 @@ html {
   max-width: none;
   object-fit: fill;
 }
+.reference-canvas {
+  position: absolute;
+  left: 5mm;
+  top: 5mm;
+  width: 210mm;
+  height: 297mm;
+  transform: scale(var(--reference-scale));
+  transform-origin: top left;
+}
+.reference-sheet .reference-frame-edge {
+  fill: none;
+  stroke: #545454;
+  stroke-width: 0.85;
+}
 .reference-sheet .reference-field {
   position: absolute;
   box-sizing: border-box;
-  padding: 0;
+  padding: 0 2pt;
   margin: 0;
   border: 0;
   color: var(--reference-ink, #243d34);
@@ -4303,6 +4317,7 @@ html {
   justify-content: center;
 }
 .reference-sheet .reference-question {
+  padding: 0;
   font-family: Arial, "Noto Sans CJK SC", sans-serif;
   font-weight: 600;
   color: #292929;
@@ -4373,6 +4388,15 @@ html {
     width: 210mm !important;
     padding: 0 !important;
     margin: 0 !important;
+  }
+  /* A 210 mm card sheet on a page with 5 mm margins shrinks the whole PDF,
+     including the zero-margin reference pages. Fit only the ordinary pages. */
+  .reference-print-document > .reference-content-page {
+    width: 200mm !important;
+  }
+  .reference-print-document > .reference-content-page .a4-page {
+    width: 210mm !important;
+    zoom: var(--reference-content-scale);
   }
   .reference-sheet {
     width: 210mm !important;
@@ -6106,7 +6130,7 @@ export function getStylesInfo() {
     size: embeddedStyles.length,
     sizeKB: (embeddedStyles.length / 1024).toFixed(2),
     sizeMB: (embeddedStyles.length / 1024 / 1024).toFixed(2),
-    generated: '2026-11-11T08:40:55.659Z',
+    generated: '2026-11-11T09:38:57.201Z',
     compressed: false
   };
 }
