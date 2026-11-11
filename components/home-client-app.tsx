@@ -1,4 +1,5 @@
 "use client"
+import { MobileExperienceNotice } from "@/components/modals/mobile-experience-notice"
 
 import { createContext, useContext, useState, useEffect, useRef } from "react"
 import CharacterSheet from "@/components/character-sheet"
@@ -254,6 +255,7 @@ export default function HomeClientApp() {
   const [sealDiceExportModalOpen, setSealDiceExportModalOpen] = useState(false)
   const [announcementsModalOpen, setAnnouncementsModalOpen] = useState(false)
   const [hasUnreadAnnouncements, setHasUnreadAnnouncements] = useState(false)
+  const [mobileExperienceNoticeAcknowledged, setMobileExperienceNoticeAcknowledged] = useState(false)
   const [currentTabValue, setCurrentTabValue] = useState("page1")
   const [showShortcutHint, setShowShortcutHint] = useState(false)
   const [isCardDrawerOpen, setIsCardDrawerOpen] = useState(false)
@@ -934,6 +936,10 @@ export default function HomeClientApp() {
       />
 
       {/* 更新公告模态框 */}
+      <MobileExperienceNotice
+        isMobile={isMobile && !mobileExperienceNoticeAcknowledged && !sessionAuditDialogOpen}
+        onAcknowledge={() => setMobileExperienceNoticeAcknowledged(true)}
+      />
       <AnnouncementsModal
         isOpen={announcementsModalOpen}
         onClose={() => setAnnouncementsModalOpen(false)}

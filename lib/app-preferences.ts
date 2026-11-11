@@ -26,6 +26,7 @@ export interface AppPreferencesDocument {
     sheetAppearance?: SheetAppearancePreferences
     professionAutoSetup?: boolean
     referencePrint?: boolean
+    mobileExperienceNoticeDismissed?: boolean
   }
   announcements: {
     lastReadAnnouncementId?: string
@@ -191,6 +192,7 @@ function normalizePreferences(value: unknown): AppPreferencesDocument | null {
   normalized.ui.dualPage = normalizeDualPage(ui.dualPage)
   if (typeof ui.professionAutoSetup === "boolean") normalized.ui.professionAutoSetup = ui.professionAutoSetup
   if (typeof ui.referencePrint === "boolean") normalized.ui.referencePrint = ui.referencePrint
+  if (typeof ui.mobileExperienceNoticeDismissed === "boolean") normalized.ui.mobileExperienceNoticeDismissed = ui.mobileExperienceNoticeDismissed
   if (ui.sheetAppearance !== undefined) normalized.ui.sheetAppearance = normalizeSheetAppearance(ui.sheetAppearance)
 
   if (typeof announcements.lastReadAnnouncementId === "string" && announcements.lastReadAnnouncementId.length > 0) {
@@ -441,4 +443,11 @@ export function setProfessionAutoSetup(value: boolean, storage?: AppPreferencesS
 export function getReferencePrint(storage?: AppPreferencesStorage): boolean { return getAppPreferences(storage).ui.referencePrint !== false }
 export function setReferencePrint(value: boolean, storage?: AppPreferencesStorage): void {
   updatePreferences(p => ({ ...p, ui: { ...p.ui, referencePrint: value } }), storage)
+}
+
+export function getMobileExperienceNoticeDismissed(storage?: AppPreferencesStorage): boolean {
+  return getAppPreferences(storage).ui.mobileExperienceNoticeDismissed === true
+}
+export function setMobileExperienceNoticeDismissed(value: boolean, storage?: AppPreferencesStorage): void {
+  updatePreferences(p => ({ ...p, ui: { ...p.ui, mobileExperienceNoticeDismissed: value } }), storage)
 }

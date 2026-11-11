@@ -1,6 +1,6 @@
 /**
  * 自动生成的CSS内容文件
- * 生成时间: 2026-11-11T10:55:18.135Z
+ * 生成时间: 2026-11-11T11:48:13.063Z
  * 
  * 该文件包含了应用的所有CSS样式，用于HTML导出功能
  * 请勿手动编辑此文件，它会在构建时自动生成
@@ -11,7 +11,7 @@
 
 /**
  * 完整的CSS内容（包含Tailwind CSS和应用样式）
- * 大小: 150.58 KB
+ * 大小: 150.97 KB
  */
 export const embeddedStyles = `*, ::before, ::after {
   --tw-border-spacing-x: 0;
@@ -2128,6 +2128,9 @@ video {
 .border-t-2 {
   border-top-width: 2px;
 }
+.border-t-4 {
+  border-top-width: 4px;
+}
 .border-dashed {
   border-style: dashed;
 }
@@ -2327,6 +2330,10 @@ video {
 .border-l-transparent {
   border-left-color: transparent;
 }
+.border-t-red-800 {
+  --tw-border-opacity: 1;
+  border-top-color: rgb(153 27 27 / var(--tw-border-opacity, 1));
+}
 .border-t-transparent {
   border-top-color: transparent;
 }
@@ -2525,6 +2532,10 @@ video {
 .bg-red-700 {
   --tw-bg-opacity: 1;
   background-color: rgb(185 28 28 / var(--tw-bg-opacity, 1));
+}
+.bg-red-800 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(153 27 27 / var(--tw-bg-opacity, 1));
 }
 .bg-secondary {
   background-color: hsl(var(--secondary));
@@ -2887,6 +2898,9 @@ video {
 }
 .pr-4 {
   padding-right: 16px;
+}
+.pr-5 {
+  padding-right: 20px;
 }
 .pr-8 {
   padding-right: 32px;
@@ -4779,6 +4793,10 @@ html {
   --tw-bg-opacity: 1;
   background-color: rgb(153 27 27 / var(--tw-bg-opacity, 1));
 }
+.hover\\:bg-red-900:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(127 29 29 / var(--tw-bg-opacity, 1));
+}
 .hover\\:bg-secondary:hover {
   background-color: hsl(var(--secondary));
 }
@@ -6251,7 +6269,7 @@ export function getStylesInfo() {
     size: embeddedStyles.length,
     sizeKB: (embeddedStyles.length / 1024).toFixed(2),
     sizeMB: (embeddedStyles.length / 1024 / 1024).toFixed(2),
-    generated: '2026-11-11T10:55:18.136Z',
+    generated: '2026-11-11T11:48:13.063Z',
     compressed: false
   };
 }
