@@ -10,7 +10,7 @@ Story columns independently select guided questions or continuous prose. Optiona
 
 `public/print-templates` contains 27 page backgrounds and the original form font subset with its license. The font loads only in print preview. Standalone HTML embeds backgrounds and one font copy, so it remains portable. Color and monochrome PDF actions commit the requested print palette before the browser captures the document; both the main export menu and preview toolbar expose them directly.
 
-The artwork, live fields and marks share the full A4 canvas without added paper insets. Ordinary pages use their own local print scale to fit 5 mm margins, preventing Chromium from shrinking the entire mixed-page document. The original artwork is preserved without added frame edges. Equipment feature text fills the original two writing rows separately, including the second row's label indentation; unfit text retains its complete continuation entry.
+The artwork, live fields and marks share the full A4 canvas without added paper insets. All pages use the same unnamed zero-margin A4 page rule, including standalone HTML. Ordinary pages use 5 mm internal padding and a 200 mm content width. Do not reintroduce named pages, differing page margins or print-time zoom: Safari can change fragmentation and scale when switching from Letter to A4. Paper selection itself remains controlled by the OS print dialog. The original artwork is preserved without added frame edges. Equipment feature text fills the original two writing rows separately, including the second row's label indentation; unfit text retains its complete continuation entry.
 
 Regenerate assets and `data/character/profession-presets.json` from the 13 supplied fillable PDFs:
 

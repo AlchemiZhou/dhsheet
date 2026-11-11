@@ -13,7 +13,6 @@ import type { SheetData } from "@/lib/sheet-data";
 import { getVisiblePages } from "@/lib/page-registry";
 import { useSheetAppearanceAttributes } from "@/components/sheet-appearance-provider";
 import { SHEET_APPEARANCE_STYLES } from "@/character/appearance/styles";
-import { REFERENCE_CONTENT_SCALE } from "@/character/print-reference/layout";
 
 interface PrintPageRendererProps {
   sheetData: SheetData;
@@ -78,12 +77,7 @@ export function PrintPageRenderer({
     <div
       {...appearanceAttributes}
       className={`pb-40 print:pb-0 ${appearanceAttributes.className} ${referenceDocument ? "reference-print-document" : ""}`}
-      style={
-        {
-          ...appearanceAttributes.style,
-          "--reference-content-scale": REFERENCE_CONTENT_SCALE,
-        } as React.CSSProperties
-      }
+      style={appearanceAttributes.style}
     >
       {visiblePages.map((page, index) => {
         const Component = page.printComponent ?? page.component;
@@ -95,7 +89,7 @@ export function PrintPageRenderer({
         return (
           <React.Fragment key={page.id}>
             <div
-              className={`${page.printClass} ${referenceDocument ? (referencePage ? "reference-print-page" : "reference-content-page") : ""} flex justify-center items-start ${
+              className={`${page.printClass} ${!referencePage ? "sheet-content-page" : ""} ${referenceDocument ? (referencePage ? "reference-print-page" : "reference-content-page") : ""} flex justify-center items-start ${
                 isLastPage ? "last-printed-page" : ""
               }`}
             >

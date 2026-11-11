@@ -1125,7 +1125,7 @@ function generateInlineCSS(extractedStyles: string): string {
 
       @page {
         size: A4;
-        margin: 5mm 5mm 0mm 5mm;
+        margin: 0;
       }
     }
 

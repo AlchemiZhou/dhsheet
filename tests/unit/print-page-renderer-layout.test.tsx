@@ -28,6 +28,7 @@ describe("PrintPageRenderer layout", () => {
     expect(wrapper).not.toBeNull()
     expect(wrapper?.className).toContain("pb-40")
     expect(wrapper?.className).toContain("print:pb-0")
+    expect(container.querySelectorAll('.sheet-content-page')).toHaveLength(2)
   })
 
   it('uses the dedicated print component and marks the last included group', () => {

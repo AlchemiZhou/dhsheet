@@ -1,6 +1,6 @@
 /**
  * 自动生成的CSS内容文件
- * 生成时间: 2026-11-11T11:48:13.063Z
+ * 生成时间: 2026-11-11T18:25:21.774Z
  * 
  * 该文件包含了应用的所有CSS样式，用于HTML导出功能
  * 请勿手动编辑此文件，它会在构建时自动生成
@@ -11,7 +11,7 @@
 
 /**
  * 完整的CSS内容（包含Tailwind CSS和应用样式）
- * 大小: 150.97 KB
+ * 大小: 151.12 KB
  */
 export const embeddedStyles = `*, ::before, ::after {
   --tw-border-spacing-x: 0;
@@ -3727,13 +3727,14 @@ html {
   .print-card {
     border: 1.5px solid #666 !important;
     box-shadow: none !important;
-    height: 95mm;
+    /* Physical size previously obtained by scaling a 95 mm card down. */
+    height: 90.5mm;
   }
 
   .print-card-header {
     background-color: #f9f9f9 !important;
     border-bottom: 1px solid #ccc !important;
-    padding: 4px 8px !important;
+    padding: 1mm 2mm !important;
   }
 
   .print-card-header h3 {
@@ -3758,6 +3759,14 @@ html {
   .print-card-description {
     font-size: 8pt !important;
     line-height: 1.3 !important;
+  }
+
+  .print-card-description > div {
+    font-size: 7.2pt !important;
+  }
+
+  .print-card > .p-2 {
+    padding: 2mm;
   }
 
   .print-card-description p {
@@ -3795,7 +3804,7 @@ html {
 
   @page {
     size: A4;
-    margin: 5mm 5mm 0mm 5mm;
+    margin: 0;
   }
 
   .a4-page {
@@ -4517,25 +4526,24 @@ html {
   object-fit: contain;
 }
 @media print {
-  @page reference-sheet {
-    size: A4;
-    margin: 0;
-  }
   .print-all-pages .reference-print-page {
-    page: reference-sheet;
     display: block;
     width: 210mm !important;
     padding: 0 !important;
     margin: 0 !important;
   }
-  /* A 210 mm card sheet on a page with 5 mm margins shrinks the whole PDF,
-     including the zero-margin reference pages. Fit only the ordinary pages. */
-  .reference-print-document > .reference-content-page {
-    width: 200mm !important;
-  }
-  .reference-print-document > .reference-content-page .a4-page {
+  /* One paper box for every page. WebKit must not switch named page margins
+     or apply print-time zoom when the user changes Letter to A4. */
+  .print-all-pages .sheet-content-page {
+    display: block;
     width: 210mm !important;
-    zoom: var(--reference-content-scale);
+    box-sizing: border-box;
+    padding: 5mm 5mm 0 !important;
+  }
+  .print-all-pages .sheet-content-page .a4-page {
+    width: 200mm !important;
+    max-width: 200mm !important;
+    margin: 0 !important;
   }
   .reference-sheet {
     width: 210mm !important;
@@ -4554,7 +4562,7 @@ html {
     color: #303030 !important;
   }
   .reference-continuation {
-    page: auto;
+    margin: 5mm;
     break-before: page;
     break-after: page;
   }
@@ -6269,7 +6277,7 @@ export function getStylesInfo() {
     size: embeddedStyles.length,
     sizeKB: (embeddedStyles.length / 1024).toFixed(2),
     sizeMB: (embeddedStyles.length / 1024 / 1024).toFixed(2),
-    generated: '2026-11-11T11:48:13.063Z',
+    generated: '2026-11-11T18:25:21.775Z',
     compressed: false
   };
 }

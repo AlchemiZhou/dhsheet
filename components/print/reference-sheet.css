@@ -138,25 +138,24 @@
   object-fit: contain;
 }
 @media print {
-  @page reference-sheet {
-    size: A4;
-    margin: 0;
-  }
   .print-all-pages .reference-print-page {
-    page: reference-sheet;
     display: block;
     width: 210mm !important;
     padding: 0 !important;
     margin: 0 !important;
   }
-  /* A 210 mm card sheet on a page with 5 mm margins shrinks the whole PDF,
-     including the zero-margin reference pages. Fit only the ordinary pages. */
-  .reference-print-document > .reference-content-page {
-    width: 200mm !important;
-  }
-  .reference-print-document > .reference-content-page .a4-page {
+  /* One paper box for every page. WebKit must not switch named page margins
+     or apply print-time zoom when the user changes Letter to A4. */
+  .print-all-pages .sheet-content-page {
+    display: block;
     width: 210mm !important;
-    zoom: var(--reference-content-scale);
+    box-sizing: border-box;
+    padding: 5mm 5mm 0 !important;
+  }
+  .print-all-pages .sheet-content-page .a4-page {
+    width: 200mm !important;
+    max-width: 200mm !important;
+    margin: 0 !important;
   }
   .reference-sheet {
     width: 210mm !important;
@@ -175,7 +174,7 @@
     color: #303030 !important;
   }
   .reference-continuation {
-    page: auto;
+    margin: 5mm;
     break-before: page;
     break-after: page;
   }

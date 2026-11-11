@@ -61,6 +61,8 @@ describe("reference print document order", () => {
       root.querySelector(".page-four")?.classList.contains("last-printed-page"),
     ).toBe(false);
     expect(root.classList.contains("reference-print-document")).toBe(true);
+    expect(root.querySelector('.page-four')?.classList.contains('sheet-content-page')).toBe(true);
+    expect(root.querySelector('.page-one')?.classList.contains('sheet-content-page')).toBe(false);
     expect(
       root
         .querySelector(".page-four")
