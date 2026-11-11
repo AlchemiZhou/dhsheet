@@ -1,3 +1,4 @@
+import { embedReferencePrintFonts, readPrintAssetDataUrl } from '@/character/print-reference/embed-font'
 /**
  * HTML导出器 - 从打印预览页面提取HTML并导出
  * 
@@ -172,7 +173,7 @@ function cleanupExtractedHTML(htmlContent: string): string {
     .replace(/<!--[\s\S]*?localStorage[\s\S]*?-->/gi, '')
     // 清理空白
     .replace(/\s*class=""\s*/g, ' ')
-    .replace(/\s+/g, ' ')
+    // Preserve line breaks in story answers and pre-wrapped template fields.
     .replace(/>\s+</g, '><')
 }
 
@@ -378,6 +379,7 @@ class CanvasManager {
  * 将图片转换为Base64（优化版）
  */
 function imageToBase64(img: HTMLImageElement): Promise<string> {
+  if (img.classList.contains("reference-background")) return readPrintAssetDataUrl(img.currentSrc || img.src)
   return new Promise((resolve, reject) => {
     const canvasManager = new CanvasManager()
     
@@ -682,7 +684,9 @@ function extractPrintPreviewHTML(onProgress?: ProgressCallback): Promise<string>
       const imageMap = await convertImagesToBase64(onProgress)
 
       // 克隆容器以避免影响原页面
+      await document.fonts?.ready
       const clonedContainer = printContainer.cloneNode(true) as HTMLElement
+      await embedReferencePrintFonts(clonedContainer)
 
       // Preserve values that are hidden on screen but explicitly shown on paper
       // (for example the HP/Stress maximum next to the printed resource track).

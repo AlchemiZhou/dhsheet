@@ -1,6 +1,6 @@
 /**
  * 自动生成的CSS内容文件
- * 生成时间: 2026-11-10T18:14:39.856Z
+ * 生成时间: 2026-11-11T08:40:55.658Z
  * 
  * 该文件包含了应用的所有CSS样式，用于HTML导出功能
  * 请勿手动编辑此文件，它会在构建时自动生成
@@ -11,7 +11,7 @@
 
 /**
  * 完整的CSS内容（包含Tailwind CSS和应用样式）
- * 大小: 144.44 KB
+ * 大小: 147.06 KB
  */
 export const embeddedStyles = `*, ::before, ::after {
   --tw-border-spacing-x: 0;
@@ -1078,9 +1078,6 @@ video {
   width: 16px;
   height: 16px;
 }
-.\\!h-\\[220px\\] {
-  height: 220px !important;
-}
 .h-10 {
   height: 40px;
 }
@@ -1735,11 +1732,11 @@ video {
 .select-none {
   user-select: none;
 }
-.\\!resize-none {
-  resize: none !important;
-}
 .resize-none {
   resize: none;
+}
+.resize-y {
+  resize: vertical;
 }
 .resize {
   resize: both;
@@ -1976,9 +1973,6 @@ video {
 .overflow-auto {
   overflow: auto;
 }
-.\\!overflow-hidden {
-  overflow: hidden !important;
-}
 .overflow-hidden {
   overflow: hidden;
 }
@@ -2137,10 +2131,6 @@ video {
 .\\!border-blue-500 {
   --tw-border-opacity: 1 !important;
   border-color: rgb(59 130 246 / var(--tw-border-opacity, 1)) !important;
-}
-.\\!border-gray-400 {
-  --tw-border-opacity: 1 !important;
-  border-color: rgb(187 187 187 / var(--tw-border-opacity, 1)) !important;
 }
 .border-amber-200 {
   --tw-border-opacity: 1;
@@ -2940,9 +2930,6 @@ video {
 .\\!text-\\[10px\\] {
   font-size: 10px !important;
 }
-.\\!text-\\[11px\\] {
-  font-size: 11px !important;
-}
 .\\!text-sm {
   font-size: 14px !important;
   line-height: 20px !important;
@@ -3035,9 +3022,6 @@ video {
 .tabular-nums {
   --tw-numeric-spacing: tabular-nums;
   font-variant-numeric: var(--tw-ordinal) var(--tw-slashed-zero) var(--tw-numeric-figure) var(--tw-numeric-spacing) var(--tw-numeric-fraction);
-}
-.\\!leading-\\[1\\.2\\] {
-  line-height: 1.2 !important;
 }
 .leading-3 {
   line-height: .75rem;
@@ -3804,6 +3788,12 @@ html {
     display: none !important;
   }
 
+  /* Empty notification wrappers still create a page after a named A4 page. */
+  body > [role="region"]:has(ol),
+  body > .pointer-events-none {
+    display: none !important;
+  }
+
   .print-hidden {
     display: none !important;
   }
@@ -4218,6 +4208,7 @@ html {
   .bottom-dock { bottom: 0; padding-bottom: env(safe-area-inset-bottom,0px); }
   .bottom-dock .dock-wrapper { padding: 6px; }
   .bottom-dock .dock-shell { width: 100%; border-radius: 16px; background: rgba(245,244,241,.97) !important; border-color: #ccc !important; padding: 5px; gap: 5px; }
+  .sheet-history-controls { display: none !important; }
   .bottom-dock-main .dock-shell { display: grid; grid-template-columns: repeat(5,minmax(0,1fr)); }
   .bottom-dock .dock-actions-group { display: contents; }
   .bottom-dock .dock-shell > [data-orientation=vertical], .bottom-dock .dock-mobile-secondary { display: none; }
@@ -4274,6 +4265,136 @@ html {
 }
 @media screen and (min-width: 480px) and (max-width: 1023px) {
   .card-selection-grid { grid-template-columns: repeat(2,minmax(0,1fr)) !important; }
+}
+
+.reference-sheet {
+  position: relative;
+  box-sizing: border-box;
+  width: 210mm;
+  height: 297mm;
+  flex-shrink: 0;
+  background: white;
+  color: var(--reference-ink, #243d34);
+  overflow: hidden;
+}
+.reference-sheet .reference-background {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: fill;
+}
+.reference-sheet .reference-field {
+  position: absolute;
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  color: var(--reference-ink, #243d34);
+  font-family: "Reference Ink", serif;
+  font-weight: 400;
+  line-height: 1.12;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.reference-sheet .reference-question {
+  font-family: Arial, "Noto Sans CJK SC", sans-serif;
+  font-weight: 600;
+  color: #292929;
+  justify-content: flex-start;
+}
+.reference-sheet .reference-marks {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  color: var(--reference-ink, #243d34);
+}
+.reference-sheet .reference-tick {
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.reference-sheet .reference-meta {
+  position: absolute;
+  bottom: 2px;
+  right: 8px;
+  font-size: 6px;
+  color: #616161;
+}
+.sheet-print-mono .reference-sheet .reference-field,
+.sheet-print-mono .reference-sheet .reference-marks {
+  color: #303030 !important;
+}
+.reference-continuation {
+  box-sizing: border-box;
+  width: 200mm;
+  padding: 6mm;
+  background: white;
+  color: #292929;
+  font-size: 12px;
+}
+.reference-continuation h2 {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  break-after: avoid;
+}
+.reference-continuation article {
+  break-inside: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  margin-bottom: 14px;
+}
+.reference-continuation article > strong {
+  display: block;
+  break-after: avoid;
+}
+.reference-continuation img {
+  max-width: 45mm;
+  max-height: 55mm;
+  object-fit: contain;
+}
+@media print {
+  @page reference-sheet {
+    size: A4;
+    margin: 0;
+  }
+  .print-all-pages .reference-print-page {
+    page: reference-sheet;
+    display: block;
+    width: 210mm !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  .reference-sheet {
+    width: 210mm !important;
+    height: 296.9mm !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+  }
+  .reference-sheet .reference-field {
+    color: var(--reference-ink, #243d34) !important;
+  }
+  .reference-sheet .reference-question {
+    color: #292929 !important;
+  }
+  .sheet-print-mono .reference-sheet .reference-field {
+    color: #303030 !important;
+  }
+  .reference-continuation {
+    page: auto;
+    break-before: page;
+    break-after: page;
+  }
 }
 .file\\:border-0::file-selector-button {
   border-width: 0px;
@@ -5985,7 +6106,7 @@ export function getStylesInfo() {
     size: embeddedStyles.length,
     sizeKB: (embeddedStyles.length / 1024).toFixed(2),
     sizeMB: (embeddedStyles.length / 1024 / 1024).toFixed(2),
-    generated: '2026-11-10T18:14:39.856Z',
+    generated: '2026-11-11T08:40:55.659Z',
     compressed: false
   };
 }

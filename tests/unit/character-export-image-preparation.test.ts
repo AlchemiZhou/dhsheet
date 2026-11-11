@@ -101,4 +101,12 @@ describe('character export image preparation', () => {
     expect(exported.querySelector('.ordinary-hidden-control')).toBeNull()
     expect(document.querySelector('.resource-print-value')?.classList.contains('hidden')).toBe(true)
   })
+
+  it('preserves paragraph breaks in editable story answers and continuation notes', async () => {
+    document.body.innerHTML = '<div class="print-all-pages"><div class="reference-field">第一段\n\n第二段</div><section class="reference-continuation"><p>补充记录\n结尾</p></section></div>'
+    const html = await getHTMLContent(sheet(), { includeStyles: false })
+    const exported = new DOMParser().parseFromString(html, 'text/html')
+    expect(exported.querySelector('.reference-field')?.textContent).toBe('第一段\n\n第二段')
+    expect(exported.querySelector('.reference-continuation p')?.textContent).toBe('补充记录\n结尾')
+  })
 })

@@ -1,90 +1,110 @@
-"use client"
+"use client";
+import type React from "react";
+import type { SheetData } from "@/lib/sheet-data";
+import { useSheetStore } from "@/lib/sheet-store";
+import { createProfessionStory } from "@/character/profession-setup/story";
 
-import type React from "react"
-import { Textarea } from "@/components/ui/textarea"
-import type { SheetData } from "@/lib/sheet-data"
-
-interface CharacterDescriptionSectionProps {
-  formData: SheetData
-  handleInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void
-}
-
-export function CharacterDescriptionSection({ formData, handleInputChange }: CharacterDescriptionSectionProps) {  // 基于高度限制的处理函数
-  const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const textarea = e.target
-    const newValue = e.target.value
-
-    // 创建一个模拟的事件对象用于更新状态
-    const createSyntheticEvent = (value: string) => {
-      const syntheticEvent = {
-        ...e,
-        target: {
-          ...e.target,
-          value: value,
-          name: e.target.name
-        }
-      } as React.ChangeEvent<HTMLTextAreaElement>
-      return syntheticEvent
-    }
-
-    // 临时保存当前值
-    const originalValue = textarea.value
-
-    // 应用新值来测试
-    textarea.value = newValue
-
-    // 立即检查是否溢出
-    const hasOverflow = textarea.scrollHeight > textarea.clientHeight + 5
-
-    if (hasOverflow) {
-    // 有溢出，恢复原值
-      textarea.value = originalValue
-      // 不调用 handleInputChange，保持原来的状态
-    } else {
-      // 没有溢出，更新 React 状态
-      handleInputChange(createSyntheticEvent(newValue))
-    }
-  }
+export function CharacterDescriptionSection({
+  formData,
+}: {
+  formData: SheetData;
+  handleInputChange: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => void;
+}) {
+  const setSheetData = useSheetStore((state) => state.setSheetData);
+  const story =
+    formData.professionStory ?? createProfessionStory(formData.cards?.[0]);
+  const update = (
+    group: "background" | "connections",
+    index: number,
+    field: "question" | "answer",
+    value: string,
+  ) => {
+    setSheetData((previous) => {
+      const current =
+        previous.professionStory ?? createProfessionStory(previous.cards?.[0]);
+      return {
+        professionStory: {
+          ...current,
+          [group]: current[group].map((entry, i) =>
+            i === index ? { ...entry, [field]: value } : entry,
+          ),
+        },
+      };
+    });
+  };
   return (
-    <div className="sheet-biography-grid grid grid-cols-3 gap-1 mt-2 p-1">
-      <div className="col-span-1 flex flex-col">
-        <h3 className="text-[12px] font-bold text-center mb-1">角色简介</h3>
-        <div className="flex-grow relative">
-          <Textarea
-            name="characterBackground"
-            value={formData.characterBackground}
-            onChange={handleTextareaChange}
-            className="!h-[220px] !text-[11px] !border-gray-400 !leading-[1.2] !resize-none !overflow-hidden print-empty-hide"
-            placeholder="写下对您的角色的概括性介绍，包括他们的过去、经历和个性特征。请注意，角色真正的性格和背景特质应当在游戏中体现出来，这里只是简短的概括和提示。"
-          />
-        </div>
+    <section className="profession-story-section mt-2 p-1">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        {(["background", "connections"] as const).map((group) => (
+          <div key={group}>
+            <h3 className="text-center text-sm font-bold mb-1">
+              {group === "background" ? "背景问题" : "关系"}
+            </h3>
+            <p className="text-xs text-gray-500 mb-2">
+              {group === "background"
+                ? "回答任意问题，也可以编辑问题描述。"
+                : "询问同伴玩家，让其角色回答，也可以自行改写。"}
+            </p>
+            {story[group].map((entry, index) => (
+              <div
+                key={index}
+                className="mb-2 rounded border border-gray-300 p-2"
+              >
+                <textarea
+                  aria-label={`${group === "background" ? "背景问题" : "关系"}${index + 1}描述`}
+                  value={entry.question}
+                  onChange={(event) =>
+                    update(group, index, "question", event.target.value)
+                  }
+                  rows={2}
+                  className="w-full resize-y border-0 bg-gray-50 text-xs font-semibold p-1"
+                  placeholder="自行编写问题"
+                />
+                <textarea
+                  aria-label={`${group === "background" ? "背景问题" : "关系"}${index + 1}回答`}
+                  value={entry.answer}
+                  onChange={(event) =>
+                    update(group, index, "answer", event.target.value)
+                  }
+                  rows={3}
+                  className="w-full resize-y border-t border-gray-200 text-sm p-1"
+                  placeholder="填写回答…"
+                />
+              </div>
+            ))}
+          </div>
+        ))}
       </div>
-
-      <div className="col-span-1 flex flex-col">
-        <h3 className="text-[12px] font-bold text-center mb-1">角色特质</h3>
-        <div className="flex-grow relative">
-          <Textarea
-            name="characterAppearance"
-            value={formData.characterAppearance}
-            onChange={handleTextareaChange}
-            className="!h-[220px] !text-[11px] !border-gray-400 !leading-[1.2] !resize-none !overflow-hidden print-empty-hide"
-            placeholder="写下您的角色的性别、年龄、外貌和服装等外观特征。如果您的角色有什么特征或者与众不同之处，也可以记录在这里。"
-          />
-        </div>
-      </div>
-
-      <div className="col-span-1 flex flex-col">
-        <h3 className="text-[12px] font-bold text-center mb-1">冒险笔记</h3>
-        <div className="flex-grow relative">
-          <Textarea
-            name="characterMotivation"
-            value={formData.characterMotivation}
-            onChange={handleTextareaChange}
-            className="!h-[220px] !text-[11px] !border-gray-400 !leading-[1.2] !resize-none !overflow-hidden print-empty-hide"
-            placeholder="写下您角色经历的重大事件，值得注意的线索，目前的角色的状态和思考，或者其他值得记录的重要信息。"
-          />
-        </div>
-      </div>
-    </div>
-  )
+      {[
+        formData.characterBackground,
+        formData.characterAppearance,
+        formData.characterMotivation,
+      ].some(Boolean) && (
+        <details className="mt-2 text-sm">
+          <summary>原角色简介、特质与冒险笔记</summary>
+          {(
+            [
+              "characterBackground",
+              "characterAppearance",
+              "characterMotivation",
+            ] as const
+          ).map((field, i) => (
+            <label className="block mt-2" key={field}>
+              {["角色简介", "角色特质", "冒险笔记"][i]}
+              <textarea
+                className="block w-full rounded border p-2"
+                rows={3}
+                value={formData[field] ?? ""}
+                onChange={(event) =>
+                  setSheetData({ [field]: event.target.value })
+                }
+              />
+            </label>
+          ))}
+        </details>
+      )}
+    </section>
+  );
 }

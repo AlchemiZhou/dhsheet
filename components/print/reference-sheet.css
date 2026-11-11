@@ -1,0 +1,129 @@
+.reference-sheet {
+  position: relative;
+  box-sizing: border-box;
+  width: 210mm;
+  height: 297mm;
+  flex-shrink: 0;
+  background: white;
+  color: var(--reference-ink, #243d34);
+  overflow: hidden;
+}
+.reference-sheet .reference-background {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: fill;
+}
+.reference-sheet .reference-field {
+  position: absolute;
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  color: var(--reference-ink, #243d34);
+  font-family: "Reference Ink", serif;
+  font-weight: 400;
+  line-height: 1.12;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.reference-sheet .reference-question {
+  font-family: Arial, "Noto Sans CJK SC", sans-serif;
+  font-weight: 600;
+  color: #292929;
+  justify-content: flex-start;
+}
+.reference-sheet .reference-marks {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  color: var(--reference-ink, #243d34);
+}
+.reference-sheet .reference-tick {
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.reference-sheet .reference-meta {
+  position: absolute;
+  bottom: 2px;
+  right: 8px;
+  font-size: 6px;
+  color: #616161;
+}
+.sheet-print-mono .reference-sheet .reference-field,
+.sheet-print-mono .reference-sheet .reference-marks {
+  color: #303030 !important;
+}
+.reference-continuation {
+  box-sizing: border-box;
+  width: 200mm;
+  padding: 6mm;
+  background: white;
+  color: #292929;
+  font-size: 12px;
+}
+.reference-continuation h2 {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  break-after: avoid;
+}
+.reference-continuation article {
+  break-inside: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  margin-bottom: 14px;
+}
+.reference-continuation article > strong {
+  display: block;
+  break-after: avoid;
+}
+.reference-continuation img {
+  max-width: 45mm;
+  max-height: 55mm;
+  object-fit: contain;
+}
+@media print {
+  @page reference-sheet {
+    size: A4;
+    margin: 0;
+  }
+  .print-all-pages .reference-print-page {
+    page: reference-sheet;
+    display: block;
+    width: 210mm !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  .reference-sheet {
+    width: 210mm !important;
+    height: 296.9mm !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+  }
+  .reference-sheet .reference-field {
+    color: var(--reference-ink, #243d34) !important;
+  }
+  .reference-sheet .reference-question {
+    color: #292929 !important;
+  }
+  .sheet-print-mono .reference-sheet .reference-field {
+    color: #303030 !important;
+  }
+  .reference-continuation {
+    page: auto;
+    break-before: page;
+    break-after: page;
+  }
+}

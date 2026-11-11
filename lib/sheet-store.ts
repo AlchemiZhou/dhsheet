@@ -1,6 +1,10 @@
 "use client";
 
 import { create } from "zustand";
+import { attachSheetHistory } from "@/character/history/store";
+import { applyProfessionPreset } from "@/character/profession-setup/actions";
+import { createProfessionStory } from "@/character/profession-setup/story";
+import { useProfessionSetupPreferences } from "@/character/profession-setup/preferences";
 import { defaultSheetData } from "./default-sheet-data";
 import type { SheetData, AttributeValue, ArmorTemplateData, SheetCardReference } from "./sheet-data";
 import { createEmptyCard, isEmptyCard, type StandardCard } from "@/card/card-types";
@@ -416,7 +420,9 @@ function selectCharacterChoiceCardInSheetData(
         template,
     );
 
-    return syncSubclassSpellcastingResult(result, sheetData);
+    const synced = syncSubclassSpellcastingResult(result, sheetData);
+    if (kind !== "profession" || synced.kind === "failure") return synced;
+    return { ...synced, sheetData: applyProfessionPreset(synced.sheetData, template, useProfessionSetupPreferences.getState().enabled) };
 }
 
 function toCardSelectionActionResult(result: CardAutomationActionResult): CardSelectionActionResult {
@@ -448,7 +454,9 @@ function clearCharacterChoiceCardInSheetData(sheetData: SheetData, kind: Charact
         undefined,
     );
 
-    return syncSubclassSpellcastingResult(result, sheetData);
+    const synced = syncSubclassSpellcastingResult(result, sheetData);
+    if (kind !== "profession" || synced.kind === "failure") return synced;
+    return { ...synced, sheetData: { ...synced.sheetData, professionStory: createProfessionStory(undefined, sheetData.professionStory) } };
 }
 
 function equipmentModifierSourceId(slotRef: EquipmentModifierSlotRef): string {
@@ -1464,6 +1472,8 @@ export const useSheetStore = create<SheetState>((set, get) => ({
         return output;
     },
 }));
+
+export const useSheetHistoryStore = attachSheetHistory(useSheetStore);
 
 // Selector functions for better performance
 export const useSheetName = () => useSheetStore(state => state.sheetData.name);

@@ -1,3 +1,4 @@
+import { normalizeProfessionStory } from "@/character/profession-setup/story"
 /**
  * 角色数据验证器 - 通用的数据验证和清理功能
  * 
@@ -59,6 +60,8 @@ export function validateSheetData(data: any): data is SheetData {
     console.warn('Field hope should be a number or boolean array')
     return false
   }
+
+  if (data.professionStory !== undefined && !normalizeProfessionStory(data.professionStory)) return false
 
   // 检查cards数组中的对象结构
   if (data.cards && data.cards.length > 0) {

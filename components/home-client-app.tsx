@@ -712,7 +712,7 @@ export default function HomeClientApp() {
               <BottomDock
                 mode="preview"
                 isMobile={isMobile}
-                onExportPDF={() => window.print()}
+                onExportPDF={async () => { await document.fonts.ready; window.print() }}
                 onExportHTML={handleExportHTML}
                 onExportJSON={handleExportJSON}
                 onOpenSealDiceExport={() => {

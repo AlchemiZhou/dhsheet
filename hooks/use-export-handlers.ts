@@ -126,6 +126,7 @@ export function useExportHandlers({
       console.log('[ExportHandlers] 快速 PDF 导出')
       await handlePrintAll()
       await waitForAllImagesLoaded()
+      await document.fonts?.ready
 
       window.print()
 
@@ -147,6 +148,7 @@ export function useExportHandlers({
       console.log('[ExportHandlers] 快速 HTML 导出')
       await handlePrintAll()
       await waitForAllImagesLoaded()
+      await document.fonts?.ready
       await handleExportHTML()
       setIsPrintingAll(false)
       document.title = APP_TITLE
@@ -162,6 +164,7 @@ export function useExportHandlers({
       console.log('[ExportHandlers] 快速 JSON 导出')
       await handlePrintAll()
       await waitForAllImagesLoaded()
+      await document.fonts?.ready
       await handleExportJSON()
       setIsPrintingAll(false)
       document.title = APP_TITLE

@@ -187,6 +187,12 @@ html {
     display: none !important;
   }
 
+  /* Empty notification wrappers still create a page after a named A4 page. */
+  body > [role="region"]:has(ol),
+  body > .pointer-events-none {
+    display: none !important;
+  }
+
   .print-hidden {
     display: none !important;
   }

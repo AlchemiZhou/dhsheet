@@ -125,6 +125,7 @@
   .bottom-dock { bottom: 0; padding-bottom: env(safe-area-inset-bottom,0px); }
   .bottom-dock .dock-wrapper { padding: 6px; }
   .bottom-dock .dock-shell { width: 100%; border-radius: 16px; background: rgba(245,244,241,.97) !important; border-color: #ccc !important; padding: 5px; gap: 5px; }
+  .sheet-history-controls { display: none !important; }
   .bottom-dock-main .dock-shell { display: grid; grid-template-columns: repeat(5,minmax(0,1fr)); }
   .bottom-dock .dock-actions-group { display: contents; }
   .bottom-dock .dock-shell > [data-orientation=vertical], .bottom-dock .dock-mobile-secondary { display: none; }

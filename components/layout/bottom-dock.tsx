@@ -1,6 +1,8 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
+import { SheetHistoryControls } from "@/components/sheet-history-controls"
+import { useSheetHistoryStore } from "@/lib/sheet-store"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -89,6 +91,7 @@ type BottomDockProps = MainModeProps | PreviewModeProps
 // 主页面模式内容
 function MainModeContent(props: MainModeProps) {
   const { isMobile } = props
+  const history = useSheetHistoryStore()
 
   return (
     <>
@@ -294,6 +297,7 @@ function MainModeContent(props: MainModeProps) {
           </TooltipContent>
         </Tooltip>
 
+        <SheetHistoryControls />
         {/* 更多菜单 */}
         <DropdownMenu>
           <Tooltip open={isMobile ? false : undefined}>
@@ -326,6 +330,8 @@ function MainModeContent(props: MainModeProps) {
           </Tooltip>
           <DropdownMenuContent align="end" side="top" className={cn("w-56", isMobile && "text-base")}>
             {isMobile && <>
+              <DropdownMenuItem disabled={!history.past.length} onClick={history.undo} className="py-3 px-4">撤回</DropdownMenuItem>
+              <DropdownMenuItem disabled={!history.future.length} onClick={history.redo} className="py-3 px-4">重做</DropdownMenuItem>
               <DropdownMenuItem onClick={props.onToggleGuide} className="py-3 px-4"><Sparkles className="mr-2 h-5 w-5" />建卡指引</DropdownMenuItem>
               <DropdownMenuItem onClick={() => navigateToPage('/card-manager')} className="py-3 px-4"><Package className="mr-2 h-5 w-5" />扩展管理</DropdownMenuItem>
               <DropdownMenuSeparator />

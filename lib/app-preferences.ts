@@ -24,6 +24,8 @@ export interface AppPreferencesDocument {
     cardDisplayMode: CardDisplayMode
     dualPage: DualPagePreferences
     sheetAppearance?: SheetAppearancePreferences
+    professionAutoSetup?: boolean
+    referencePrint?: boolean
   }
   announcements: {
     lastReadAnnouncementId?: string
@@ -187,6 +189,8 @@ function normalizePreferences(value: unknown): AppPreferencesDocument | null {
 
   normalized.ui.cardDisplayMode = normalizeCardDisplayMode(ui.cardDisplayMode)
   normalized.ui.dualPage = normalizeDualPage(ui.dualPage)
+  if (typeof ui.professionAutoSetup === "boolean") normalized.ui.professionAutoSetup = ui.professionAutoSetup
+  if (typeof ui.referencePrint === "boolean") normalized.ui.referencePrint = ui.referencePrint
   if (ui.sheetAppearance !== undefined) normalized.ui.sheetAppearance = normalizeSheetAppearance(ui.sheetAppearance)
 
   if (typeof announcements.lastReadAnnouncementId === "string" && announcements.lastReadAnnouncementId.length > 0) {
@@ -429,3 +433,12 @@ export function setCardSourceDisabled(
   )
 }
 import { normalizeSheetAppearance, type SheetAppearancePreferences } from '@/character/appearance/theme'
+
+export function getProfessionAutoSetup(storage?: AppPreferencesStorage): boolean { return getAppPreferences(storage).ui.professionAutoSetup !== false }
+export function setProfessionAutoSetup(value: boolean, storage?: AppPreferencesStorage): void {
+  updatePreferences(p => ({ ...p, ui: { ...p.ui, professionAutoSetup: value } }), storage)
+}
+export function getReferencePrint(storage?: AppPreferencesStorage): boolean { return getAppPreferences(storage).ui.referencePrint !== false }
+export function setReferencePrint(value: boolean, storage?: AppPreferencesStorage): void {
+  updatePreferences(p => ({ ...p, ui: { ...p.ui, referencePrint: value } }), storage)
+}

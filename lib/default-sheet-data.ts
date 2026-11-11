@@ -8,6 +8,7 @@ import { createMartialStancesState } from "@/character/martial-stances/state";
 export const defaultSheetData: SheetData = {
     schemaVersion: CURRENT_SCHEMA_VERSION,
     name: "",
+    professionStory: undefined,
     characterImage: "",
     imageAssets: {},
     level: "1",
