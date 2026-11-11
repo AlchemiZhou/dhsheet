@@ -1,6 +1,6 @@
 /**
  * 自动生成的CSS内容文件
- * 生成时间: 2026-11-11T09:58:37.786Z
+ * 生成时间: 2026-11-11T10:06:47.193Z
  * 
  * 该文件包含了应用的所有CSS样式，用于HTML导出功能
  * 请勿手动编辑此文件，它会在构建时自动生成
@@ -11,7 +11,7 @@
 
 /**
  * 完整的CSS内容（包含Tailwind CSS和应用样式）
- * 大小: 147.54 KB
+ * 大小: 147.71 KB
  */
 export const embeddedStyles = `*, ::before, ::after {
   --tw-border-spacing-x: 0;
@@ -4315,6 +4315,13 @@ html {
   color: #292929;
   justify-content: flex-start;
 }
+.reference-sheet .reference-equipment-value {
+  transform: translateY(2pt);
+}
+.reference-sheet .reference-armor-threshold {
+  text-align: center;
+  padding-inline: 4pt;
+}
 .reference-sheet .reference-marks {
   position: absolute;
   inset: 0;
@@ -6122,7 +6129,7 @@ export function getStylesInfo() {
     size: embeddedStyles.length,
     sizeKB: (embeddedStyles.length / 1024).toFixed(2),
     sizeMB: (embeddedStyles.length / 1024 / 1024).toFixed(2),
-    generated: '2026-11-11T09:58:37.786Z',
+    generated: '2026-11-11T10:06:47.193Z',
     compressed: false
   };
 }

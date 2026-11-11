@@ -46,6 +46,13 @@
   color: #292929;
   justify-content: flex-start;
 }
+.reference-sheet .reference-equipment-value {
+  transform: translateY(2pt);
+}
+.reference-sheet .reference-armor-threshold {
+  text-align: center;
+  padding-inline: 4pt;
+}
 .reference-sheet .reference-marks {
   position: absolute;
   inset: 0;

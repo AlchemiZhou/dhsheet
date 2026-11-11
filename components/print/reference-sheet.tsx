@@ -81,7 +81,7 @@ function Field({
     <div
       ref={ref}
       data-reference-field={name}
-      className={`reference-field ${question ? "reference-question" : ""}`}
+      className={`reference-field ${question ? "reference-question" : ""} ${/^[12]:(main|off|reserve1|reserve2)\.(name|use|damage)$|^[12]:armor\.(name|threshold|rating)$/.test(name) ? "reference-equipment-value" : ""} ${name === "1:armor.threshold" ? "reference-armor-threshold" : ""}`}
       style={
         {
           left: `${(x / width) * 100}%`,
@@ -89,7 +89,7 @@ function Field({
           width: `${((x2 - x) / width) * 100}%`,
           height: `${((y2 - y) / height) * 100}%`,
           fontSize: ((box.fontSize || 10) * 4) / 3,
-          textAlign: /^(total\.|level|exp\.\d+\.bonus)/.test(
+          textAlign: name === "1:armor.threshold" || /^(total\.|level|exp\.\d+\.bonus)/.test(
             name.replace(/^[12]:/, ""),
           )
             ? "center"
