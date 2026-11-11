@@ -1,5 +1,11 @@
 "use client";
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+} from "react";
 import type { SheetData } from "@/lib/sheet-data";
 import { getBasePath } from "@/lib/utils";
 import {
@@ -13,7 +19,10 @@ import {
   referenceFieldLabel,
   type ReferenceFieldBox,
 } from "@/character/print-reference/model";
-import { createProfessionStory } from "@/character/profession-setup/story";
+import {
+  createProfessionStory,
+  storyWritingModes,
+} from "@/character/profession-setup/story";
 import {
   REFERENCE_PAGE_WIDTH,
   REFERENCE_PAGE_HEIGHT,
@@ -34,6 +43,8 @@ export function Field({
   name,
   question = false,
   fit = true,
+  minFontSize = 5.25,
+  prose = false,
   onOverflow,
 }: {
   box: ReferenceFieldBox;
@@ -41,12 +52,17 @@ export function Field({
   name: string;
   question?: boolean;
   fit?: boolean;
+  minFontSize?: number;
+  prose?: boolean;
   onOverflow: (entry: PrintOverflow | undefined, key: string) => void;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (!fit) return;
-    if (!value) { onOverflow(undefined, name); return; }
+    if (!value) {
+      onOverflow(undefined, name);
+      return;
+    }
     let cancelled = false;
     const fitText = () => {
       const element = ref.current;
@@ -55,11 +71,11 @@ export function Field({
       let size = initial;
       element.style.fontSize = `${size}px`;
       while (
-        size > 7 &&
+        size > (minFontSize * 4) / 3 &&
         (element.scrollHeight > element.clientHeight + 1 ||
           element.scrollWidth > element.clientWidth + 1)
       ) {
-        size -= 0.4;
+        size = Math.max((minFontSize * 4) / 3, size - 0.4);
         element.style.fontSize = `${size}px`;
       }
       const overflow =
@@ -76,13 +92,14 @@ export function Field({
     return () => {
       cancelled = true;
     };
-  }, [box, value, name, onOverflow, fit]);
+  }, [box, value, name, onOverflow, fit, minFontSize]);
+  useEffect(() => () => onOverflow(undefined, name), [name, onOverflow]);
   const [x, y, x2, y2] = box.rect;
   return (
     <div
       ref={ref}
       data-reference-field={name}
-      className={`reference-field ${question ? "reference-question" : ""} ${/^[12]:(main|off|reserve1|reserve2)\.(name|use|damage)$|^[12]:armor\.(name|threshold|rating)$/.test(name) ? "reference-equipment-value" : ""} ${name === "1:armor.threshold" ? "reference-armor-threshold" : ""}`}
+      className={`reference-field ${question ? "reference-question" : ""} ${prose ? "reference-prose" : ""} ${/^[12]:(main|off|reserve1|reserve2)\.(name|use|damage)$|^[12]:armor\.(name|threshold|rating)$/.test(name) ? "reference-equipment-value" : ""} ${name === "1:armor.threshold" ? "reference-armor-threshold" : ""}`}
       style={
         {
           left: `${(x / width) * 100}%`,
@@ -90,16 +107,96 @@ export function Field({
           width: `${((x2 - x) / width) * 100}%`,
           height: `${((y2 - y) / height) * 100}%`,
           fontSize: ((box.fontSize || 10) * 4) / 3,
-          textAlign: name === "1:armor.threshold" || /^(total\.|level|exp\.\d+\.bonus)/.test(
-            name.replace(/^[12]:/, ""),
-          )
-            ? "center"
-            : "left",
+          textAlign:
+            name === "1:armor.threshold" ||
+            /^(total\.|level|exp\.\d+\.bonus)/.test(name.replace(/^[12]:/, ""))
+              ? "center"
+              : "left",
         } as CSSProperties
       }
     >
       {value}
     </div>
+  );
+}
+
+function FreeStoryPanel({
+  column,
+  value,
+  onOverflow,
+}: {
+  column: 0 | 1;
+  value: string;
+  onOverflow: (entry: PrintOverflow | undefined, key: string) => void;
+}) {
+  const [overflow, setOverflow] = useState(false);
+  const report = useCallback(
+    (entry: PrintOverflow | undefined, key: string) => {
+      setOverflow(Boolean(entry));
+      onOverflow(entry, key);
+    },
+    [onOverflow],
+  );
+  const left = column ? 323 : 33;
+  const label = column ? "角色介绍" : "背景故事";
+  return (
+    <>
+      <svg
+        className="reference-story-mask"
+        viewBox={`0 0 ${width} ${height}`}
+        aria-hidden="true"
+      >
+        <rect
+          x={column ? 316 : 21}
+          y="228"
+          width="269"
+          height="266"
+          fill="white"
+        />
+        <rect
+          x={column ? 411 : 111}
+          y="216"
+          width="70"
+          height="10"
+          fill="white"
+        />
+      </svg>
+      <div
+        className="reference-story-title"
+        style={{
+          left: `${((column ? 411 : 111) / width) * 100}%`,
+          width: `${(70 / width) * 100}%`,
+          top: `${(216 / height) * 100}%`,
+          height: `${(10 / height) * 100}%`,
+        }}
+      >
+        {label}
+      </div>
+      <Field
+        box={{
+          rect: [left, 249, left + 247, 481],
+          fontSize: 11,
+          checkbox: false,
+        }}
+        value={value}
+        name={column ? "2:story.profile" : "2:story.background"}
+        minFontSize={9}
+        prose
+        onOverflow={report}
+      />
+      {overflow && (
+        <div
+          className="reference-story-overflow"
+          style={{
+            left: `${(left / width) * 100}%`,
+            top: `${(485 / height) * 100}%`,
+            width: `${(247 / width) * 100}%`,
+          }}
+        >
+          全文见文末“角色补充记录”
+        </div>
+      )}
+    </>
   );
 }
 
@@ -197,6 +294,7 @@ export function ReferenceSheet({
   const fontUrl = `${getBasePath()}/print-templates/form-ink.woff2`;
   const story =
     sheet.professionStory ?? createProfessionStory(sheet.cards?.[0]);
+  const modes = storyWritingModes(sheet);
   const box = (rect: number[], fontSize = 10): ReferenceFieldBox => ({
     rect,
     fontSize,
@@ -227,6 +325,13 @@ export function ReferenceSheet({
             ([name, definition]) =>
               !definition.checkbox &&
               values[name] &&
+              !(
+                page === 2 &&
+                ((name.startsWith("background.") &&
+                  modes.background === "free") ||
+                  (name.startsWith("relationship.") &&
+                    modes.connections === "profile"))
+              ) &&
               !name.endsWith("feature2"),
           )
           .map(([name, definition]) => {
@@ -267,25 +372,41 @@ export function ReferenceSheet({
           })}
         {page === 2 &&
           (["background", "connections"] as const).flatMap((group, column) =>
-            story[group].map((entry, i) => (
-              <Field
-                key={`${group}${i}`}
-                box={box(
-                  [
-                    column ? 323 : 32.8,
-                    254 + i * 77,
-                    (column ? 323 : 32.8) + 247,
-                    276 + i * 77,
-                  ],
-                  7.5,
-                )}
-                value={entry.question}
-                question
-                name={`question:${group}:${i}`}
-                onOverflow={onOverflow}
-              />
-            )),
+            modes[group] !== "questions"
+              ? []
+              : story[group].map((entry, i) => (
+                  <Field
+                    key={`${group}${i}`}
+                    box={box(
+                      [
+                        column ? 323 : 32.8,
+                        254 + i * 77,
+                        (column ? 323 : 32.8) + 247,
+                        276 + i * 77,
+                      ],
+                      7.5,
+                    )}
+                    value={entry.question}
+                    question
+                    name={`question:${group}:${i}`}
+                    onOverflow={onOverflow}
+                  />
+                )),
           )}
+        {page === 2 && modes.background === "free" && (
+          <FreeStoryPanel
+            column={0}
+            value={sheet.characterBackground ?? ""}
+            onOverflow={onOverflow}
+          />
+        )}
+        {page === 2 && modes.connections === "profile" && (
+          <FreeStoryPanel
+            column={1}
+            value={sheet.characterAppearance ?? ""}
+            onOverflow={onOverflow}
+          />
+        )}
         <svg
           className="reference-marks"
           viewBox={`0 0 ${width} ${height}`}

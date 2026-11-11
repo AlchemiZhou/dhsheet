@@ -1,0 +1,29 @@
+@media screen and (max-width: 1023px) {
+  .equipment-modal.equipment-mobile-dialog {
+    position: fixed !important;
+    inset: 0;
+    width: 100% !important;
+    height: 100dvh;
+    max-height: 100dvh !important;
+    border-radius: 0;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .equipment-mobile-dialog .mobile-equipment-list {
+    display: grid;
+    gap: 12px;
+    padding: 12px;
+    min-width: 0;
+  }
+  .mobile-equipment-card {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+  .equipment-mobile-dialog .equipment-filter-chip {
+    height: auto;
+    min-height: 44px;
+  }
+  .equipment-filter-menu [role="menuitemcheckbox"],
+  .equipment-filter-menu [role="menuitem"] {
+    min-height: 44px;
+  }
+}

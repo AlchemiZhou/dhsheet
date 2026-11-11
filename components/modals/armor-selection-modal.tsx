@@ -12,17 +12,23 @@ import {
   CustomArmorDraftForm,
   emptyArmorDraftState,
   validateArmorDraftState,
-  type CustomArmorDraftState,
+  type CustomArmorDraftState
 } from "./custom-equipment-draft-form"
 import {
   ActiveFilterChips,
   createActiveFilter,
   MultiSelectDropdownFilter,
-  type EquipmentFilterOption,
+  type EquipmentFilterOption
 } from "./equipment-selection-filter-controls"
 
+import { useIsMobile } from "@/hooks/use-mobile"
+import { MobileEquipmentCard } from "./mobile-equipment-card"
+
 const LEVELS: EquipmentTier[] = ["T1", "T2", "T3", "T4"]
-const TIER_OPTIONS: Array<EquipmentFilterOption<EquipmentTier>> = LEVELS.map((level) => ({ value: level, label: level }))
+const TIER_OPTIONS: Array<EquipmentFilterOption<EquipmentTier>> = LEVELS.map((level) => ({
+  value: level,
+  label: level
+}))
 
 interface ArmorModalProps {
   isOpen: boolean
@@ -38,7 +44,7 @@ function uniqueSourceOptions(templates: RuntimeEquipmentTemplateWithSource[]) {
         if (!sources.has(template.sourceId)) sources.set(template.sourceId, template.sourceLabel)
         return sources
       }, new Map<string, string>())
-      .entries(),
+      .entries()
   ).map(([sourceId, sourceLabel]) => ({ sourceId, sourceLabel }))
 }
 
@@ -50,7 +56,7 @@ function FilterableTableHeader<T extends string>({
   label,
   selected,
   options,
-  onChange,
+  onChange
 }: {
   label: string
   selected: T[]
@@ -67,6 +73,7 @@ function FilterableTableHeader<T extends string>({
 const filterControlClass = "h-10 rounded border border-gray-300 bg-white px-2 text-sm text-gray-900"
 
 export function ArmorSelectionModal({ isOpen, onClose, onSelect, title }: ArmorModalProps) {
+  const isMobile = useIsMobile()
   const equipmentStore = getEquipmentUiStore()
   const initialized = equipmentStore((state) => state.initialized)
   const initializing = equipmentStore((state) => state.initializing)
@@ -114,13 +121,17 @@ export function ArmorSelectionModal({ isOpen, onClose, onSelect, title }: ArmorM
     if (!initialized || initializationError) return []
 
     return querySelectableTemplates({ kind: "armor" }).filter(
-      (template): template is RuntimeEquipmentTemplateWithSource & { kind: "armor" } => template.kind === "armor",
+      (template): template is RuntimeEquipmentTemplateWithSource & { kind: "armor" } => template.kind === "armor"
     )
   }, [initialized, initializationError, querySelectableTemplates])
 
   const sourceOptions = useMemo<Array<EquipmentFilterOption<string>>>(
-    () => uniqueSourceOptions(sourceArmor).map((source) => ({ value: source.sourceId, label: source.sourceLabel })),
-    [sourceArmor],
+    () =>
+      uniqueSourceOptions(sourceArmor).map((source) => ({
+        value: source.sourceId,
+        label: source.sourceLabel
+      })),
+    [sourceArmor]
   )
 
   const filteredArmor = useMemo(() => {
@@ -130,8 +141,10 @@ export function ArmorSelectionModal({ isOpen, onClose, onSelect, title }: ArmorM
       kind: "armor",
       searchText,
       tiers: tierFilters,
-      sourceIds: sourceFilters,
-    }).filter((template): template is RuntimeEquipmentTemplateWithSource & { kind: "armor" } => template.kind === "armor")
+      sourceIds: sourceFilters
+    }).filter(
+      (template): template is RuntimeEquipmentTemplateWithSource & { kind: "armor" } => template.kind === "armor"
+    )
   }, [initialized, initializationError, querySelectableTemplates, searchText, tierFilters, sourceFilters])
 
   const resetFilters = () => {
@@ -196,14 +209,14 @@ export function ArmorSelectionModal({ isOpen, onClose, onSelect, title }: ArmorM
       label: "来源",
       selected: sourceFilters,
       options: sourceOptions,
-      clear: () => setSourceFilters([]),
+      clear: () => setSourceFilters([])
     }),
     searchText
       ? {
           key: "search",
           label: `搜索：${searchText}`,
           title: `搜索：${searchText}`,
-          clear: () => setSearchText(""),
+          clear: () => setSearchText("")
         }
       : null,
     createActiveFilter({
@@ -211,13 +224,22 @@ export function ArmorSelectionModal({ isOpen, onClose, onSelect, title }: ArmorM
       label: "等级",
       selected: tierFilters,
       options: TIER_OPTIONS,
-      clear: () => setTierFilters([]),
-    }),
-  ].filter((filter): filter is { key: string; label: string; title: string; clear: () => void } => filter !== null)
+      clear: () => setTierFilters([])
+    })
+  ].filter(
+    (
+      filter
+    ): filter is {
+      key: string
+      label: string
+      title: string
+      clear: () => void
+    } => filter !== null
+  )
 
   const handleRowKeyDown = (
     event: ReactKeyboardEvent<HTMLTableRowElement>,
-    armor: RuntimeEquipmentTemplateWithSource & { kind: "armor" },
+    armor: RuntimeEquipmentTemplateWithSource & { kind: "armor" }
   ) => {
     if (event.key !== "Enter" && event.key !== " ") return
     event.preventDefault()
@@ -229,7 +251,12 @@ export function ArmorSelectionModal({ isOpen, onClose, onSelect, title }: ArmorM
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4">
       <div className="absolute inset-0 bg-black bg-opacity-50" onClick={requestClose}></div>
-      <div className="equipment-modal relative flex max-h-[95vh] w-full max-w-6xl flex-col overflow-hidden rounded-lg bg-white shadow-lg sm:max-h-[85vh]">
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label={title}
+        className={`equipment-modal ${isMobile ? "equipment-mobile-dialog" : ""} relative flex max-h-[95vh] w-full max-w-6xl flex-col overflow-hidden rounded-lg bg-white shadow-lg sm:max-h-[85vh]`}
+      >
         <div className="flex items-center gap-3 border-b border-gray-200 p-3 sm:p-4">
           <div className="flex flex-1 flex-wrap items-center gap-3">
             <h2 className="text-lg font-bold sm:text-xl">{title}</h2>
@@ -328,59 +355,102 @@ export function ArmorSelectionModal({ isOpen, onClose, onSelect, title }: ArmorM
             </div>
           )}
 
-          <p className="equipment-scroll-hint hidden">左右滑动可查看完整装备信息</p>
-          <div className="min-h-[16rem] flex-1 overflow-auto">
-            <div className="p-1 sm:p-2">
-              <table className="w-full min-w-[56rem] border-collapse">
-                <thead className="sticky top-0 z-10 bg-gray-800 text-white">
-                  <tr>
-                    <TableHeader label="名称" />
-                    <FilterableTableHeader
-                      label="等级"
-                      selected={tierFilters}
-                      options={TIER_OPTIONS}
-                      onChange={setTierFilters}
-                    />
-                    <TableHeader label="伤害阈值" />
-                    <TableHeader label="护甲值" />
-                    <TableHeader label="特性" />
-                    <TableHeader label="描述" />
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredArmor.map((armor) => (
-                    <tr
-                      key={armor.id}
-                      aria-label={customMode ? `选择护甲 ${armor.name}，点击套用到草稿` : `选择护甲 ${armor.name}`}
-                      className="cursor-pointer border-b border-gray-200 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-500"
-                      role="button"
-                      tabIndex={0}
-                      onClick={() => chooseArmorTemplate(armor)}
-                      onKeyDown={(event) => handleRowKeyDown(event, armor)}
-                    >
-                      <td className="whitespace-nowrap p-1 text-xs sm:p-2 sm:text-sm">{armor.name}</td>
-                      <td className="whitespace-nowrap p-1 text-xs sm:p-2 sm:text-sm">{armor.tier}</td>
-                      <td className="whitespace-nowrap p-1 text-xs sm:p-2 sm:text-sm">
-                        {armor.baseThresholds.minor}/{armor.baseThresholds.major}
-                      </td>
-                      <td className="whitespace-nowrap p-1 text-xs sm:p-2 sm:text-sm">{armor.baseArmorMax}</td>
-                      <td className="whitespace-nowrap p-1 text-xs sm:p-2 sm:text-sm">{armor.featureName}</td>
-                      <td className="whitespace-nowrap p-1 text-xs sm:p-2 sm:text-sm" title={armor.description}>
-                        {armor.description}
-                      </td>
-                    </tr>
-                  ))}
-                  {!initializing && filteredArmor.length === 0 && (
-                    <tr>
-                      <td className="p-4 text-center text-sm text-gray-500" colSpan={6}>
-                        未找到符合条件的护甲
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
-          </div>
+          {isMobile ? (
+            <>
+              <details className="border-b border-gray-200 px-3 py-2">
+                <summary className="cursor-pointer py-2 text-sm font-semibold">更多筛选</summary>
+                <div className="mt-2 grid grid-cols-2 gap-2">
+                  <MultiSelectDropdownFilter
+                    label="等级"
+                    selected={tierFilters}
+                    options={TIER_OPTIONS}
+                    onChange={setTierFilters}
+                    variant="field"
+                  />
+                </div>
+              </details>
+              <p className="px-3 pt-3 text-xs text-gray-500">
+                {filteredArmor.length} 件护甲 · 上下浏览，完整查看特性后再选择
+              </p>
+              <div className="mobile-equipment-list">
+                {filteredArmor.map((armor) => (
+                  <MobileEquipmentCard
+                    key={armor.id}
+                    name={armor.name}
+                    tier={armor.tier}
+                    source={armor.sourceLabel}
+                    stats={[
+                      ["伤害阈值", `${armor.baseThresholds.minor}/${armor.baseThresholds.major}`],
+                      ["护甲值", String(armor.baseArmorMax)]
+                    ]}
+                    feature={armor.featureName}
+                    description={armor.description}
+                    label={customMode ? `套用护甲 ${armor.name}` : `选择护甲 ${armor.name}`}
+                    onChoose={() => chooseArmorTemplate(armor)}
+                  />
+                ))}
+                {!initializing && !filteredArmor.length && (
+                  <p className="py-8 text-center text-sm text-gray-500">未找到符合条件的护甲</p>
+                )}
+              </div>
+            </>
+          ) : (
+            <>
+              <p className="equipment-scroll-hint hidden">左右滑动可查看完整装备信息</p>
+              <div className="min-h-[16rem] flex-1 overflow-auto">
+                <div className="p-1 sm:p-2">
+                  <table className="w-full min-w-[56rem] border-collapse">
+                    <thead className="sticky top-0 z-10 bg-gray-800 text-white">
+                      <tr>
+                        <TableHeader label="名称" />
+                        <FilterableTableHeader
+                          label="等级"
+                          selected={tierFilters}
+                          options={TIER_OPTIONS}
+                          onChange={setTierFilters}
+                        />
+                        <TableHeader label="伤害阈值" />
+                        <TableHeader label="护甲值" />
+                        <TableHeader label="特性" />
+                        <TableHeader label="描述" />
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filteredArmor.map((armor) => (
+                        <tr
+                          key={armor.id}
+                          aria-label={customMode ? `选择护甲 ${armor.name}，点击套用到草稿` : `选择护甲 ${armor.name}`}
+                          className="cursor-pointer border-b border-gray-200 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-500"
+                          role="button"
+                          tabIndex={0}
+                          onClick={() => chooseArmorTemplate(armor)}
+                          onKeyDown={(event) => handleRowKeyDown(event, armor)}
+                        >
+                          <td className="whitespace-nowrap p-1 text-xs sm:p-2 sm:text-sm">{armor.name}</td>
+                          <td className="whitespace-nowrap p-1 text-xs sm:p-2 sm:text-sm">{armor.tier}</td>
+                          <td className="whitespace-nowrap p-1 text-xs sm:p-2 sm:text-sm">
+                            {armor.baseThresholds.minor}/{armor.baseThresholds.major}
+                          </td>
+                          <td className="whitespace-nowrap p-1 text-xs sm:p-2 sm:text-sm">{armor.baseArmorMax}</td>
+                          <td className="whitespace-nowrap p-1 text-xs sm:p-2 sm:text-sm">{armor.featureName}</td>
+                          <td className="whitespace-nowrap p-1 text-xs sm:p-2 sm:text-sm" title={armor.description}>
+                            {armor.description}
+                          </td>
+                        </tr>
+                      ))}
+                      {!initializing && filteredArmor.length === 0 && (
+                        <tr>
+                          <td className="p-4 text-center text-sm text-gray-500" colSpan={6}>
+                            未找到符合条件的护甲
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>

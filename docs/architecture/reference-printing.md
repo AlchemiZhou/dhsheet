@@ -4,6 +4,8 @@
 
 `character/history` holds at most 50 session snapshots, coalesces text edits, and resets on character loads and image transactions. History is not part of saved character data.
 
+Story columns independently select guided questions or continuous prose. Optional `professionStory.backgroundMode` / `connectionsMode` preserve the selection; prose uses the existing `characterBackground` / `characterAppearance` fields. Legacy prose opens in its continuous mode unless an explicit mode was saved. Switching modes never deletes either draft. Print overlays replace only the selected question column and title, preserve the original outer artwork, and keep prose at least 9 pt; excess text is repeated in full after the card pages. Inactive drafts are not printed.
+
 `character/print-reference` projects live values and marks into the original form coordinates. `components/print/reference-sheet` uses widget-free, lossless 400 dpi artwork for the first two A4 pages. The optional Ranger companion page also uses its supplied print artwork, with a square portrait and the existing live companion data. Other card and optional-page renderers remain in use. Long text, legacy notes and portraits use continuation pages. Unsupported professions or edited profession rules use the existing sheet renderer to preserve their rules.
 
 `public/print-templates` contains 27 page backgrounds and the original form font subset with its license. The font loads only in print preview. Standalone HTML embeds backgrounds and one font copy, so it remains portable. Color and monochrome PDF actions commit the requested print palette before the browser captures the document; both the main export menu and preview toolbar expose them directly.

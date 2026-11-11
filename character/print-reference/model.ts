@@ -150,6 +150,8 @@ export function referenceFieldLabel(name: string): string {
     "total.instinct": "本能",
     "total.presence": "风度",
     "total.knowledge": "知识",
+    "story.background": "背景故事（全文）",
+    "story.profile": "角色介绍（全文）",
   };
   if (labels[clean]) return labels[clean];
   const parts = clean.split(".");

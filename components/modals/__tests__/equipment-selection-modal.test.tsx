@@ -136,13 +136,59 @@ const expectLastWeaponQuery = (criteria: Record<string, unknown>) => {
 vi.mock("@/equipment/ui/equipment-ui-store", () => ({
   getEquipmentUiStore: () => ((selector: (state: typeof storeState) => unknown) => selector(storeState)),
 }))
+const viewport = vi.hoisted(() => ({ mobile: false }))
+vi.mock("@/hooks/use-mobile", () => ({ useIsMobile: () => viewport.mobile }))
 
 describe("equipment selection modals", () => {
   beforeEach(() => {
+    viewport.mobile = false
     vi.clearAllMocks()
     storeState.initialized = true
     storeState.initializing = false
     storeState.initializationError = null
+  })
+
+  it("offers full weapon cards, effective filters and explicit choice buttons on phones", async () => {
+    viewport.mobile = true
+    const onSelect = vi.fn()
+    render(<WeaponSelectionModal isOpen onClose={vi.fn()} onSelect={onSelect} title="选择主武器" weaponSlotType="primary" />)
+    expect(screen.queryByRole("table")).not.toBeInTheDocument()
+    expect(screen.getAllByText("稳定可靠。").length).toBeGreaterThan(0)
+    expect(screen.queryByRole("button", { name: "类型筛选" })).not.toBeInTheDocument()
+    await userEvent.click(screen.getByText("更多筛选"))
+    await userEvent.click(screen.getByRole("button", { name: "属性筛选" }))
+    await userEvent.click(screen.getByRole("menuitemcheckbox", { name: /力量/ }))
+    expectLastWeaponQuery({ traits: ["strength"], weaponTypes: ["primary"] })
+    await userEvent.keyboard("{Escape}")
+    await userEvent.click(screen.getByRole("button", { name: "选择武器 测试长剑" }))
+    expect(onSelect).toHaveBeenCalledWith({ type: "template", template: weapon })
+  })
+
+  it("shows armor thresholds and modifiers on phones and keeps custom selection as a draft", async () => {
+    viewport.mobile = true
+    const onSelect = vi.fn()
+    render(<ArmorSelectionModal isOpen onClose={vi.fn()} onSelect={onSelect} title="选择护甲" />)
+    expect(screen.queryByRole("table")).not.toBeInTheDocument()
+    expect(screen.getByText("7/14")).toBeInTheDocument()
+    expect(screen.getByText("+1 护甲值，-1 闪避值")).toBeInTheDocument()
+    await userEvent.click(screen.getByRole("button", { name: "+ 自定义护甲" }))
+    await userEvent.click(screen.getByRole("button", { name: "套用护甲 测试守护甲" }))
+    expect(onSelect).not.toHaveBeenCalled()
+    expect(screen.getByDisplayValue("测试守护甲")).toBeInTheDocument()
+    await userEvent.click(screen.getByRole("button", { name: "保存并选择" }))
+    expect(onSelect).toHaveBeenCalledWith({ type: "custom", draft: expect.objectContaining({name: "测试守护甲", baseArmorMax: 4}) })
+  })
+
+  it("closes only the equipment filter menu on Escape before closing the equipment dialog", async () => {
+    viewport.mobile = true
+    const onClose = vi.fn()
+    render(<ArmorSelectionModal isOpen onClose={onClose} onSelect={vi.fn()} title="选择护甲" />)
+    await userEvent.click(screen.getByRole("button", {name:"来源筛选"}))
+    await userEvent.keyboard("{Escape}")
+    expect(screen.queryByRole("menu")).not.toBeInTheDocument()
+    expect(onClose).not.toHaveBeenCalled()
+    await userEvent.keyboard("{Escape}")
+    expect(onClose).toHaveBeenCalledTimes(1)
   })
 
   it("renders weapon source filter and selects a runtime weapon template", async () => {

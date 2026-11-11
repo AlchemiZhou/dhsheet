@@ -58,11 +58,7 @@ export function PrintPageRenderer({
     profession?.description === processCardDescription(preset.description)
       ? resolveProfessionPresetId(profession)
       : undefined;
-  const legacyNotes = [
-    sheetData.characterBackground,
-    sheetData.characterAppearance,
-    sheetData.characterMotivation,
-  ];
+  const legacyNotes = [sheetData.characterMotivation];
   const companionReference =
     referenceEnabled &&
     getVisiblePages(sheetData).some((page) => page.id === "page3");
@@ -70,7 +66,9 @@ export function PrintPageRenderer({
   const hasSupplement =
     referenceDocument &&
     (Object.keys(overflow).length > 0 ||
-      Boolean(templateId && (legacyNotes.some(Boolean) || sheetData.characterImage)));
+      Boolean(
+        templateId && (legacyNotes.some(Boolean) || sheetData.characterImage),
+      ));
   const visiblePages = getVisiblePages(sheetData).filter(
     (page) => !excludePageIds.includes(page.id),
   );
@@ -131,7 +129,7 @@ export function PrintPageRenderer({
             (text, i) =>
               text && (
                 <article key={i}>
-                  <strong>{["角色简介", "角色特质", "冒险笔记"][i]}</strong>
+                  <strong>冒险笔记</strong>
                   <p>{text}</p>
                 </article>
               ),

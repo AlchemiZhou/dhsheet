@@ -8,7 +8,7 @@ import type {
   EquipmentDamageType,
   EquipmentRange,
   EquipmentTier,
-  EquipmentTrait,
+  EquipmentTrait
 } from "@/equipment/import/types"
 import type { WeaponSelectionInput } from "@/lib/sheet-store"
 import { X } from "lucide-react"
@@ -18,17 +18,23 @@ import {
   emptyWeaponDraftState,
   validateWeaponDraftState,
   weaponDraftFromTemplate,
-  type CustomWeaponDraftState,
+  type CustomWeaponDraftState
 } from "./custom-equipment-draft-form"
 import {
   ActiveFilterChips,
   createActiveFilter,
   MultiSelectDropdownFilter,
-  type EquipmentFilterOption,
+  type EquipmentFilterOption
 } from "./equipment-selection-filter-controls"
 
+import { useIsMobile } from "@/hooks/use-mobile"
+import { MobileEquipmentCard } from "./mobile-equipment-card"
+
 const LEVELS: EquipmentTier[] = ["T1", "T2", "T3", "T4"]
-const TIER_OPTIONS: Array<EquipmentFilterOption<EquipmentTier>> = LEVELS.map((level) => ({ value: level, label: level }))
+const TIER_OPTIONS: Array<EquipmentFilterOption<EquipmentTier>> = LEVELS.map((level) => ({
+  value: level,
+  label: level
+}))
 
 const TRAIT_OPTIONS: Array<{ value: EquipmentTrait; label: string }> = [
   { value: "agility", label: "敏捷" },
@@ -36,12 +42,15 @@ const TRAIT_OPTIONS: Array<{ value: EquipmentTrait; label: string }> = [
   { value: "knowledge", label: "知识" },
   { value: "strength", label: "力量" },
   { value: "instinct", label: "本能" },
-  { value: "presence", label: "风度" },
+  { value: "presence", label: "风度" }
 ]
 
-const DAMAGE_TYPE_OPTIONS: Array<{ value: EquipmentDamageType; label: string }> = [
+const DAMAGE_TYPE_OPTIONS: Array<{
+  value: EquipmentDamageType
+  label: string
+}> = [
   { value: "physical", label: "物理" },
-  { value: "magic", label: "魔法" },
+  { value: "magic", label: "魔法" }
 ]
 
 const RANGE_OPTIONS: Array<{ value: EquipmentRange; label: string }> = [
@@ -49,23 +58,23 @@ const RANGE_OPTIONS: Array<{ value: EquipmentRange; label: string }> = [
   { value: "veryClose", label: "邻近" },
   { value: "close", label: "近距离" },
   { value: "far", label: "远距离" },
-  { value: "veryFar", label: "极远" },
+  { value: "veryFar", label: "极远" }
 ]
 
 const BURDEN_OPTIONS: Array<{ value: EquipmentBurden; label: string }> = [
   { value: "oneHanded", label: "单手" },
   { value: "twoHanded", label: "双手" },
-  { value: "offHand", label: "副手" },
+  { value: "offHand", label: "副手" }
 ]
 
 const WEAPON_TYPE_LABELS: Record<"primary" | "secondary", string> = {
   primary: "主武器",
-  secondary: "副武器",
+  secondary: "副武器"
 }
 
 const WEAPON_TYPE_OPTIONS: Array<EquipmentFilterOption<"primary" | "secondary">> = [
   { value: "primary", label: "主武器" },
-  { value: "secondary", label: "副武器" },
+  { value: "secondary", label: "副武器" }
 ]
 
 const labelFromOptions = <T extends string>(options: Array<{ value: T; label: string }>, value: T) =>
@@ -86,7 +95,7 @@ function uniqueSourceOptions(templates: RuntimeEquipmentTemplateWithSource[]) {
         if (!sources.has(template.sourceId)) sources.set(template.sourceId, template.sourceLabel)
         return sources
       }, new Map<string, string>())
-      .entries(),
+      .entries()
   ).map(([sourceId, sourceLabel]) => ({ sourceId, sourceLabel }))
 }
 
@@ -98,7 +107,7 @@ function FilterableTableHeader<T extends string>({
   label,
   selected,
   options,
-  onChange,
+  onChange
 }: {
   label: string
   selected: T[]
@@ -115,6 +124,7 @@ function FilterableTableHeader<T extends string>({
 const filterControlClass = "h-10 rounded border border-gray-300 bg-white px-2 text-sm text-gray-900"
 
 export function WeaponSelectionModal({ isOpen, onClose, onSelect, title, weaponSlotType }: WeaponModalProps) {
+  const isMobile = useIsMobile()
   const equipmentStore = getEquipmentUiStore()
   const initialized = equipmentStore((state) => state.initialized)
   const initializing = equipmentStore((state) => state.initializing)
@@ -125,7 +135,7 @@ export function WeaponSelectionModal({ isOpen, onClose, onSelect, title, weaponS
 
   const defaultCustomWeaponType = useMemo<"primary" | "secondary">(
     () => (weaponSlotType === "secondary" ? "secondary" : "primary"),
-    [weaponSlotType],
+    [weaponSlotType]
   )
 
   const [searchText, setSearchText] = useState("")
@@ -138,7 +148,7 @@ export function WeaponSelectionModal({ isOpen, onClose, onSelect, title, weaponS
   const [weaponTypeFilters, setWeaponTypeFilters] = useState<Array<"primary" | "secondary">>([])
   const [customMode, setCustomMode] = useState(false)
   const [customDraft, setCustomDraft] = useState<CustomWeaponDraftState>(() =>
-    emptyWeaponDraftState(defaultCustomWeaponType),
+    emptyWeaponDraftState(defaultCustomWeaponType)
   )
   const [customErrors, setCustomErrors] = useState<Record<string, string>>({})
   const [customDirty, setCustomDirty] = useState(false)
@@ -180,13 +190,19 @@ export function WeaponSelectionModal({ isOpen, onClose, onSelect, title, weaponS
 
     return querySelectableTemplates({
       kind: "weapon",
-      weaponTypes: weaponSlotType === "inventory" ? undefined : [weaponSlotType],
-    }).filter((template): template is RuntimeEquipmentTemplateWithSource & { kind: "weapon" } => template.kind === "weapon")
+      weaponTypes: weaponSlotType === "inventory" ? undefined : [weaponSlotType]
+    }).filter(
+      (template): template is RuntimeEquipmentTemplateWithSource & { kind: "weapon" } => template.kind === "weapon"
+    )
   }, [initialized, initializationError, querySelectableTemplates, weaponSlotType])
 
   const sourceOptions = useMemo<Array<EquipmentFilterOption<string>>>(
-    () => uniqueSourceOptions(sourceWeapons).map((source) => ({ value: source.sourceId, label: source.sourceLabel })),
-    [sourceWeapons],
+    () =>
+      uniqueSourceOptions(sourceWeapons).map((source) => ({
+        value: source.sourceId,
+        label: source.sourceLabel
+      })),
+    [sourceWeapons]
   )
 
   const filteredWeapons = useMemo(() => {
@@ -201,8 +217,10 @@ export function WeaponSelectionModal({ isOpen, onClose, onSelect, title, weaponS
       ranges: rangeFilters,
       burdens: burdenFilters,
       weaponTypes: weaponSlotType === "inventory" ? weaponTypeFilters : [weaponSlotType],
-      sourceIds: sourceFilters,
-    }).filter((template): template is RuntimeEquipmentTemplateWithSource & { kind: "weapon" } => template.kind === "weapon")
+      sourceIds: sourceFilters
+    }).filter(
+      (template): template is RuntimeEquipmentTemplateWithSource & { kind: "weapon" } => template.kind === "weapon"
+    )
   }, [
     initialized,
     initializationError,
@@ -215,7 +233,7 @@ export function WeaponSelectionModal({ isOpen, onClose, onSelect, title, weaponS
     burdenFilters,
     weaponTypeFilters,
     weaponSlotType,
-    sourceFilters,
+    sourceFilters
   ])
 
   const resetFilters = () => {
@@ -285,14 +303,14 @@ export function WeaponSelectionModal({ isOpen, onClose, onSelect, title, weaponS
       label: "来源",
       selected: sourceFilters,
       options: sourceOptions,
-      clear: () => setSourceFilters([]),
+      clear: () => setSourceFilters([])
     }),
     searchText
       ? {
           key: "search",
           label: `搜索：${searchText}`,
           title: `搜索：${searchText}`,
-          clear: () => setSearchText(""),
+          clear: () => setSearchText("")
         }
       : null,
     createActiveFilter({
@@ -300,48 +318,57 @@ export function WeaponSelectionModal({ isOpen, onClose, onSelect, title, weaponS
       label: "等级",
       selected: tierFilters,
       options: TIER_OPTIONS,
-      clear: () => setTierFilters([]),
+      clear: () => setTierFilters([])
     }),
     createActiveFilter({
       key: "weaponType",
       label: "类型",
       selected: weaponTypeFilters,
       options: WEAPON_TYPE_OPTIONS,
-      clear: () => setWeaponTypeFilters([]),
+      clear: () => setWeaponTypeFilters([])
     }),
     createActiveFilter({
       key: "damageType",
       label: "伤害类型",
       selected: damageTypeFilters,
       options: DAMAGE_TYPE_OPTIONS,
-      clear: () => setDamageTypeFilters([]),
+      clear: () => setDamageTypeFilters([])
     }),
     createActiveFilter({
       key: "burden",
       label: "负荷",
       selected: burdenFilters,
       options: BURDEN_OPTIONS,
-      clear: () => setBurdenFilters([]),
+      clear: () => setBurdenFilters([])
     }),
     createActiveFilter({
       key: "range",
       label: "范围",
       selected: rangeFilters,
       options: RANGE_OPTIONS,
-      clear: () => setRangeFilters([]),
+      clear: () => setRangeFilters([])
     }),
     createActiveFilter({
       key: "trait",
       label: "属性",
       selected: traitFilters,
       options: TRAIT_OPTIONS,
-      clear: () => setTraitFilters([]),
-    }),
-  ].filter((filter): filter is { key: string; label: string; title: string; clear: () => void } => filter !== null)
+      clear: () => setTraitFilters([])
+    })
+  ].filter(
+    (
+      filter
+    ): filter is {
+      key: string
+      label: string
+      title: string
+      clear: () => void
+    } => filter !== null
+  )
 
   const handleRowKeyDown = (
     event: ReactKeyboardEvent<HTMLTableRowElement>,
-    weapon: RuntimeEquipmentTemplateWithSource & { kind: "weapon" },
+    weapon: RuntimeEquipmentTemplateWithSource & { kind: "weapon" }
   ) => {
     if (event.key !== "Enter" && event.key !== " ") return
     event.preventDefault()
@@ -353,7 +380,12 @@ export function WeaponSelectionModal({ isOpen, onClose, onSelect, title, weaponS
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4">
       <div className="absolute inset-0 bg-black bg-opacity-50" onClick={requestClose}></div>
-      <div className="equipment-modal relative flex max-h-[95vh] w-full max-w-6xl flex-col overflow-hidden rounded-lg bg-white shadow-lg sm:max-h-[85vh]">
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label={title}
+        className={`equipment-modal ${isMobile ? "equipment-mobile-dialog" : ""} relative flex max-h-[95vh] w-full max-w-6xl flex-col overflow-hidden rounded-lg bg-white shadow-lg sm:max-h-[85vh]`}
+      >
         <div className="flex items-center gap-3 border-b border-gray-200 p-3 sm:p-4">
           <div className="flex flex-1 flex-wrap items-center gap-3">
             <h2 className="text-lg font-bold sm:text-xl">{title}</h2>
@@ -452,104 +484,189 @@ export function WeaponSelectionModal({ isOpen, onClose, onSelect, title, weaponS
             </div>
           )}
 
-          <p className="equipment-scroll-hint hidden">左右滑动可查看完整装备信息</p>
-          <div className="min-h-[16rem] flex-1 overflow-auto">
-            <div className="p-1 sm:p-2">
-              <table className="w-full min-w-[72rem] border-collapse">
-                <thead className="sticky top-0 z-10 bg-gray-800 text-white">
-                  <tr>
-                    <FilterableTableHeader
-                      label="等级"
-                      selected={tierFilters}
-                      options={TIER_OPTIONS}
-                      onChange={setTierFilters}
+          {isMobile ? (
+            <>
+              <details className="border-b border-gray-200 px-3 py-2">
+                <summary className="cursor-pointer py-2 text-sm font-semibold">更多筛选</summary>
+                <div className="mt-2 grid grid-cols-2 gap-2">
+                  <MultiSelectDropdownFilter
+                    label="等级"
+                    selected={tierFilters}
+                    options={TIER_OPTIONS}
+                    onChange={setTierFilters}
+                    variant="field"
+                  />
+                  <MultiSelectDropdownFilter
+                    label="属性"
+                    selected={traitFilters}
+                    options={TRAIT_OPTIONS}
+                    onChange={setTraitFilters}
+                    variant="field"
+                  />
+                  <MultiSelectDropdownFilter
+                    label="伤害类型"
+                    selected={damageTypeFilters}
+                    options={DAMAGE_TYPE_OPTIONS}
+                    onChange={setDamageTypeFilters}
+                    variant="field"
+                  />
+                  <MultiSelectDropdownFilter
+                    label="负荷"
+                    selected={burdenFilters}
+                    options={BURDEN_OPTIONS}
+                    onChange={setBurdenFilters}
+                    variant="field"
+                  />
+                  <MultiSelectDropdownFilter
+                    label="范围"
+                    selected={rangeFilters}
+                    options={RANGE_OPTIONS}
+                    onChange={setRangeFilters}
+                    variant="field"
+                  />
+                  {weaponSlotType === "inventory" && (
+                    <MultiSelectDropdownFilter
+                      label="类型"
+                      selected={weaponTypeFilters}
+                      options={WEAPON_TYPE_OPTIONS}
+                      onChange={setWeaponTypeFilters}
+                      variant="field"
                     />
-                    <TableHeader label="名称" />
-                    {weaponSlotType === "inventory" ? (
-                      <FilterableTableHeader
-                        label="类型"
-                        selected={weaponTypeFilters}
-                        options={WEAPON_TYPE_OPTIONS}
-                        onChange={setWeaponTypeFilters}
-                      />
-                    ) : (
-                      <TableHeader label="类型" />
-                    )}
-                    <FilterableTableHeader
-                      label="伤害类型"
-                      selected={damageTypeFilters}
-                      options={DAMAGE_TYPE_OPTIONS}
-                      onChange={setDamageTypeFilters}
-                    />
-                    <FilterableTableHeader
-                      label="负荷"
-                      selected={burdenFilters}
-                      options={BURDEN_OPTIONS}
-                      onChange={setBurdenFilters}
-                    />
-                    <FilterableTableHeader
-                      label="范围"
-                      selected={rangeFilters}
-                      options={RANGE_OPTIONS}
-                      onChange={setRangeFilters}
-                    />
-                    <FilterableTableHeader
-                      label="属性"
-                      selected={traitFilters}
-                      options={TRAIT_OPTIONS}
-                      onChange={setTraitFilters}
-                    />
-                    <TableHeader label="伤害" />
-                    <TableHeader label="特性" />
-                    <TableHeader label="描述" />
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredWeapons.map((weapon) => (
-                    <tr
-                      key={weapon.id}
-                      aria-label={customMode ? `选择武器 ${weapon.name}，点击套用到草稿` : `选择武器 ${weapon.name}`}
-                      className="cursor-pointer border-b border-gray-200 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-500"
-                      role="button"
-                      tabIndex={0}
-                      onClick={() => chooseWeaponTemplate(weapon)}
-                      onKeyDown={(event) => handleRowKeyDown(event, weapon)}
-                    >
-                      <td className="whitespace-nowrap p-1 text-xs sm:p-2 sm:text-sm">{weapon.tier}</td>
-                      <td className="whitespace-nowrap p-1 text-xs sm:p-2 sm:text-sm">{weapon.name}</td>
-                      <td className="whitespace-nowrap p-1 text-xs sm:p-2 sm:text-sm">
-                        {WEAPON_TYPE_LABELS[weapon.weaponType]}
-                      </td>
-                      <td className="whitespace-nowrap p-1 text-xs sm:p-2 sm:text-sm">
-                        {labelFromOptions(DAMAGE_TYPE_OPTIONS, weapon.damageType)}
-                      </td>
-                      <td className="whitespace-nowrap p-1 text-xs sm:p-2 sm:text-sm">
-                        {labelFromOptions(BURDEN_OPTIONS, weapon.burden)}
-                      </td>
-                      <td className="whitespace-nowrap p-1 text-xs sm:p-2 sm:text-sm">
-                        {labelFromOptions(RANGE_OPTIONS, weapon.range)}
-                      </td>
-                      <td className="whitespace-nowrap p-1 text-xs sm:p-2 sm:text-sm">
-                        {labelFromOptions(TRAIT_OPTIONS, weapon.trait)}
-                      </td>
-                      <td className="whitespace-nowrap p-1 text-xs sm:p-2 sm:text-sm">{weapon.damage}</td>
-                      <td className="whitespace-nowrap p-1 text-xs sm:p-2 sm:text-sm">{weapon.featureName}</td>
-                      <td className="whitespace-nowrap p-1 text-xs sm:p-2 sm:text-sm" title={weapon.description}>
-                        {weapon.description}
-                      </td>
-                    </tr>
-                  ))}
-                  {!initializing && filteredWeapons.length === 0 && (
-                    <tr>
-                      <td className="p-4 text-center text-sm text-gray-500" colSpan={10}>
-                        未找到符合条件的武器
-                      </td>
-                    </tr>
                   )}
-                </tbody>
-              </table>
-            </div>
-          </div>
+                </div>
+              </details>
+              <p className="px-3 pt-3 text-xs text-gray-500">
+                {filteredWeapons.length} 件武器 · 上下浏览，完整查看特性后再选择
+              </p>
+              <div className="mobile-equipment-list">
+                {filteredWeapons.map((weapon) => (
+                  <MobileEquipmentCard
+                    key={weapon.id}
+                    name={weapon.name}
+                    tier={weapon.tier}
+                    source={weapon.sourceLabel}
+                    stats={[
+                      ["类型", WEAPON_TYPE_LABELS[weapon.weaponType]],
+                      ["伤害", `${weapon.damage} ${labelFromOptions(DAMAGE_TYPE_OPTIONS, weapon.damageType)}`],
+                      ["属性", labelFromOptions(TRAIT_OPTIONS, weapon.trait)],
+                      ["范围", labelFromOptions(RANGE_OPTIONS, weapon.range)],
+                      ["负荷", labelFromOptions(BURDEN_OPTIONS, weapon.burden)]
+                    ]}
+                    feature={weapon.featureName}
+                    description={weapon.description}
+                    label={customMode ? `套用武器 ${weapon.name}` : `选择武器 ${weapon.name}`}
+                    onChoose={() => chooseWeaponTemplate(weapon)}
+                  />
+                ))}
+                {!initializing && !filteredWeapons.length && (
+                  <p className="py-8 text-center text-sm text-gray-500">未找到符合条件的武器</p>
+                )}
+              </div>
+            </>
+          ) : (
+            <>
+              <p className="equipment-scroll-hint hidden">左右滑动可查看完整装备信息</p>
+              <div className="min-h-[16rem] flex-1 overflow-auto">
+                <div className="p-1 sm:p-2">
+                  <table className="w-full min-w-[72rem] border-collapse">
+                    <thead className="sticky top-0 z-10 bg-gray-800 text-white">
+                      <tr>
+                        <FilterableTableHeader
+                          label="等级"
+                          selected={tierFilters}
+                          options={TIER_OPTIONS}
+                          onChange={setTierFilters}
+                        />
+                        <TableHeader label="名称" />
+                        {weaponSlotType === "inventory" ? (
+                          <FilterableTableHeader
+                            label="类型"
+                            selected={weaponTypeFilters}
+                            options={WEAPON_TYPE_OPTIONS}
+                            onChange={setWeaponTypeFilters}
+                          />
+                        ) : (
+                          <TableHeader label="类型" />
+                        )}
+                        <FilterableTableHeader
+                          label="伤害类型"
+                          selected={damageTypeFilters}
+                          options={DAMAGE_TYPE_OPTIONS}
+                          onChange={setDamageTypeFilters}
+                        />
+                        <FilterableTableHeader
+                          label="负荷"
+                          selected={burdenFilters}
+                          options={BURDEN_OPTIONS}
+                          onChange={setBurdenFilters}
+                        />
+                        <FilterableTableHeader
+                          label="范围"
+                          selected={rangeFilters}
+                          options={RANGE_OPTIONS}
+                          onChange={setRangeFilters}
+                        />
+                        <FilterableTableHeader
+                          label="属性"
+                          selected={traitFilters}
+                          options={TRAIT_OPTIONS}
+                          onChange={setTraitFilters}
+                        />
+                        <TableHeader label="伤害" />
+                        <TableHeader label="特性" />
+                        <TableHeader label="描述" />
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filteredWeapons.map((weapon) => (
+                        <tr
+                          key={weapon.id}
+                          aria-label={
+                            customMode ? `选择武器 ${weapon.name}，点击套用到草稿` : `选择武器 ${weapon.name}`
+                          }
+                          className="cursor-pointer border-b border-gray-200 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-500"
+                          role="button"
+                          tabIndex={0}
+                          onClick={() => chooseWeaponTemplate(weapon)}
+                          onKeyDown={(event) => handleRowKeyDown(event, weapon)}
+                        >
+                          <td className="whitespace-nowrap p-1 text-xs sm:p-2 sm:text-sm">{weapon.tier}</td>
+                          <td className="whitespace-nowrap p-1 text-xs sm:p-2 sm:text-sm">{weapon.name}</td>
+                          <td className="whitespace-nowrap p-1 text-xs sm:p-2 sm:text-sm">
+                            {WEAPON_TYPE_LABELS[weapon.weaponType]}
+                          </td>
+                          <td className="whitespace-nowrap p-1 text-xs sm:p-2 sm:text-sm">
+                            {labelFromOptions(DAMAGE_TYPE_OPTIONS, weapon.damageType)}
+                          </td>
+                          <td className="whitespace-nowrap p-1 text-xs sm:p-2 sm:text-sm">
+                            {labelFromOptions(BURDEN_OPTIONS, weapon.burden)}
+                          </td>
+                          <td className="whitespace-nowrap p-1 text-xs sm:p-2 sm:text-sm">
+                            {labelFromOptions(RANGE_OPTIONS, weapon.range)}
+                          </td>
+                          <td className="whitespace-nowrap p-1 text-xs sm:p-2 sm:text-sm">
+                            {labelFromOptions(TRAIT_OPTIONS, weapon.trait)}
+                          </td>
+                          <td className="whitespace-nowrap p-1 text-xs sm:p-2 sm:text-sm">{weapon.damage}</td>
+                          <td className="whitespace-nowrap p-1 text-xs sm:p-2 sm:text-sm">{weapon.featureName}</td>
+                          <td className="whitespace-nowrap p-1 text-xs sm:p-2 sm:text-sm" title={weapon.description}>
+                            {weapon.description}
+                          </td>
+                        </tr>
+                      ))}
+                      {!initializing && filteredWeapons.length === 0 && (
+                        <tr>
+                          <td className="p-4 text-center text-sm text-gray-500" colSpan={10}>
+                            未找到符合条件的武器
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>

@@ -96,7 +96,7 @@ export function MultiSelectDropdownFilter<T extends string>({
           <ChevronDown className="h-3.5 w-3.5 shrink-0 opacity-80" />
         </button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="start" className="w-44">
+      <DropdownMenuContent align="start" className="equipment-filter-menu w-44 max-h-[70dvh] overflow-y-auto" onEscapeKeyDown={event => event.stopPropagation()}>
         <DropdownMenuLabel>{label}筛选</DropdownMenuLabel>
         <DropdownMenuSeparator />
         {options.map((option) => (
@@ -134,7 +134,7 @@ export function ActiveFilterChips({ filters }: { filters: ActiveEquipmentFilter[
       {filters.map((filter) => (
         <span
           key={filter.key}
-          className="inline-flex h-7 items-center gap-1 rounded-full bg-gray-100 px-2 text-xs font-medium text-gray-700"
+          className="equipment-filter-chip inline-flex h-7 items-center gap-1 rounded-full bg-gray-100 px-2 text-xs font-medium text-gray-700"
           title={filter.title}
         >
           {filter.label}

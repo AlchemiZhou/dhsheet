@@ -49,6 +49,36 @@
 .reference-sheet .reference-equipment-value {
   transform: translateY(2pt);
 }
+.reference-sheet .reference-prose {
+  justify-content: flex-start;
+  line-height: 1.4;
+}
+.reference-story-mask {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.reference-story-title {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #292929;
+  font:
+    bold 8.5pt Arial,
+    "Noto Sans CJK SC",
+    sans-serif;
+}
+.reference-story-overflow {
+  position: absolute;
+  font:
+    7.5pt Arial,
+    "Noto Sans CJK SC",
+    sans-serif;
+  color: #555;
+}
 .reference-sheet .reference-armor-threshold {
   text-align: center;
   padding-inline: 4pt;

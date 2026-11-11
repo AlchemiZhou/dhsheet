@@ -62,6 +62,8 @@ export function validateSheetData(data: any): data is SheetData {
   }
 
   if (data.professionStory !== undefined && !normalizeProfessionStory(data.professionStory)) return false
+  if (data.professionStory?.backgroundMode !== undefined && !['questions', 'free'].includes(data.professionStory.backgroundMode)) return false
+  if (data.professionStory?.connectionsMode !== undefined && !['questions', 'profile'].includes(data.professionStory.connectionsMode)) return false
 
   // 检查cards数组中的对象结构
   if (data.cards && data.cards.length > 0) {

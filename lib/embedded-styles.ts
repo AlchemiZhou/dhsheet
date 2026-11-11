@@ -1,6 +1,6 @@
 /**
  * 自动生成的CSS内容文件
- * 生成时间: 2026-11-11T10:35:00.874Z
+ * 生成时间: 2026-11-11T10:55:18.135Z
  * 
  * 该文件包含了应用的所有CSS样式，用于HTML导出功能
  * 请勿手动编辑此文件，它会在构建时自动生成
@@ -11,7 +11,7 @@
 
 /**
  * 完整的CSS内容（包含Tailwind CSS和应用样式）
- * 大小: 148.85 KB
+ * 大小: 150.58 KB
  */
 export const embeddedStyles = `*, ::before, ::after {
   --tw-border-spacing-x: 0;
@@ -1156,6 +1156,9 @@ video {
 .h-\\[50px\\] {
   height: 50px;
 }
+.h-\\[90dvh\\] {
+  height: 90dvh;
+}
 .h-\\[min\\(32svh\\2c 420px\\)\\] {
   height: min(32svh,420px);
 }
@@ -1200,6 +1203,9 @@ video {
 }
 .max-h-\\[60vh\\] {
   max-height: 60vh;
+}
+.max-h-\\[70dvh\\] {
+  max-height: 70dvh;
 }
 .max-h-\\[720px\\] {
   max-height: 720px;
@@ -3035,6 +3041,9 @@ video {
 .leading-7 {
   line-height: 1.75rem;
 }
+.leading-8 {
+  line-height: 2rem;
+}
 .leading-\\[1\\.3\\] {
   line-height: 1.3;
 }
@@ -4081,6 +4090,19 @@ html {
   .print-all-pages .page-beast-forms.last-printed-page { break-after: auto; }
 }
 
+@media screen and (max-width: 1023px) {
+  .profession-story-section :is(textarea, select) {
+    font-size: 16px;
+  }
+  .profession-story-section select {
+    min-height: 44px;
+  }
+  .story-focus-dialog {
+    width: calc(100% - 16px);
+    max-height: calc(100dvh - 16px);
+  }
+}
+
 /* Editing follows the device width. A4 preview and print keep their own document layout. */
 @media screen and (max-width: 1023px) {
   .sheet-app { padding: 8px; max-width: 100%; }
@@ -4267,6 +4289,36 @@ html {
   .card-selection-grid { grid-template-columns: repeat(2,minmax(0,1fr)) !important; }
 }
 
+@media screen and (max-width: 1023px) {
+  .equipment-modal.equipment-mobile-dialog {
+    position: fixed !important;
+    inset: 0;
+    width: 100% !important;
+    height: 100dvh;
+    max-height: 100dvh !important;
+    border-radius: 0;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .equipment-mobile-dialog .mobile-equipment-list {
+    display: grid;
+    gap: 12px;
+    padding: 12px;
+    min-width: 0;
+  }
+  .mobile-equipment-card {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+  .equipment-mobile-dialog .equipment-filter-chip {
+    height: auto;
+    min-height: 44px;
+  }
+  .equipment-filter-menu [role="menuitemcheckbox"],
+  .equipment-filter-menu [role="menuitem"] {
+    min-height: 44px;
+  }
+}
+
 .reference-companion .reference-companion-portrait {
   position: absolute;
   object-fit: contain;
@@ -4361,6 +4413,36 @@ html {
 }
 .reference-sheet .reference-equipment-value {
   transform: translateY(2pt);
+}
+.reference-sheet .reference-prose {
+  justify-content: flex-start;
+  line-height: 1.4;
+}
+.reference-story-mask {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.reference-story-title {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #292929;
+  font:
+    bold 8.5pt Arial,
+    "Noto Sans CJK SC",
+    sans-serif;
+}
+.reference-story-overflow {
+  position: absolute;
+  font:
+    7.5pt Arial,
+    "Noto Sans CJK SC",
+    sans-serif;
+  color: #555;
 }
 .reference-sheet .reference-armor-threshold {
   text-align: center;
@@ -4903,6 +4985,10 @@ html {
 .focus\\:ring-blue-500:focus {
   --tw-ring-opacity: 1;
   --tw-ring-color: rgb(59 130 246 / var(--tw-ring-opacity, 1));
+}
+.focus\\:ring-gray-300:focus {
+  --tw-ring-opacity: 1;
+  --tw-ring-color: rgb(221 221 221 / var(--tw-ring-opacity, 1));
 }
 .focus\\:ring-gray-500:focus {
   --tw-ring-opacity: 1;
@@ -6165,7 +6251,7 @@ export function getStylesInfo() {
     size: embeddedStyles.length,
     sizeKB: (embeddedStyles.length / 1024).toFixed(2),
     sizeMB: (embeddedStyles.length / 1024 / 1024).toFixed(2),
-    generated: '2026-11-11T10:35:00.875Z',
+    generated: '2026-11-11T10:55:18.136Z',
     compressed: false
   };
 }

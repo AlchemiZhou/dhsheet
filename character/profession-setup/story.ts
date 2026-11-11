@@ -9,6 +9,8 @@ export interface ProfessionStory {
   professionId: string;
   background: StoryEntry[];
   connections: StoryEntry[];
+  backgroundMode?: "questions" | "free";
+  connectionsMode?: "questions" | "profile";
 }
 export function normalizeProfessionStory(
   value: unknown,
@@ -29,6 +31,22 @@ export function normalizeProfessionStory(
       typeof source.professionId === "string" ? source.professionId : "",
     background: entries(source.background),
     connections: entries(source.connections),
+    ...(source.backgroundMode !== undefined
+      ? {
+          backgroundMode:
+            source.backgroundMode === "free"
+              ? ("free" as const)
+              : ("questions" as const),
+        }
+      : {}),
+    ...(source.connectionsMode !== undefined
+      ? {
+          connectionsMode:
+            source.connectionsMode === "profile"
+              ? ("profile" as const)
+              : ("questions" as const),
+        }
+      : {}),
   };
 }
 export function createProfessionStory(
@@ -42,8 +60,33 @@ export function createProfessionStory(
       answer: previous?.[key][i]?.answer ?? "",
     }));
   return {
+    ...previous,
     professionId: card?.id ?? "",
     background: group("background"),
     connections: group("connections"),
   };
+}
+
+export function storyWritingModes(sheet: {
+  professionStory?: ProfessionStory;
+  characterBackground?: string;
+  characterAppearance?: string;
+}) {
+  return {
+    background:
+      sheet.professionStory?.backgroundMode ??
+      (sheet.characterBackground?.trim() ? "free" : "questions"),
+    connections:
+      sheet.professionStory?.connectionsMode ??
+      (sheet.characterAppearance?.trim() ? "profile" : "questions"),
+  } as const;
+}
+
+export function storyAnswersToDraft(entries: StoryEntry[]): string {
+  return entries
+    .filter((entry) => entry.answer.trim())
+    .map((entry) =>
+      [entry.question.trim(), entry.answer].filter(Boolean).join("\n"),
+    )
+    .join("\n\n");
 }
