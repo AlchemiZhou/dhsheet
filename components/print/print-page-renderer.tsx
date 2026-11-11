@@ -2,6 +2,7 @@
 
 import React, { useState, useCallback } from "react";
 import { ReferenceSheet, type PrintOverflow } from "./reference-sheet";
+import { ReferenceCompanionSheet } from "./reference-companion";
 import { useProfessionSetupPreferences } from "@/character/profession-setup/preferences";
 import {
   getProfessionPreset,
@@ -62,11 +63,14 @@ export function PrintPageRenderer({
     sheetData.characterAppearance,
     sheetData.characterMotivation,
   ];
+  const companionReference =
+    referenceEnabled &&
+    getVisiblePages(sheetData).some((page) => page.id === "page3");
+  const referenceDocument = Boolean(templateId || companionReference);
   const hasSupplement =
-    templateId &&
+    referenceDocument &&
     (Object.keys(overflow).length > 0 ||
-      legacyNotes.some(Boolean) ||
-      Boolean(sheetData.characterImage));
+      Boolean(templateId && (legacyNotes.some(Boolean) || sheetData.characterImage)));
   const visiblePages = getVisiblePages(sheetData).filter(
     (page) => !excludePageIds.includes(page.id),
   );
@@ -75,7 +79,7 @@ export function PrintPageRenderer({
   return (
     <div
       {...appearanceAttributes}
-      className={`pb-40 print:pb-0 ${appearanceAttributes.className} ${templateId ? "reference-print-document" : ""}`}
+      className={`pb-40 print:pb-0 ${appearanceAttributes.className} ${referenceDocument ? "reference-print-document" : ""}`}
       style={
         {
           ...appearanceAttributes.style,
@@ -87,17 +91,23 @@ export function PrintPageRenderer({
         const Component = page.printComponent ?? page.component;
         const isLastPage = index === lastPageIndex && !hasSupplement;
         const referencePage =
-          templateId && (page.id === "page1" || page.id === "page2");
+          (templateId && (page.id === "page1" || page.id === "page2")) ||
+          (companionReference && page.id === "page3");
 
         return (
           <React.Fragment key={page.id}>
             <div
-              className={`${page.printClass} ${templateId ? (referencePage ? "reference-print-page" : "reference-content-page") : ""} flex justify-center items-start ${
+              className={`${page.printClass} ${referenceDocument ? (referencePage ? "reference-print-page" : "reference-content-page") : ""} flex justify-center items-start ${
                 isLastPage ? "last-printed-page" : ""
               }`}
             >
               {index === 0 && <style>{SHEET_APPEARANCE_STYLES}</style>}
-              {referencePage ? (
+              {companionReference && page.id === "page3" ? (
+                <ReferenceCompanionSheet
+                  sheet={sheetData}
+                  onOverflow={reportOverflow}
+                />
+              ) : referencePage ? (
                 <ReferenceSheet
                   sheet={sheetData}
                   id={templateId!}

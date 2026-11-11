@@ -28,7 +28,7 @@ export interface PrintOverflow {
 }
 const width = REFERENCE_PAGE_WIDTH,
   height = REFERENCE_PAGE_HEIGHT;
-function Field({
+export function Field({
   box,
   value,
   name,
@@ -46,6 +46,7 @@ function Field({
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (!fit) return;
+    if (!value) { onOverflow(undefined, name); return; }
     let cancelled = false;
     const fitText = () => {
       const element = ref.current;
@@ -164,7 +165,7 @@ function FeatureFields({
     </>
   );
 }
-function Tick({ rect, checked }: { rect: number[]; checked: boolean }) {
+export function Tick({ rect, checked }: { rect: number[]; checked: boolean }) {
   if (!checked) return null;
   const [x, y, x2, y2] = rect,
     w = x2 - x,

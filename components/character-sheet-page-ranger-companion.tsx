@@ -9,6 +9,7 @@ import {
     applyCharacterImageAssetAction,
 } from '@/character/storage/character-image-actions';
 import { getActiveCharacterId } from '@/lib/multi-character-storage';
+import '@/components/print/reference-companion.css';
 
 const MAX_STRESS = (formData: any) => Number(formData.companionStressMax) || 3;
 const TOTAL_STRESS = 6;
@@ -59,7 +60,7 @@ const CharacterSheetPageThree: React.FC<CharacterSheetPageThreeProps> = ({ curre
                         height="9rem"
                         placeholder={{ title: "伙伴图像", subtitle: "点击上传" }}
                         inputId="companion-image-upload"
-                        className="mb-2 print:w-28 print:h-28"
+                        className="companion-portrait-editor mb-2"
                     />
                     <textarea
                         rows={6}
@@ -225,13 +226,13 @@ const CharacterSheetPageThree: React.FC<CharacterSheetPageThreeProps> = ({ curre
 
             <div className="w-full max-w-[210mm] mx-auto">
                 <div
-                    className="a4-page p-2 bg-white text-gray-800 shadow-lg print:shadow-none rounded-md"
+                    className="a4-page ranger-companion-sheet p-2 bg-white text-gray-800 shadow-lg print:shadow-none rounded-md"
                     style={{ width: "210mm" }}
                 >
             {/* Header Section - 黑色顶盖 */}
             <PageHeader />
             {/* Header Section */}
-            <div className="flex justify-between items-start mb-3">
+            <div className="ranger-companion-heading flex justify-between items-start mb-3">
                 <div>
                     <h1 className="text-4xl font-bold text-gray-800 dark:text-gray-200">游侠伙伴</h1>
                 </div>

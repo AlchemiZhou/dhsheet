@@ -1,6 +1,6 @@
 /**
  * 自动生成的CSS内容文件
- * 生成时间: 2026-11-11T10:06:47.193Z
+ * 生成时间: 2026-11-11T10:35:00.874Z
  * 
  * 该文件包含了应用的所有CSS样式，用于HTML导出功能
  * 请勿手动编辑此文件，它会在构建时自动生成
@@ -11,7 +11,7 @@
 
 /**
  * 完整的CSS内容（包含Tailwind CSS和应用样式）
- * 大小: 147.71 KB
+ * 大小: 148.85 KB
  */
 export const embeddedStyles = `*, ::before, ::after {
   --tw-border-spacing-x: 0;
@@ -4267,6 +4267,50 @@ html {
   .card-selection-grid { grid-template-columns: repeat(2,minmax(0,1fr)) !important; }
 }
 
+.reference-companion .reference-companion-portrait {
+  position: absolute;
+  object-fit: contain;
+  background: #fff;
+  aspect-ratio: 1;
+}
+.reference-companion [data-reference-field="companion:evasion"],
+.reference-companion [data-reference-field^="companion:experienceBonus"] {
+  text-align: center !important;
+}
+.reference-companion .reference-companion-description-label {
+  position: absolute;
+  left: 28.2%;
+  top: 14.3%;
+  color: #3d4937;
+  font-size: 12px;
+  font-weight: 700;
+}
+.ranger-companion-sheet .companion-portrait-editor {
+  width: 9rem !important;
+  height: 9rem !important;
+  aspect-ratio: 1;
+  flex: none;
+  box-sizing: border-box;
+}
+.ranger-companion-heading {
+  border-bottom: 2px solid #63734b;
+}
+.ranger-companion-heading h1 {
+  background: #343f2c;
+  color: #fff !important;
+  padding: 10px 34px 12px 14px;
+  clip-path: polygon(0 0, 100% 0, 90% 100%, 0 100%);
+  font-size: 30px;
+}
+.ranger-companion-sheet .bg-gray-700 {
+  background: #536044;
+}
+@media print {
+  .ranger-companion-sheet .companion-portrait-editor { width:7rem!important; height:7rem!important; }
+}
+.sheet-print-mono .reference-companion-description-label { color:#303030; }
+.sheet-print-mono .reference-companion .reference-marks rect[stroke] { stroke:#707070; }
+
 .reference-sheet {
   position: relative;
   box-sizing: border-box;
@@ -5952,20 +5996,12 @@ html {
     display: none;
   }
 
-  .print\\:h-28 {
-    height: 112px;
-  }
-
   .print\\:max-h-\\[8rem\\] {
     max-height: 8rem;
   }
 
   .print\\:min-h-\\[5rem\\] {
     min-height: 5rem;
-  }
-
-  .print\\:w-28 {
-    width: 112px;
   }
 
   .print\\:w-\\[210mm\\] {
@@ -6129,7 +6165,7 @@ export function getStylesInfo() {
     size: embeddedStyles.length,
     sizeKB: (embeddedStyles.length / 1024).toFixed(2),
     sizeMB: (embeddedStyles.length / 1024 / 1024).toFixed(2),
-    generated: '2026-11-11T10:06:47.193Z',
+    generated: '2026-11-11T10:35:00.875Z',
     compressed: false
   };
 }
