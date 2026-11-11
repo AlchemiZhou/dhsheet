@@ -26,6 +26,16 @@ const mainProps = {
 }
 
 describe("BottomDock more menu", () => {
+  it("offers explicit color and monochrome PDF exports from the main export menu", () => {
+    const onQuickExportPDF = vi.fn()
+    render(<BottomDock {...mainProps} onQuickExportPDF={onQuickExportPDF} />)
+    fireEvent.pointerDown(screen.getByRole('button', { name: '导出' }))
+    fireEvent.click(screen.getByRole('menuitem', { name: '导出彩色PDF' }))
+    fireEvent.pointerDown(screen.getByRole('button', { name: '导出' }))
+    fireEvent.click(screen.getByRole('menuitem', { name: '导出黑白PDF' }))
+    expect(onQuickExportPDF).toHaveBeenNthCalledWith(1, 'color')
+    expect(onQuickExportPDF).toHaveBeenNthCalledWith(2, 'mono')
+  })
   it("keeps the guide and extension tools reachable from the mobile more menu", () => {
     const onToggleGuide = vi.fn()
     render(<BottomDock {...mainProps} isMobile onToggleGuide={onToggleGuide} />)
@@ -41,10 +51,12 @@ describe("BottomDock more menu", () => {
     const onClose = vi.fn()
     render(<BottomDock mode="preview" isMobile onExportPDF={onExportPDF} onExportHTML={onExportHTML}
       onExportJSON={vi.fn()} onOpenSealDiceExport={vi.fn()} onClose={onClose} />)
-    fireEvent.click(screen.getByRole("button", { name: "导出为PDF" }))
+    fireEvent.click(screen.getByRole("button", { name: "导出彩色PDF" }))
+    fireEvent.click(screen.getByRole("button", { name: "导出黑白PDF" }))
     fireEvent.click(screen.getByRole("button", { name: "导出为HTML" }))
     fireEvent.click(screen.getByRole("button", { name: "返回" }))
-    expect(onExportPDF).toHaveBeenCalledTimes(1)
+    expect(onExportPDF).toHaveBeenNthCalledWith(1, 'color')
+    expect(onExportPDF).toHaveBeenNthCalledWith(2, 'mono')
     expect(onExportHTML).toHaveBeenCalledTimes(1)
     expect(onClose).toHaveBeenCalledTimes(1)
   })

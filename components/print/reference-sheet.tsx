@@ -17,8 +17,6 @@ import { createProfessionStory } from "@/character/profession-setup/story";
 import {
   REFERENCE_PAGE_WIDTH,
   REFERENCE_PAGE_HEIGHT,
-  REFERENCE_CONTENT_SCALE,
-  REFERENCE_FRAME_EDGES,
   splitReferenceFeature,
 } from "@/character/print-reference/layout";
 import "./reference-sheet.css";
@@ -210,7 +208,6 @@ export function ReferenceSheet({
       style={
         {
           "--reference-ink": preset.ink,
-          "--reference-scale": REFERENCE_CONTENT_SCALE,
         } as CSSProperties
       }
     >
@@ -293,13 +290,6 @@ export function ReferenceSheet({
           viewBox={`0 0 ${width} ${height}`}
           aria-hidden="true"
         >
-          {REFERENCE_FRAME_EDGES[page].map(([x, y, end], index) => (
-            <path
-              key={`edge-${index}`}
-              className="reference-frame-edge"
-              d={`M${x} ${y}V${end}`}
-            />
-          ))}
           {Object.entries(fields)
             .filter(
               ([name, definition]) =>

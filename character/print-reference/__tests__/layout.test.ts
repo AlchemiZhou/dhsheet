@@ -1,10 +1,5 @@
 import { describe, expect, it } from "vitest";
-import {
-  REFERENCE_FRAME_EDGES,
-  REFERENCE_PAGE_WIDTH,
-  REFERENCE_PAGE_HEIGHT,
-  splitReferenceFeature,
-} from "../layout";
+import { splitReferenceFeature } from "../layout";
 
 const measure = (value: string) => Array.from(value).length;
 
@@ -28,19 +23,5 @@ describe("native equipment writing rows", () => {
       lines: ["龙", "😀"],
       remaining: "人",
     });
-  });
-});
-
-describe("restored frame edges", () => {
-  it("places every edge inside the artwork so paper clipping cannot remove it", () => {
-    for (const edges of Object.values(REFERENCE_FRAME_EDGES)) {
-      for (const [x, top, bottom] of edges) {
-        expect(x).toBeGreaterThan(0);
-        expect(x).toBeLessThan(REFERENCE_PAGE_WIDTH);
-        expect(top).toBeGreaterThan(0);
-        expect(bottom).toBeGreaterThan(top);
-        expect(bottom).toBeLessThan(REFERENCE_PAGE_HEIGHT);
-      }
-    }
   });
 });

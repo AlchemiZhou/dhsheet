@@ -4,6 +4,7 @@ import { exportToHTML } from '@/lib/html-exporter'
 import { exportCharacterData } from '@/lib/storage'
 import { APP_TITLE } from '@/lib/seo'
 import type { SheetData } from '@/lib/sheet-data'
+import { printSheetPDF, type PDFPrintMode } from '@/character/print-reference/print-document'
 
 // 配置常量
 const WAIT_TIMEOUT = 10000  // 10 秒超时
@@ -121,14 +122,14 @@ export function useExportHandlers({
   }, [formData])
 
   // 快速 PDF 导出
-  const handleQuickExportPDF = useCallback(async () => {
+  const handleQuickExportPDF = useCallback(async (mode: PDFPrintMode = 'color') => {
     try {
       console.log('[ExportHandlers] 快速 PDF 导出')
       await handlePrintAll()
       await waitForAllImagesLoaded()
       await document.fonts?.ready
 
-      window.print()
+      await printSheetPDF(mode)
 
       setTimeout(() => {
         setIsPrintingAll(false)

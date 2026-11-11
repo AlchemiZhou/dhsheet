@@ -1,6 +1,6 @@
 /**
  * 自动生成的CSS内容文件
- * 生成时间: 2026-11-11T09:38:57.201Z
+ * 生成时间: 2026-11-11T09:58:37.786Z
  * 
  * 该文件包含了应用的所有CSS样式，用于HTML导出功能
  * 请勿手动编辑此文件，它会在构建时自动生成
@@ -11,7 +11,7 @@
 
 /**
  * 完整的CSS内容（包含Tailwind CSS和应用样式）
- * 大小: 147.72 KB
+ * 大小: 147.54 KB
  */
 export const embeddedStyles = `*, ::before, ::after {
   --tw-border-spacing-x: 0;
@@ -4287,17 +4287,9 @@ html {
 }
 .reference-canvas {
   position: absolute;
-  left: 5mm;
-  top: 5mm;
-  width: 210mm;
-  height: 297mm;
-  transform: scale(var(--reference-scale));
-  transform-origin: top left;
-}
-.reference-sheet .reference-frame-edge {
-  fill: none;
-  stroke: #545454;
-  stroke-width: 0.85;
+  inset: 0;
+  width: 100%;
+  height: 100%;
 }
 .reference-sheet .reference-field {
   position: absolute;
@@ -6130,7 +6122,7 @@ export function getStylesInfo() {
     size: embeddedStyles.length,
     sizeKB: (embeddedStyles.length / 1024).toFixed(2),
     sizeMB: (embeddedStyles.length / 1024 / 1024).toFixed(2),
-    generated: '2026-11-11T09:38:57.201Z',
+    generated: '2026-11-11T09:58:37.786Z',
     compressed: false
   };
 }

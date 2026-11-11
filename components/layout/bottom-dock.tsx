@@ -36,6 +36,7 @@ import { navigateToPage, cn } from "@/lib/utils"
 import { DualPageToggle } from "@/components/ui/dual-page-toggle"
 import { MAX_CHARACTERS } from "@/lib/multi-character-storage"
 import { SheetAppearanceSettings } from '@/components/sheet-appearance-settings'
+import type { PDFPrintMode } from '@/character/print-reference/print-document'
 
 export const DAGGERHEART_SUPPORT_URL = "https://zhongchou.modian.com/item/159038.html"
 
@@ -62,7 +63,7 @@ interface MainModeProps extends BottomDockBaseProps {
   onPrintAll: () => void
   onOpenSealDiceExport: () => void
   onQuickExportJSON: () => void
-  onQuickExportPDF: () => void
+  onQuickExportPDF: (mode?: PDFPrintMode) => void
   onQuickExportHTML: () => void
 
   // 存档相关
@@ -79,7 +80,7 @@ interface MainModeProps extends BottomDockBaseProps {
 interface PreviewModeProps extends BottomDockBaseProps {
   mode: 'preview'
 
-  onExportPDF: () => void
+  onExportPDF: (mode?: PDFPrintMode) => void
   onExportHTML: () => void
   onExportJSON: () => void
   onOpenSealDiceExport: () => void
@@ -213,9 +214,13 @@ function MainModeContent(props: MainModeProps) {
               <FileJson className={cn("mr-2", isMobile ? "h-5 w-5" : "h-4 w-4")} />
               导出JSON
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={props.onQuickExportPDF} className={cn(isMobile && "py-3 px-4")}>
+            <DropdownMenuItem onClick={() => props.onQuickExportPDF('color')} className={cn(isMobile && "py-3 px-4")}>
               <FileType className={cn("mr-2", isMobile ? "h-5 w-5" : "h-4 w-4")} />
-              导出PDF
+              导出彩色PDF
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => props.onQuickExportPDF('mono')} className={cn(isMobile && "py-3 px-4")}>
+              <FileType className={cn("mr-2", isMobile ? "h-5 w-5" : "h-4 w-4")} />
+              导出黑白PDF
             </DropdownMenuItem>
             <DropdownMenuItem onClick={props.onQuickExportHTML} className={cn(isMobile && "py-3 px-4")}>
               <Code className={cn("mr-2", isMobile ? "h-5 w-5" : "h-4 w-4")} />
@@ -394,14 +399,21 @@ function PreviewModeContent(props: PreviewModeProps) {
         <DropdownMenuContent side="top" className="w-56 print:hidden" onEscapeKeyDown={event => event.stopPropagation()}><SheetAppearanceSettings printOnly /></DropdownMenuContent>
       </DropdownMenu>
       <Button
-        onClick={props.onExportPDF}
-        aria-label="导出为PDF"
+        onClick={() => props.onExportPDF('color')}
+        aria-label="导出彩色PDF"
         className={cn(
           "bg-gray-800 text-white hover:bg-gray-700 focus:outline-none whitespace-nowrap",
           isMobile ? "px-6 py-3 text-base" : "px-4 py-2 text-sm"
         )}
       >
-        {isMobile ? 'PDF' : '导出为PDF'}
+        {isMobile ? '彩色PDF' : '导出彩色PDF'}
+      </Button>
+      <Button
+        onClick={() => props.onExportPDF('mono')}
+        aria-label="导出黑白PDF"
+        className={cn("bg-gray-800 text-white hover:bg-gray-700 whitespace-nowrap", isMobile ? "px-6 py-3 text-base" : "px-4 py-2 text-sm")}
+      >
+        {isMobile ? '黑白PDF' : '导出黑白PDF'}
       </Button>
       <Button
         onClick={props.onExportHTML}

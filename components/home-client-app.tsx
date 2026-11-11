@@ -41,6 +41,7 @@ import { registerPages, getTabPages } from "@/lib/page-registry"
 import { PageDisplay } from "@/components/layout/page-display"
 import { BottomDock } from "@/components/layout/bottom-dock"
 import { PrintPageRenderer } from "@/components/print/print-page-renderer"
+import { printSheetPDF } from '@/character/print-reference/print-document'
 import { SaveSwitcher } from "@/components/ui/save-switcher"
 import { MemoryAlert } from "@/components/memory-alert"
 import { memoryMonitor } from "@/lib/memory-monitor"
@@ -712,7 +713,7 @@ export default function HomeClientApp() {
               <BottomDock
                 mode="preview"
                 isMobile={isMobile}
-                onExportPDF={async () => { await document.fonts.ready; window.print() }}
+                onExportPDF={printSheetPDF}
                 onExportHTML={handleExportHTML}
                 onExportJSON={handleExportJSON}
                 onOpenSealDiceExport={() => {
