@@ -61,17 +61,18 @@ interface UseCardFilteringReturn {
  * 4. 动态选项计算 - 从过滤后的卡牌中提取类别/等级选项
  * 5. 支持多入口 - 通过 syncWithInitialTab 处理不同入口的 initialTab
  */
-export function useCardFiltering(initialTab?: string): UseCardFilteringReturn {
+export function useCardFiltering(initialTab?: string, isOpen = true): UseCardFilteringReturn {
   const cardStore = useUnifiedCardStore()
   const filterStore = useCardFilterStore()
 
   // === 同步 initialTab ===
+  // 仅在打开时同步入口类型，避免隐藏的选择器改动其他弹窗的筛选状态。
   // 当 initialTab 与当前 activeTab 不同时，重置到 initialTab
   // 这样可以支持不同入口（card-deck、upgrade domain、upgrade subclass）
   // 使用 getState() 获取稳定的函数引用，避免无限循环
   useEffect(() => {
-    useCardFilterStore.getState().syncWithInitialTab(initialTab)
-  }, [initialTab])
+    if (isOpen) useCardFilterStore.getState().syncWithInitialTab(initialTab)
+  }, [initialTab, isOpen])
 
   // === 从 store 获取状态 ===
   const state: FilterState = {

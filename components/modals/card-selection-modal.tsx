@@ -7,6 +7,7 @@ import { ContentStates, InfiniteCardGrid } from "./display"
 import { MultiSelectFilter } from "./filters"
 import { CardTypeSidebar } from "./card-selection/CardTypeSidebar"
 import { useCardFiltering } from "@/hooks/use-card-filtering"
+import { useProfessionDomainFilter } from "@/hooks/use-profession-domain-filter"
 import { useInfiniteScroll } from "@/hooks/use-infinite-scroll"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -48,8 +49,9 @@ export function CardSelectionModal({
     actions,
     loading,
     error,
-  } = useCardFiltering(initialTab)
+  } = useCardFiltering(initialTab, isOpen)
 
+  useProfessionDomainFilter(isOpen, state.activeTab)
 
   // 本地搜索词（modal 关闭后自动清空）
   const [searchTerm, setSearchTerm] = useState('')
