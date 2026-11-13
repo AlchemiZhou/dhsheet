@@ -29,6 +29,6 @@
 |15|导出与分享|[查看／保存](https://github.com/AlchemiZhou/dhsheet/raw/refs/heads/codex/mixed-ancestry-test/testing/warrior-tutorial/images/15.jpg)|
 |16|导出设置|[查看／保存](https://github.com/AlchemiZhou/dhsheet/raw/refs/heads/codex/mixed-ancestry-test/testing/warrior-tutorial/images/16.jpg)|
 |17|角色卡成品|[查看／保存](https://github.com/AlchemiZhou/dhsheet/raw/refs/heads/codex/mixed-ancestry-test/testing/warrior-tutorial/images/17.jpg)|
-|18|背景与卡牌|[查看／保存](https://github.com/AlchemiZhou/dhsheet/raw/refs/heads/codex/mixed-ancestry-test/testing/warrior-tutorial/images/18.jpg)|
+|18|1级建卡速查介绍|[查看／保存](https://github.com/AlchemiZhou/dhsheet/raw/refs/heads/codex/mixed-ancestry-test/testing/warrior-tutorial/images/18.jpg)|
 
 示例角色数据和PDF保持原样。头像为原有利刃6级「久经沙场」插图，仅作头像，不加入1级卡组。原版开源车卡器：RidRisR。改造与教程：炼金术士阿刻米。规则与卡图归原创作者。
