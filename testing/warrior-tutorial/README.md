@@ -26,7 +26,7 @@
 |12|自由写作|[查看／保存](https://github.com/AlchemiZhou/dhsheet/raw/refs/heads/codex/mixed-ancestry-test/testing/warrior-tutorial/images/12.jpg)|
 |13|领域卡筛选|[查看／保存](https://github.com/AlchemiZhou/dhsheet/raw/refs/heads/codex/mixed-ancestry-test/testing/warrior-tutorial/images/13.jpg)|
 |14|领域卡选择|[查看／保存](https://github.com/AlchemiZhou/dhsheet/raw/refs/heads/codex/mixed-ancestry-test/testing/warrior-tutorial/images/14.jpg)|
-|15|存档备份|[查看／保存](https://github.com/AlchemiZhou/dhsheet/raw/refs/heads/codex/mixed-ancestry-test/testing/warrior-tutorial/images/15.jpg)|
+|15|导出与分享|[查看／保存](https://github.com/AlchemiZhou/dhsheet/raw/refs/heads/codex/mixed-ancestry-test/testing/warrior-tutorial/images/15.jpg)|
 |16|导出设置|[查看／保存](https://github.com/AlchemiZhou/dhsheet/raw/refs/heads/codex/mixed-ancestry-test/testing/warrior-tutorial/images/16.jpg)|
 |17|角色卡成品|[查看／保存](https://github.com/AlchemiZhou/dhsheet/raw/refs/heads/codex/mixed-ancestry-test/testing/warrior-tutorial/images/17.jpg)|
 |18|背景与卡牌|[查看／保存](https://github.com/AlchemiZhou/dhsheet/raw/refs/heads/codex/mixed-ancestry-test/testing/warrior-tutorial/images/18.jpg)|
