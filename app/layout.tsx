@@ -19,6 +19,11 @@ import { CardArtworkToggle } from "@/components/card-artwork-toggle"
 
 // Inline before app chunks so script-load failures can be captured immediately.
 const startupCheckSource = readFileSync(join(process.cwd(), 'public/startup-check.js'), 'utf8')
+const browserCompatibilitySource = readFileSync(join(process.cwd(), 'public/browser-compatibility.js'), 'utf8')
+const abortCompatibilitySource = readFileSync(
+  join(process.cwd(), 'node_modules/abortcontroller-polyfill/dist/polyfill-patch-fetch.js'),
+  'utf8',
+)
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -158,6 +163,8 @@ export default function RootLayout({
     <html lang="zh-CN" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: startupCheckSource }} />
+        <script dangerouslySetInnerHTML={{ __html: browserCompatibilitySource }} />
+        <script dangerouslySetInnerHTML={{ __html: abortCompatibilitySource }} />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}

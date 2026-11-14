@@ -37,3 +37,29 @@ describe("ServiceWorkerLifecycle", () => {
     expect(() => render(<ServiceWorkerLifecycle />)).not.toThrow()
   })
 })
+
+describe('restricted browser service workers', () => {
+  it('keeps rendering when reading the worker property throws', () => {
+    const error = new DOMException('Worker blocked by browser', 'SecurityError')
+    const log = vi.spyOn(console, 'error').mockImplementation(() => {})
+    vi.stubGlobal('navigator', Object.defineProperty({}, 'serviceWorker', { get() { throw error } }))
+    expect(() => render(<ServiceWorkerLifecycle />)).not.toThrow()
+    expect(log).toHaveBeenCalledWith(expect.stringContaining('ServiceWorkerLifecycle'), error)
+  })
+  it('handles synchronous registration errors without a reload', () => {
+    const error = new DOMException('Registration blocked', 'SecurityError')
+    const log = vi.spyOn(console, 'error').mockImplementation(() => {})
+    const register = vi.fn(() => { throw error })
+    vi.stubGlobal('navigator', { serviceWorker: { register } })
+    expect(() => render(<ServiceWorkerLifecycle />)).not.toThrow()
+    expect(log).toHaveBeenCalledWith(expect.stringContaining('ServiceWorkerLifecycle'), error)
+  })
+  it('handles rejected registration without a reload', async () => {
+    const error = new Error('Worker registration rejected')
+    const log = vi.spyOn(console, 'error').mockImplementation(() => {})
+    vi.stubGlobal('navigator', { serviceWorker: { register: vi.fn().mockRejectedValue(error) } })
+    render(<ServiceWorkerLifecycle />)
+    await Promise.resolve()
+    expect(log).toHaveBeenCalledWith(expect.stringContaining('ServiceWorkerLifecycle'), error)
+  })
+})

@@ -2,14 +2,21 @@
 (function () {
   var failure = '';
   var panel;
+  function describeError(error) {
+    if (!error) return 'Unknown rejection';
+    return String(error.stack || error.message || error).slice(0, 3000);
+  }
   window.addEventListener('error', function (event) {
     if (failure) return;
     if (event.target && event.target.tagName === 'SCRIPT') {
       failure = 'SCRIPT_LOAD_FAILED: ' + (event.target.src || 'unknown script');
     } else if (event.message) {
-      failure = 'RUNTIME_ERROR: ' + event.message;
+      failure = 'RUNTIME_ERROR: ' + event.message + (event.error ? '\n' + describeError(event.error) : '');
     }
   }, true);
+  window.addEventListener('unhandledrejection', function (event) {
+    if (!failure) failure = 'UNHANDLED_REJECTION: ' + describeError(event.reason);
+  });
   function removePanel() {
     if (panel && panel.parentNode) panel.parentNode.removeChild(panel);
   }

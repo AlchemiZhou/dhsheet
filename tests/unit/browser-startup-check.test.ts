@@ -49,4 +49,12 @@ describe('independent startup diagnostics', () => {
     check.events.get('dhsheet:client-ready')?.()
     expect(document.getElementById('dhsheet-startup-notice')).toBeNull()
   })
+  it('retains unhandled promise failures and their stack without suppressing the event', () => {
+    const check = loadCheck()
+    const preventDefault = vi.fn()
+    check.events.get('unhandledrejection')?.({ reason: { message: 'Missing browser API', stack: 'Missing browser API\n at dependency.js:10' }, preventDefault })
+    check.expire()
+    expect(document.querySelector<HTMLTextAreaElement>('#dhsheet-startup-notice textarea')!.value).toContain('UNHANDLED_REJECTION: Missing browser API\n at dependency.js:10')
+    expect(preventDefault).not.toHaveBeenCalled()
+  })
 })

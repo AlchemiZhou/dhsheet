@@ -1,0 +1,62 @@
+[
+  {
+    "mode": "normal",
+    "startup": true,
+    "profession": true,
+    "saveReload": true,
+    "domainFilter": true,
+    "abortableFetch": true,
+    "htmlExport": true,
+    "pageErrors": 0
+  },
+  {
+    "mode": "legacyRuntime",
+    "startup": true,
+    "profession": true,
+    "saveReload": true,
+    "domainFilter": true,
+    "abortableFetch": true,
+    "htmlExport": true,
+    "pageErrors": 0
+  },
+  {
+    "mode": "restrictedWorker",
+    "startup": true,
+    "profession": true,
+    "saveReload": true,
+    "domainFilter": true,
+    "abortableFetch": true,
+    "htmlExport": true,
+    "pageErrors": 0
+  },
+  {
+    "mode": "registrationThrows",
+    "startup": true,
+    "profession": true,
+    "saveReload": true,
+    "domainFilter": true,
+    "abortableFetch": true,
+    "htmlExport": true,
+    "pageErrors": 0
+  },
+  {
+    "mode": "rejectedWorker",
+    "startup": true,
+    "profession": true,
+    "saveReload": true,
+    "domainFilter": true,
+    "abortableFetch": true,
+    "htmlExport": true,
+    "pageErrors": 0
+  },
+  {
+    "mode": "desktop",
+    "startup": true,
+    "profession": true,
+    "saveReload": true,
+    "domainFilter": true,
+    "abortableFetch": true,
+    "htmlExport": true,
+    "pageErrors": 0
+  }
+]

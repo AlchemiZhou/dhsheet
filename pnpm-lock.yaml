@@ -107,6 +107,9 @@ importers:
       '@ungap/structured-clone':
         specifier: 1.3.0
         version: 1.3.0
+      abortcontroller-polyfill:
+        specifier: 1.7.8
+        version: 1.7.8
       ajv:
         specifier: 8.17.1
         version: 8.17.1
@@ -255,6 +258,9 @@ importers:
       '@vitejs/plugin-react':
         specifier: ^4.7.0
         version: 4.7.0(vite@7.0.5(@types/node@22.15.21)(jiti@1.21.7)(terser@5.44.1)(yaml@2.8.0))
+      acorn:
+        specifier: 8.15.0
+        version: 8.15.0
       eslint:
         specifier: ^9.29.0
         version: 9.29.0(jiti@1.21.7)
@@ -2167,6 +2173,9 @@ packages:
 
   '@xtuc/long@4.2.2':
     resolution: {integrity: sha512-NuHqBY1PB/D8xU6s/thBgOAiAP7HOYDQ32+BFZILJ8ivkUkAHQnWfn6WhL79Owj1qmUnoN/YPhktdIoucipkAQ==}
+
+  abortcontroller-polyfill@1.7.8:
+    resolution: {integrity: sha512-9f1iZ2uWh92VcrU9Y8x+LdM4DLj75VE0MJB8zuF1iUnroEptStw+DQ8EQPMUdfe5k+PkB1uUfDQfWbhstH8LrQ==}
 
   acorn-import-phases@1.0.4:
     resolution: {integrity: sha512-wKmbr/DDiIXzEOiWrTTUcDm24kQ2vGfZQvM2fwg2vXqR5uW6aapr7ObPtj1th32b9u90/Pf4AItvdTh42fBmVQ==}
@@ -6696,6 +6705,8 @@ snapshots:
   '@xtuc/ieee754@1.2.0': {}
 
   '@xtuc/long@4.2.2': {}
+
+  abortcontroller-polyfill@1.7.8: {}
 
   acorn-import-phases@1.0.4(acorn@8.15.0):
     dependencies:

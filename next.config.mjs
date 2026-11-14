@@ -35,6 +35,29 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+  // These dependencies ship optional chaining/nullish coalescing in their ESM
+  // distributions. Compile them for the same browsers as application code.
+  transpilePackages: [
+    'uuid',
+    'dexie',
+    '@radix-ui/react-slot',
+    '@radix-ui/react-id',
+    '@radix-ui/primitive',
+    '@radix-ui/react-context',
+    '@radix-ui/react-use-layout-effect',
+    '@radix-ui/react-use-callback-ref',
+    '@radix-ui/react-use-controllable-state',
+    '@radix-ui/react-dismissable-layer',
+    '@radix-ui/react-use-escape-keydown',
+    'framer-motion',
+    'motion-dom',
+    'motion-utils',
+    'zod',
+    'tailwind-merge',
+    '@uiw/react-md-editor',
+    '@uiw/react-markdown-preview',
+    'remark-github-blockquote-alert',
+  ],
   webpack: (config) => {
     config.module.rules.push({
       test: /\.md$/,
