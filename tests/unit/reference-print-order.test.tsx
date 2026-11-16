@@ -77,3 +77,17 @@ describe("reference print document order", () => {
     ).toBe(true);
   });
 });
+
+describe('portraits in reference documents', () => {
+  it('does not append a portrait-only page and still keeps real notes', () => {
+    const sheet = structuredClone(defaultSheetData);
+    sheet.cards = [professionCardConverter.toStandard((base.profession as ProfessionCard[]).find(card => card.名称 === '战士')!)];
+    sheet.characterImage = 'data:image/png;base64,portrait';
+    const { container, rerender } = render(<PrintPageRenderer sheetData={sheet} />);
+    expect(container.querySelector('.reference-continuation')).toBeNull();
+    expect(container.querySelector('.page-four')?.classList.contains('last-printed-page')).toBe(true);
+    rerender(<PrintPageRenderer sheetData={{ ...sheet, characterMotivation: '保留这些冒险笔记' }} />);
+    expect(container.querySelector('.reference-continuation')?.textContent).toContain('保留这些冒险笔记');
+    expect(container.querySelector('.reference-continuation img')).toBeNull();
+  });
+});

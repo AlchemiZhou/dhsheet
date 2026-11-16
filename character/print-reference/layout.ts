@@ -2,6 +2,14 @@
 export const REFERENCE_PAGE_WIDTH = 595.2756;
 export const REFERENCE_PAGE_HEIGHT = 841.8898;
 
+/** Page-two recommendation column; PDF points except the physical portrait size. */
+export const REFERENCE_CHARACTER_PORTRAIT = {
+  mask: [22, 61, 214, 214],
+  left: 54.2205,
+  top: 76,
+  sizeMM: 45,
+} as const;
+
 /** Fill the two separate writing rows, honoring explicit paragraph breaks. */
 export function splitReferenceFeature(
   text: string,

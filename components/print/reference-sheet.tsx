@@ -26,6 +26,7 @@ import {
 import {
   REFERENCE_PAGE_WIDTH,
   REFERENCE_PAGE_HEIGHT,
+  REFERENCE_CHARACTER_PORTRAIT,
   splitReferenceFeature,
 } from "@/character/print-reference/layout";
 import "./reference-sheet.css";
@@ -37,6 +38,44 @@ export interface PrintOverflow {
 }
 const width = REFERENCE_PAGE_WIDTH,
   height = REFERENCE_PAGE_HEIGHT;
+
+function CharacterPortrait({ image }: { image: string }) {
+  const { mask, left, top, sizeMM } = REFERENCE_CHARACTER_PORTRAIT;
+  return (
+    <>
+      <svg
+        className="reference-story-mask reference-portrait-mask"
+        viewBox={`0 0 ${width} ${height}`}
+        aria-hidden="true"
+      >
+        <rect
+          x={mask[0]}
+          y={mask[1]}
+          width={mask[2] - mask[0]}
+          height={mask[3] - mask[1]}
+          fill="white"
+        />
+      </svg>
+      <div className="reference-portrait-title">角色头像</div>
+      <div
+        className="reference-character-portrait"
+        style={{
+          left: `${(left / width) * 100}%`,
+          top: `${(top / height) * 100}%`,
+          width: `${sizeMM}mm`,
+          height: `${sizeMM}mm`,
+        }}
+      >
+        <img src={image} alt="角色头像" loading="eager" />
+      </div>
+      <div className="reference-portrait-notes">
+        <span>外貌简述</span>
+        <span className="reference-portrait-notes-line" aria-hidden="true" />
+      </div>
+    </>
+  );
+}
+
 export function Field({
   box,
   value,
@@ -320,6 +359,9 @@ export function ReferenceSheet({
           alt={`${preset.name}第${page}页原版版式`}
           loading="eager"
         />
+        {page === 2 && sheet.characterImage && (
+          <CharacterPortrait image={sheet.characterImage} />
+        )}
         {Object.entries(fields)
           .filter(
             ([name, definition]) =>

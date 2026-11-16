@@ -65,9 +65,7 @@ export function PrintPageRenderer({
   const hasSupplement =
     referenceDocument &&
     (Object.keys(overflow).length > 0 ||
-      Boolean(
-        templateId && (legacyNotes.some(Boolean) || sheetData.characterImage),
-      ));
+      Boolean(templateId && legacyNotes.some(Boolean)));
   const visiblePages = getVisiblePages(sheetData).filter(
     (page) => !excludePageIds.includes(page.id),
   );
@@ -116,9 +114,6 @@ export function PrintPageRenderer({
       {hasSupplement && (
         <section className="reference-continuation last-printed-page">
           <h2>角色补充记录</h2>
-          {sheetData.characterImage && (
-            <img src={sheetData.characterImage} alt="角色肖像" />
-          )}
           {legacyNotes.map(
             (text, i) =>
               text && (

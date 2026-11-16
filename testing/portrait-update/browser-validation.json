@@ -1,0 +1,26 @@
+{
+  "checks": [
+    {
+      "case": "uploaded portrait",
+      "location": "page2-upper-left",
+      "sizeMM": 45,
+      "square": true,
+      "noPortraitSupplement": true,
+      "htmlPortable": true
+    },
+    {
+      "case": "no portrait",
+      "originalGuidePreserved": true,
+      "noEmptyFrame": true,
+      "noExtraPage": true
+    }
+  ],
+  "portraitDimensions": {
+    "width": 170.078125,
+    "height": 170.078125,
+    "left": 72.28125,
+    "top": 101.328125,
+    "paperWidth": 793.6875
+  },
+  "pageErrors": []
+}

@@ -1,6 +1,6 @@
 /**
  * 自动生成的CSS内容文件
- * 生成时间: 2026-11-11T18:25:21.774Z
+ * 生成时间: 2026-11-16T17:31:57.432Z
  * 
  * 该文件包含了应用的所有CSS样式，用于HTML导出功能
  * 请勿手动编辑此文件，它会在构建时自动生成
@@ -11,7 +11,7 @@
 
 /**
  * 完整的CSS内容（包含Tailwind CSS和应用样式）
- * 大小: 151.12 KB
+ * 大小: 151.91 KB
  */
 export const embeddedStyles = `*, ::before, ::after {
   --tw-border-spacing-x: 0;
@@ -4410,6 +4410,49 @@ html {
   width: 100%;
   height: 100%;
 }
+.reference-character-portrait {
+  position: absolute;
+  box-sizing: border-box;
+  border: .6pt solid var(--reference-ink, #243d34);
+  background: #fff;
+  padding: 2pt;
+  overflow: hidden;
+}
+.reference-character-portrait img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.reference-portrait-title {
+  position: absolute;
+  left: 3.7%;
+  top: 7.6%;
+  width: 32.2%;
+  height: 1.3%;
+  text-align: center;
+  color: #292929;
+  font: bold 8.5pt Arial, "Noto Sans CJK SC", sans-serif;
+}
+.reference-portrait-notes {
+  position: absolute;
+  left: 4.8%;
+  top: 24.45%;
+  width: 30%;
+  height: 1.2%;
+  display: flex;
+  align-items: baseline;
+  gap: 4pt;
+  color: #555;
+  font: 7pt Arial, "Noto Sans CJK SC", sans-serif;
+}
+.reference-portrait-notes-line {
+  flex: 1;
+  border-bottom: .4pt solid #858585;
+}
+.sheet-print-mono .reference-character-portrait {
+  border-color: #303030;
+}
 .reference-sheet .reference-field {
   position: absolute;
   box-sizing: border-box;
@@ -4519,11 +4562,6 @@ html {
 .reference-continuation article > strong {
   display: block;
   break-after: avoid;
-}
-.reference-continuation img {
-  max-width: 45mm;
-  max-height: 55mm;
-  object-fit: contain;
 }
 @media print {
   .print-all-pages .reference-print-page {
@@ -6277,7 +6315,7 @@ export function getStylesInfo() {
     size: embeddedStyles.length,
     sizeKB: (embeddedStyles.length / 1024).toFixed(2),
     sizeMB: (embeddedStyles.length / 1024 / 1024).toFixed(2),
-    generated: '2026-11-11T18:25:21.775Z',
+    generated: '2026-11-16T17:31:57.432Z',
     compressed: false
   };
 }

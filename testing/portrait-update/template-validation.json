@@ -1,0 +1,132 @@
+[
+  {
+    "id": "bard",
+    "name": "吟游诗人",
+    "filename": "吟游诗人角色卡-头像框版.pdf",
+    "pages": 2,
+    "portraitMM": 45,
+    "firstPageUnchanged": true,
+    "rightColumnPreserved": true,
+    "bytes": 2485630
+  },
+  {
+    "id": "druid",
+    "name": "德鲁伊",
+    "filename": "德鲁伊角色卡-头像框版.pdf",
+    "pages": 2,
+    "portraitMM": 45,
+    "firstPageUnchanged": true,
+    "rightColumnPreserved": true,
+    "bytes": 1946089
+  },
+  {
+    "id": "guardian",
+    "name": "守护者",
+    "filename": "守护者角色卡-头像框版.pdf",
+    "pages": 2,
+    "portraitMM": 45,
+    "firstPageUnchanged": true,
+    "rightColumnPreserved": true,
+    "bytes": 1972253
+  },
+  {
+    "id": "ranger",
+    "name": "游侠",
+    "filename": "游侠角色卡-头像框版.pdf",
+    "pages": 2,
+    "portraitMM": 45,
+    "firstPageUnchanged": true,
+    "rightColumnPreserved": true,
+    "bytes": 1907617
+  },
+  {
+    "id": "rogue",
+    "name": "游荡者",
+    "filename": "游荡者角色卡-头像框版.pdf",
+    "pages": 2,
+    "portraitMM": 45,
+    "firstPageUnchanged": true,
+    "rightColumnPreserved": true,
+    "bytes": 1955776
+  },
+  {
+    "id": "seraph",
+    "name": "神使",
+    "filename": "神使角色卡-头像框版.pdf",
+    "pages": 2,
+    "portraitMM": 45,
+    "firstPageUnchanged": true,
+    "rightColumnPreserved": true,
+    "bytes": 1904174
+  },
+  {
+    "id": "sorcerer",
+    "name": "术士",
+    "filename": "术士角色卡-头像框版.pdf",
+    "pages": 2,
+    "portraitMM": 45,
+    "firstPageUnchanged": true,
+    "rightColumnPreserved": true,
+    "bytes": 1962478
+  },
+  {
+    "id": "warrior",
+    "name": "战士",
+    "filename": "战士角色卡-头像框版.pdf",
+    "pages": 2,
+    "portraitMM": 45,
+    "firstPageUnchanged": true,
+    "rightColumnPreserved": true,
+    "bytes": 1927970
+  },
+  {
+    "id": "wizard",
+    "name": "法师",
+    "filename": "法师角色卡-头像框版.pdf",
+    "pages": 2,
+    "portraitMM": 45,
+    "firstPageUnchanged": true,
+    "rightColumnPreserved": true,
+    "bytes": 1908302
+  },
+  {
+    "id": "assassin",
+    "name": "刺客",
+    "filename": "刺客角色卡-头像框版.pdf",
+    "pages": 2,
+    "portraitMM": 45,
+    "firstPageUnchanged": true,
+    "rightColumnPreserved": true,
+    "bytes": 1799592
+  },
+  {
+    "id": "brawler",
+    "name": "格斗家",
+    "filename": "格斗家角色卡-头像框版.pdf",
+    "pages": 2,
+    "portraitMM": 45,
+    "firstPageUnchanged": true,
+    "rightColumnPreserved": true,
+    "bytes": 1787847
+  },
+  {
+    "id": "warlock",
+    "name": "邪术师",
+    "filename": "邪术师角色卡-头像框版.pdf",
+    "pages": 2,
+    "portraitMM": 45,
+    "firstPageUnchanged": true,
+    "rightColumnPreserved": true,
+    "bytes": 1805638
+  },
+  {
+    "id": "witch",
+    "name": "灵巫",
+    "filename": "灵巫角色卡-头像框版.pdf",
+    "pages": 2,
+    "portraitMM": 45,
+    "firstPageUnchanged": true,
+    "rightColumnPreserved": true,
+    "bytes": 1806236
+  }
+]
