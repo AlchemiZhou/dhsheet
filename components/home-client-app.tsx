@@ -104,6 +104,10 @@ function CharacterSheetPageOne() {
   return <CharacterSheet currentCharacterId={useContext(CurrentCharacterIdContext)} />
 }
 
+function CharacterSheetBackPage() {
+  return <CharacterSheetPageTwo currentCharacterId={useContext(CurrentCharacterIdContext)} />
+}
+
 function RangerCompanionPage() {
   return <CharacterSheetPageThree currentCharacterId={useContext(CurrentCharacterIdContext)} />
 }
@@ -126,7 +130,7 @@ registerPages([
   {
     id: 'page2',
     label: '第二页',
-    component: CharacterSheetPageTwo,
+    component: CharacterSheetBackPage,
     printClass: 'page-two',
     visibility: { type: 'always' },
     printOrder: 2,

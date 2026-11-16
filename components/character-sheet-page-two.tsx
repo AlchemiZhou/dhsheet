@@ -13,7 +13,9 @@ import { computeUpgradeAutomation } from "@/automation/actions/upgrade-actions"
 import { CharacterDescriptionSection } from "@/components/character-sheet-page-two-sections/character-description-section"
 import { CardDeckSection } from "@/components/character-sheet-page-two-sections/card-deck-section"
 import { UpgradeSection } from "@/components/character-sheet-page-two-sections/upgrade-section"
-import { PageHeader } from "@/components/page-header"
+import { NativeBackHeader, NativeProfessionGuide } from "@/components/layout/native-back-header"
+import { CharacterPortraitEditor } from "@/components/character-portrait-editor"
+import "@/components/layout/native-editor.css"
 import { CardSelectionModal } from "@/components/modals/card-selection-modal"
 import { useCardAutomationSetupPrompt } from "@/components/card-automation-setup"
 
@@ -29,7 +31,7 @@ function isAttributeValue(value: unknown): value is AttributeValue {
   return typeof value === "object" && value !== null && "checked" in value && "value" in value
 }
 
-export default function CharacterSheetPageTwo() {
+export default function CharacterSheetPageTwo({ currentCharacterId }: { currentCharacterId?: string | null } = {}) {
   const { setSheetData: setFormData } = useSheetStore();
   const selectCardForSlot = useSheetStore(state => state.selectCardForSlot)
   const setCardAbilityChoiceValuesForInstance = useSheetStore(state => state.setCardAbilityChoiceValuesForInstance)
@@ -188,17 +190,21 @@ export default function CharacterSheetPageTwo() {
 
       <div className="w-full max-w-[210mm] mx-auto">
         <div
-          className="a4-page sheet-detail-page p-2 bg-white text-gray-800 shadow-lg print:shadow-none rounded-md"
+          className="a4-page sheet-detail-page native-editor p-2 bg-white text-gray-800 shadow-lg print:shadow-none rounded-md"
           style={{ width: "210mm" }}
         >
           {/* Header - 调整职业名称显示框的大小 */}
-          <PageHeader />
+          <NativeBackHeader />
+          <div className="native-back-guide">
+            <CharacterPortraitEditor currentCharacterId={currentCharacterId} />
+            <NativeProfessionGuide />
+          </div>
 
           {/* Character Description Section */}
           <CharacterDescriptionSection formData={safeFormData} handleInputChange={handleInputChange} />
 
           {/* Card Deck Section */}
-        <CardDeckSection formData={safeFormData} />
+
 
           {/* Upgrade Section */}
         <div className="sheet-upgrade-grid mt-3 grid grid-cols-3 gap-3 text-m">
@@ -241,6 +247,8 @@ export default function CharacterSheetPageTwo() {
               onOpenSubclassModal={handleOpenUpgradeSubclassModal}
           />
         </div>
+        <div className="native-deck"><CardDeckSection formData={safeFormData} /></div>
+        <div className="native-footer">Daggerheart © Darrington Press 2025</div>
       </div>
       </div>
 

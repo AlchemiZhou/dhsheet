@@ -1,0 +1,77 @@
+{
+  "nameAutosaveReload": true,
+  "resourcesUndoRedo": true,
+  "weaponSelector": true,
+  "armorSelector": true,
+  "editableStories": true,
+  "referenceHTMLAndPDF": true,
+  "viewports": [
+    {
+      "width": 320,
+      "tab": "第一页",
+      "overflow": false
+    },
+    {
+      "width": 320,
+      "tab": "第二页",
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "tab": "第一页",
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "tab": "第二页",
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "tab": "第一页",
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "tab": "第二页",
+      "overflow": false
+    },
+    {
+      "width": 1024,
+      "tab": "第一页",
+      "overflow": false
+    },
+    {
+      "width": 1024,
+      "tab": "第二页",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "tab": "第一页",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "tab": "第二页",
+      "overflow": false
+    }
+  ],
+  "professions": [
+    "bard",
+    "druid",
+    "guardian",
+    "ranger",
+    "rogue",
+    "seraph",
+    "sorcerer",
+    "warrior",
+    "wizard",
+    "assassin",
+    "brawler",
+    "warlock",
+    "witch"
+  ],
+  "pageErrors": [],
+  "pageTwoPortraitDeletionPersistsAfterReload": true
+}

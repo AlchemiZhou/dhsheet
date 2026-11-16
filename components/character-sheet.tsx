@@ -27,14 +27,12 @@ import { ArmorSection } from "@/components/character-sheet-sections/armor-sectio
 import { InventorySection } from "@/components/character-sheet-sections/inventory-section"
 import { InventoryWeaponSection } from "@/components/character-sheet-sections/inventory-weapon-section"
 import ProfessionDescriptionSection from "@/components/character-sheet-sections/profession-description-section"
-import { ImageUploadCrop } from "@/components/ui/image-upload-crop"
+import { EditorPanel } from "@/components/layout/editor-panel"
+import "@/components/layout/native-editor.css"
 import { ModifierFieldAnchor } from "@/components/modifiers/modifier-field-anchor"
+import { ExperienceProviderAnchor } from "@/components/modifiers/experience-provider-popover"
 import { EquipmentProviderAnchor } from "@/components/modifiers/equipment-provider-popover"
 import { parseNumberExpressionOr } from "@/lib/number-utils"
-import {
-  applyCharacterImageAssetAction,
-} from "@/character/storage/character-image-actions"
-import { getActiveCharacterId } from "@/lib/multi-character-storage"
 import { findAncestryPair } from "@/character/ancestry/pair"
 import { toast } from "sonner"
 import { getSelectedTransformationCard } from "@/character/transformation/actions"
@@ -50,7 +48,6 @@ interface CharacterSheetProps {
 export default function CharacterSheet({ currentCharacterId }: CharacterSheetProps) {
   const {
     setSheetData: setFormData,
-    replaceSheetData,
     selectCharacterChoiceCard,
     selectAncestryPair,
     selectTransformationCard,
@@ -273,29 +270,6 @@ export default function CharacterSheet({ currentCharacterId }: CharacterSheetPro
     setArmorModalOpen(false)
   }
 
-  const handlePortraitImageChange = async (imageBase64: string) => {
-    if (!currentCharacterId) {
-      setFormData((prev) => ({ ...prev, characterImage: imageBase64 }))
-      return
-    }
-
-    try {
-      const currentSheet = useSheetStore.getState().sheetData
-      await applyCharacterImageAssetAction({
-        characterId: currentCharacterId,
-        role: 'portrait',
-        imageDataUrl: imageBase64,
-        sheetData: currentSheet,
-        getCurrentCharacterId: getActiveCharacterId,
-        getCurrentSheetData: () => useSheetStore.getState().sheetData,
-        replaceSheetData,
-      })
-    } catch (error) {
-      console.error(`[CharacterImage] Failed to update portrait for ${currentCharacterId}:`, error)
-      alert('角色图像保存失败')
-    }
-  }
-
   // 模态框控制函数
   const openWeaponModal = (selection: WeaponSlotSelection) => {
     setCurrentWeaponSlot(selection)
@@ -355,7 +329,7 @@ export default function CharacterSheet({ currentCharacterId }: CharacterSheetPro
 
       <div className="w-full max-w-[210mm] mx-auto">
         <div
-          className="a4-page sheet-primary-page p-2 bg-white text-gray-800 shadow-lg print:shadow-none rounded-md"
+          className="a4-page sheet-primary-page native-editor p-2 bg-white text-gray-800 shadow-lg print:shadow-none rounded-md"
           style={{ width: "210mm" }}
         >
           {/* Header Section */}
@@ -376,27 +350,9 @@ export default function CharacterSheet({ currentCharacterId }: CharacterSheetPro
             }}
           />
 
-          {/* Main Content - Two Section Layout */}
-          <div className="sheet-main-content flex flex-col gap-2 mt-1">
-            {/* Top Section */}
-            <div className="sheet-main-top grid grid-cols-2 gap-2">
-              {/* Top Left */}
-              <div className="sheet-statistics flex flex-col">
-                {/* Character Image, Evasion, and Armor */}
+          <div className="native-summary">
+            <div className="native-defenses">
                 <div className="sheet-defense-row flex gap-4">
-                  {/* Character Image Upload */}
-                  <div className="flex flex-col items-center">
-                    <ImageUploadCrop
-                      currentImage={safeFormData.characterImage}
-                      onImageChange={(imageBase64) => void handlePortraitImageChange(imageBase64)}
-                      onImageDelete={() => void handlePortraitImageChange("")}
-                      width="6rem"
-                      height="6rem"
-                      placeholder={{ title: "角色图像", subtitle: "点击上传" }}
-                      inputId="character-image-upload"
-                    />
-                  </div>
-
                   {/* Evasion Box */}
                   <div className="flex flex-col items-center justify-start">
                     <div className="w-24 h-24 flex flex-col rounded-lg overflow-hidden border border-gray-800">
@@ -503,20 +459,19 @@ export default function CharacterSheet({ currentCharacterId }: CharacterSheetPro
                     </div>
                   </div>
                 </div>
-
-                {/* Attributes Section */}
-                <AttributesSection />
-
-                {/* Hit Points & Stress */}
-                <HitPointsSection />
-              </div>
-
-              {/* Top Right */}
-              <div className="sheet-equipment flex flex-col space-y-1">
-                {/* Active Weapons */}
-                <div className="py-0 ">
-                  <h3 className="text-xs font-bold text-center print:mb-1">装备</h3>
-
+</div>
+            <AttributesSection />
+          </div>
+          <div className="native-columns">
+            <div className="native-column native-character-column">
+              <EditorPanel title="生命值与压力"><HitPointsSection /></EditorPanel>
+              <EditorPanel title="希望点"><HopeSection /></EditorPanel>
+              <EditorPanel title="经历" action={<ExperienceProviderAnchor size="compact" />}><ExperienceSection /></EditorPanel>
+              <EditorPanel title="金币"><GoldSection /></EditorPanel>
+              <EditorPanel title="职业特性" className="native-features"><ProfessionDescriptionSection description={safeFormData.cards[0]?.description} /></EditorPanel>
+            </div>
+            <div className="native-column sheet-equipment">
+              <EditorPanel title="装备武器">
                   <div className="sheet-proficiency flex items-center gap-0.5 mb-1">
                     <div className="flex items-center gap-0.5">
                       <span className="text-[10px]">熟练度</span>
@@ -546,68 +501,19 @@ export default function CharacterSheet({ currentCharacterId }: CharacterSheetPro
                     </div>
                   </div>
 
-                  <WeaponSection
-                    isPrimary={true}
-                    slotType="primary"
-                    onOpenWeaponModal={openWeaponModal}
-                  />
+                <WeaponSection isPrimary={true} slotType="primary" onOpenWeaponModal={openWeaponModal} />
+                <WeaponSection isPrimary={false} slotType="secondary" onOpenWeaponModal={openWeaponModal} />
+              </EditorPanel>
+              <EditorPanel title="装备护甲"><ArmorSection onOpenArmorModal={openArmorModal} /></EditorPanel>
+              <EditorPanel title="背包" className="sheet-inventory"><InventorySection /></EditorPanel>
+              <EditorPanel title="备用武器" className="sheet-inventory native-reserve" action={<EquipmentProviderAnchor slotRef={{ type: "inventoryWeapon", index: 0 }} fallbackLabel="备用武器 1" size="compact" />}>
 
-                  <WeaponSection
-                    isPrimary={false}
-                    slotType="secondary"
-                    onOpenWeaponModal={openWeaponModal}
-                  />
-                </div>
-
-                {/* Active Armor */}
-                <ArmorSection onOpenArmorModal={openArmorModal} />
-              </div>
-            </div>
-
-            {/* Bottom Section */}
-            <div className="sheet-main-bottom grid grid-cols-2 gap-2 p-1">
-              {/* Bottom Left */}
-              <div className="sheet-character-details col-span-1 space-y-1 -mt-1">
-                {/* Hope */}
-                <HopeSection />
-
-                {/* Experience */}
-                <ExperienceSection />
-
-                {/* Profession Description */}
-                <h3 className="text-xs font-bold text-center">职业特性</h3>
-                <ProfessionDescriptionSection description={safeFormData.cards[0]?.description} />
-              </div>
-
-              {/* Bottom Right */}
-              <div className="sheet-inventory col-span-1 space-y-1.5 -mt-1.5">
-                {/* Inventory */}
-                <InventorySection />
-
-                {/* Inventory Weapons */}
-                <h3 className="flex items-center justify-center gap-1 text-xs font-bold">
-                  <span>备用武器</span>
-                  <EquipmentProviderAnchor
-                    slotRef={{ type: "inventoryWeapon", index: 0 }}
-                    fallbackLabel="备用武器 1"
-                    size="compact"
-                  />
-                </h3>
-                <InventoryWeaponSection
-                  index={0}
-                  onOpenWeaponModal={openWeaponModal}
-                />
-
-                <InventoryWeaponSection
-                  index={1}
-                  onOpenWeaponModal={openWeaponModal}
-                />
-
-                {/* Gold */}
-                <GoldSection />
-              </div>
+                <InventoryWeaponSection index={0} onOpenWeaponModal={openWeaponModal} />
+                <InventoryWeaponSection index={1} onOpenWeaponModal={openWeaponModal} />
+              </EditorPanel>
             </div>
           </div>
+          <div className="native-footer">Daggerheart © Darrington Press 2025</div>
         </div>
       </div>
 

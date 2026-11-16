@@ -3,6 +3,7 @@ import { getCompactCardTitle } from '@/card/display/compact-card'
 
 import type React from "react"
 import { useState } from "react"
+import { useIsMobile } from "@/hooks/use-mobile"
 import { useAutoResizeFont } from "@/hooks/use-auto-resize-font"
 import { getCardPreviewSize, useCardPreview } from "@/hooks/use-card-preview"
 import { CardHoverPreview } from "@/components/ui/card-hover-preview"
@@ -11,6 +12,8 @@ import { useTextModeStore } from "@/lib/text-mode-store"
 import { PageHeader } from "@/components/page-header"
 import { getSheetAncestryCard } from '@/character/ancestry/complete-card'
 import { ProfessionDomainBadges } from '@/components/profession-domain-badges'
+
+import { EditorTypeface } from "@/components/layout/editor-panel"
 
 interface HeaderSectionProps {
   onOpenProfessionModal: () => void;
@@ -41,6 +44,7 @@ export function HeaderSection({
 }: HeaderSectionProps) {
   const { sheetData: formData, setSheetData, updateLevel } = useSheetStore()
   const { isTextMode } = useTextModeStore()
+  const isMobile = useIsMobile()
   const [editingField, setEditingField] = useState<string | null>(null)
   const [editingValue, setEditingValue] = useState("")
   const [levelEditingValue, setLevelEditingValue] = useState<string | null>(null)
@@ -137,6 +141,9 @@ export function HeaderSection({
     minFontSize: 10
   })
 
+  const selectedProfessionTitle = formData.professionRef?.name === formData.cards?.[0]?.name || formData.professionRef?.name?.startsWith(`${formData.cards?.[0]?.name}  -  `)
+    ? formData.cards?.[0]?.name : formData.professionRef?.name
+
   const completeAncestryCard = getSheetAncestryCard(formData)
   const {
     hoveredCard,
@@ -172,7 +179,7 @@ export function HeaderSection({
     }
     return <div
       className={`group flex h-7 min-h-7 min-w-0 flex-1 overflow-hidden rounded border border-gray-400 bg-white ${field === 'professionRef' ? 'profession-choice' : ''}`}
-      onMouseEnter={(e) => handleMouseEnter(reference, e.currentTarget)}
+      onMouseEnter={(e) => { if (!isMobile) handleMouseEnter(reference, e.currentTarget) }}
       onMouseLeave={handleMouseLeave}
     >
       <button
@@ -197,10 +204,11 @@ export function HeaderSection({
 
   return (
     <div className="sheet-header relative flex items-center gap-2 rounded-t-md bg-gray-800 p-2 pb-5 text-white">
+      <EditorTypeface />
       <div className="sheet-identity-fields grid min-w-0 flex-1 grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)_minmax(0,1fr)] items-end gap-x-2 gap-y-2">
-        <div className="flex min-w-0 flex-col gap-1" role="group" aria-label="职业">
+        <div className="flex min-w-0 flex-col gap-1" role="group" aria-label="职业" data-title-length={Array.from(selectedProfessionTitle || "选择职业").length > 3 ? "long" : "short"}>
           <div className="flex min-h-5 items-center justify-between gap-1"><span className="text-[9px] text-gray-300">职业</span><ProfessionDomainBadges /></div>
-          {renderChoiceControl('professionRef', openProfessionModal, '选择职业')}
+          {renderChoiceControl('professionRef', openProfessionModal, '选择职业', selectedProfessionTitle)}
         </div>
         <div className="flex min-w-0 flex-col gap-1">
           <label htmlFor="character-name" className="text-[9px] text-gray-300">名称</label>
@@ -301,7 +309,7 @@ export function HeaderSection({
       </div>
       <div className="absolute bottom-1 left-2 [&>div]:m-0 [&>div]:p-0"><PageHeader /></div>
       <div className="sheet-domain-band" aria-hidden="true"><span /><span /></div>
-      {hoveredCard && (
+      {hoveredCard && !isMobile && (
         <div className="z-50 pointer-events-none" style={previewPosition}>
           <CardHoverPreview card={hoveredCard} isTextMode={isTextMode} />
         </div>
