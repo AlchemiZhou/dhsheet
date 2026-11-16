@@ -1,6 +1,6 @@
 /**
  * 自动生成的CSS内容文件
- * 生成时间: 2026-11-16T17:31:57.432Z
+ * 生成时间: 2026-11-16T17:50:12.697Z
  * 
  * 该文件包含了应用的所有CSS样式，用于HTML导出功能
  * 请勿手动编辑此文件，它会在构建时自动生成
@@ -11,7 +11,7 @@
 
 /**
  * 完整的CSS内容（包含Tailwind CSS和应用样式）
- * 大小: 151.91 KB
+ * 大小: 152.44 KB
  */
 export const embeddedStyles = `*, ::before, ::after {
   --tw-border-spacing-x: 0;
@@ -3653,6 +3653,29 @@ body {
   font-size: 16px !important;
 }
 
+/* Keep the author action reachable independently of the long mobile footer. */
+.sheet-author-action {
+  position: fixed;
+  left: 8px;
+  bottom: 80px;
+  bottom: calc(80px + env(safe-area-inset-bottom, 0px));
+  z-index: 45;
+  display: inline-flex;
+  align-items: center;
+  max-width: calc(100vw - 16px);
+  min-height: 44px;
+  padding: 6px 10px;
+  border: 1px solid #d5d2cd;
+  border-radius: 6px;
+  background: #f5f4f1;
+  color: #616161;
+  font-size: 12px;
+  line-height: 1.4;
+}
+@media print {
+  .sheet-author-action { display: none !important; }
+}
+
 html {
   margin: 0;
   padding: 0;
@@ -6315,7 +6338,7 @@ export function getStylesInfo() {
     size: embeddedStyles.length,
     sizeKB: (embeddedStyles.length / 1024).toFixed(2),
     sizeMB: (embeddedStyles.length / 1024 / 1024).toFixed(2),
-    generated: '2026-11-16T17:31:57.432Z',
+    generated: '2026-11-16T17:50:12.698Z',
     compressed: false
   };
 }

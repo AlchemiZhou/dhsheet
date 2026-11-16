@@ -20,7 +20,7 @@ export function SheetAppearanceSettings({ printOnly = false }: { printOnly?: boo
         </select>
       </label>}
     </>}
-    <label className="block">导出前两页样式<select aria-label="导出前两页样式" value={setup.referencePrint ? 'reference' : 'current'} onChange={event => setup.setReferencePrint(event.target.value === 'reference')} className="mt-1 w-full rounded border bg-white p-2 text-gray-800"><option value="reference">原版彩色模板</option><option value="current">现有车卡器版式</option></select></label>
+    <label className="block">PDF 前两页样式<select aria-label="PDF 前两页样式" value={setup.referencePrint ? 'reference' : 'current'} onChange={event => setup.setReferencePrint(event.target.value === 'reference')} className="mt-1 w-full rounded border bg-white p-2 text-gray-800"><option value="reference">原版彩色模板</option><option value="current">现有车卡器版式</option></select><span className="block mt-1 text-xs text-gray-500">HTML 默认使用新版角色卡版式。</span></label>
     <label className="block">打印配色
       <select aria-label="打印配色" className="mt-1 w-full rounded border bg-white p-2 text-gray-800" value={preferences.printMode} onChange={event => update({ printMode: event.target.value as 'color' | 'mono' })}>
         <option value="color">彩色打印</option><option value="mono">黑白打印</option>

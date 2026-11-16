@@ -1,6 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
+import { CardArtworkToggle } from "@/components/card-artwork-toggle"
 import { SheetHistoryControls } from "@/components/sheet-history-controls"
 import { useSheetHistoryStore } from "@/lib/sheet-store"
 import {
@@ -350,6 +351,8 @@ function MainModeContent(props: MainModeProps) {
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <SheetAppearanceSettings />
+            <DropdownMenuSeparator />
+            <CardArtworkToggle menuItem />
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => navigateToPage("/about")} className={cn(isMobile && "py-3 px-4")}>
               <Info className={cn("mr-2", isMobile ? "h-5 w-5" : "h-4 w-4")} />

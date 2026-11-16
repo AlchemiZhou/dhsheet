@@ -1,4 +1,5 @@
 import { useCallback } from 'react'
+import { flushSync } from 'react-dom'
 import { getStandardCardById } from '@/card'
 import { exportToHTML } from '@/lib/html-exporter'
 import { exportCharacterData } from '@/lib/storage'
@@ -14,6 +15,7 @@ const RENDER_DELAY = 300    // 渲染延迟
 interface UseExportHandlersProps {
   formData: SheetData
   setIsPrintingAll: (value: boolean) => void
+  setReferencePrintOverride: (value: boolean | undefined) => void
 }
 
 /**
@@ -66,7 +68,8 @@ function waitForAllImagesLoaded(): Promise<void> {
 
 export function useExportHandlers({
   formData,
-  setIsPrintingAll
+  setIsPrintingAll,
+  setReferencePrintOverride,
 }: UseExportHandlersProps) {
 
   // 打印所有页面
@@ -102,13 +105,20 @@ export function useExportHandlers({
   const handleExportHTML = useCallback(async () => {
     try {
       console.log('[ExportHandlers] 开始 HTML 导出')
+      // HTML is the portable character-card view, independent of the user's
+      // PDF layout preference. Restore that preference after taking the snapshot.
+      flushSync(() => setReferencePrintOverride(true))
+      await document.fonts?.ready
+      await new Promise<void>(resolve => requestAnimationFrame(() => resolve()))
       await exportToHTML(formData)
       console.log('[ExportHandlers] HTML 导出完成')
     } catch (error) {
       console.error('[ExportHandlers] HTML 导出失败:', error)
       alert('HTML导出失败: ' + (error instanceof Error ? error.message : '未知错误'))
+    } finally {
+      setReferencePrintOverride(undefined)
     }
-  }, [formData])
+  }, [formData, setReferencePrintOverride])
 
   // JSON 导出
   const handleExportJSON = useCallback(async () => {

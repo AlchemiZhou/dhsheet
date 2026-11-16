@@ -17,6 +17,7 @@ import { SHEET_APPEARANCE_STYLES } from "@/character/appearance/styles";
 interface PrintPageRendererProps {
   sheetData: SheetData;
   excludePageIds?: readonly string[];
+  referencePrint?: boolean;
 }
 
 /**
@@ -26,6 +27,7 @@ interface PrintPageRendererProps {
 export function PrintPageRenderer({
   sheetData,
   excludePageIds = [],
+  referencePrint,
 }: PrintPageRendererProps) {
   const appearanceAttributes = useSheetAppearanceAttributes();
   const [overflow, setOverflow] = useState<Record<string, PrintOverflow>>({});
@@ -45,9 +47,10 @@ export function PrintPageRenderer({
     },
     [],
   );
-  const referenceEnabled = useProfessionSetupPreferences(
+  const preferredReferencePrint = useProfessionSetupPreferences(
     (state) => state.referencePrint,
   );
+  const referenceEnabled = referencePrint ?? preferredReferencePrint;
   const profession = sheetData.cards?.[0];
   const preset = getProfessionPreset(profession);
   // Modified/custom profession rules continue to use their complete live sheet.

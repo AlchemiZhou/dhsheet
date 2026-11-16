@@ -8,6 +8,7 @@ import {
 } from '@/character/storage/sheet-image-projection'
 import { defaultSheetData } from '@/lib/default-sheet-data'
 import { getHTMLContent } from '@/lib/html-exporter'
+import { extractCharacterDataFromHTML } from '@/lib/html-importer'
 import type { SheetData } from '@/lib/sheet-data'
 import { exportCharacterData } from '@/lib/storage'
 
@@ -108,5 +109,22 @@ describe('character export image preparation', () => {
     const exported = new DOMParser().parseFromString(html, 'text/html')
     expect(exported.querySelector('.reference-field')?.textContent).toBe('第一段\n\n第二段')
     expect(exported.querySelector('.reference-continuation p')?.textContent).toBe('补充记录\n结尾')
+  })
+})
+
+describe('offline reader metadata', () => {
+  afterEach(() => { document.body.innerHTML = ''; vi.unstubAllGlobals() })
+  it('identifies the reference layout and carries the same reimportable character data', async () => {
+    document.body.innerHTML = '<div class="print-all-pages"><section class="reference-sheet"><div class="reference-character-portrait">portrait</div></section></div>'
+    const data = sheet({ name: '新版角色', cards: [] })
+    const html = await getHTMLContent(data, { includeStyles: false })
+    const exported = new DOMParser().parseFromString(html, 'text/html')
+    expect(exported.documentElement.dataset.layout).toBe('reference')
+    expect(exported.documentElement.dataset.version).toBe('2.0')
+    expect(exported.querySelector('.reference-character-portrait')).not.toBeNull()
+    expect(html).toContain('window.characterData = ')
+    const imported = extractCharacterDataFromHTML(html)
+    expect(imported.success).toBe(true)
+    expect(imported.data?.name).toBe('新版角色')
   })
 })

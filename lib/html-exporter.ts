@@ -14,6 +14,7 @@ import { StandardCard } from '@/card/card-types'
 import { prepareSheetForExport } from '@/character/storage/sheet-image-projection'
 import { UnifiedProgressModalManager } from '@/components/ui/unified-progress-modal'
 import { embeddedStyles, hasEmbeddedStyles, getStylesInfo } from './embedded-styles'
+import { getBasePath } from './utils'
 
 // 扩展Window接口以支持gc函数
 declare global {
@@ -765,13 +766,17 @@ async function generateFullHTML(formData: SheetData, options: HTMLExportOptions 
     const title = await generateDocumentTitle(formData)
     const extractedHTML = await extractPrintPreviewHTML(onProgress)
     const styles = options.includeStyles !== false ? extractPageStyles() : ''
+    const sourceUrl = /^https?:$/.test(window.location.protocol)
+      ? `${window.location.origin}${getBasePath()}/`
+      : 'https://alchemizhou.github.io/dhsheet/'
+    const layout = document.querySelector('.print-all-pages .reference-sheet') ? 'reference' : 'live'
 
     const html = `<!DOCTYPE html>
-<html lang="zh-CN" data-version="1.0" data-exporter="daggerheart-character-sheet">
+<html lang="zh-CN" data-version="2.0" data-exporter="daggerheart-character-sheet" data-layout="${layout}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="generator" content="Daggerheart Character Sheet Exporter v1.0">
+  <meta name="generator" content="Daggerheart Character Card Viewer v2.0">
   <meta name="description" content="纯净的角色卡导出版本，仅包含当前角色数据">
   <title>${title}</title>
   <style>
@@ -788,8 +793,8 @@ async function generateFullHTML(formData: SheetData, options: HTMLExportOptions 
   </script>
   
   <div class="no-print" style="position: fixed; bottom: 10px; left: 10px; font-size: 12px; color: #999; pointer-events: auto; z-index: 1000; line-height: 1.4;">
-    <div>页面生成自 <a href="https://dhsheet.site" target="_blank" style="color: #007cba; text-decoration: underline;">https://dhsheet.site</a></div>
-    <div>仅用于展示和分享，没有任何数据绑定，所有修改都不会被保存</div>
+    <div>在线车卡器：<a href="${sourceUrl}" target="_blank" rel="noopener noreferrer" style="color: #873e3e; text-decoration: underline;">${sourceUrl}</a></div>
+    <div>此文件用于离线查看、分享与打印；继续编辑请将 HTML 导回车卡器。</div>
   </div>
 </body>
 </html>`
@@ -1075,6 +1080,15 @@ function generateInlineCSS(extractedStyles: string): string {
       font-style: italic;
     }
 
+    /* The downloaded file opens as an A4 reader, without the editing app shell. */
+    @media screen {
+      body { background:#f5f4f1; padding:64px 16px 72px; overflow-x:auto; }
+      .print-all-pages { background:transparent; min-height:0; padding:0; overflow:visible; }
+      .print-pages-scroll-content { min-width:0; padding:0; }
+      .print-all-pages > .sheet-appearance { padding-bottom:0; }
+      .print-all-pages .a4-page { margin:0 auto 20px; box-shadow:0 2px 12px #0002; flex-shrink:0; }
+    }
+
     /* 表单元素样式 */
     input[type="checkbox"], input[type="radio"] {
       cursor: pointer;
@@ -1300,9 +1314,9 @@ function generateInitScript(formData: SheetData): string {
       
       const printButton = document.createElement('button');
       printButton.textContent = '导出PDF';
-      printButton.style.cssText = 'padding: 12px 20px; background: #007cba; color: white; border: none; cursor: pointer; font-size: 14px; font-weight: 500; transition: background-color 0.2s ease;';
-      printButton.onmouseover = function() { this.style.backgroundColor = '#005a8b'; };
-      printButton.onmouseout = function() { this.style.backgroundColor = '#007cba'; };
+      printButton.style.cssText = 'padding: 12px 20px; background: #873e3e; color: white; border: none; cursor: pointer; font-size: 14px; font-weight: 500; transition: background-color 0.2s ease;';
+      printButton.onmouseover = function() { this.style.backgroundColor = '#6f3030'; };
+      printButton.onmouseout = function() { this.style.backgroundColor = '#873e3e'; };
       printButton.onclick = printCharacterSheet;
       
       const hideButton = document.createElement('button');

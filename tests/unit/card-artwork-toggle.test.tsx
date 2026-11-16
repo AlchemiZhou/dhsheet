@@ -78,3 +78,12 @@ describe('card artwork preference', () => {
     }
   })
 })
+
+describe('reachable author controls', () => {
+  it('renders the floating action without requiring a credit-footer ancestor', () => {
+    const { container } = render(<CardArtworkToggle floating />)
+    const button = container.querySelector('button')!
+    expect(button).toHaveClass('sheet-author-action')
+    expect(button.closest('.sheet-credit')).toBeNull()
+  })
+})

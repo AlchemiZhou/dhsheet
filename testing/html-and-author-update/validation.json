@@ -1,0 +1,59 @@
+{
+  "previewExportUsesNewLayoutWithoutChangingPDFPreference": true,
+  "offlineOpaqueOrigin": {
+    "actualFileNavigation": "blocked by managed browser policy",
+    "referencePages": 2,
+    "portrait": true,
+    "externalRequests": 0,
+    "characterDataPortable": true
+  },
+  "htmlReimport": true,
+  "authorViewports": [
+    {
+      "width": 320,
+      "height": 640,
+      "reachable": true
+    },
+    {
+      "width": 360,
+      "height": 800,
+      "reachable": true
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "reachable": true
+    },
+    {
+      "width": 430,
+      "height": 932,
+      "reachable": true
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "reachable": true
+    },
+    {
+      "width": 1024,
+      "height": 768,
+      "reachable": true
+    },
+    {
+      "width": 1440,
+      "height": 1000,
+      "reachable": true
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "reachable": true
+    }
+  ],
+  "menuBackup": {
+    "worksWhenFloatingControlHidden": true,
+    "remembered": true,
+    "notifications": true
+  },
+  "pageErrors": []
+}

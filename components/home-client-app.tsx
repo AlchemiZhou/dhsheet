@@ -250,6 +250,7 @@ export default function HomeClientApp() {
   
   // UI状态
   const [isPrintingAll, setIsPrintingAll] = useState(false)
+  const [referencePrintOverride, setReferencePrintOverride] = useState<boolean | undefined>(undefined)
   const [isGuideOpen, setIsGuideOpen] = useState(false)
   const [characterManagementModalOpen, setCharacterManagementModalOpen] = useState(false)
   const [sealDiceExportModalOpen, setSealDiceExportModalOpen] = useState(false)
@@ -299,7 +300,7 @@ export default function HomeClientApp() {
     handleQuickExportPDF,
     handleQuickExportHTML,
     handleQuickExportJSON,
-  } = useExportHandlers({ formData, setIsPrintingAll })
+  } = useExportHandlers({ formData, setIsPrintingAll, setReferencePrintOverride })
 
   // 客户端挂载检测
   useEffect(() => {
@@ -729,7 +730,7 @@ export default function HomeClientApp() {
 
               {/* 打印内容容器 - 用于图片加载检测 */}
               <div ref={printContainerRef} className="print-pages-scroll-content">
-                <PrintPageRenderer sheetData={formData} excludePageIds={beastFormPages.status === 'empty' ? ['beast-forms'] : []} />
+                <PrintPageRenderer sheetData={formData} referencePrint={referencePrintOverride} excludePageIds={beastFormPages.status === 'empty' ? ['beast-forms'] : []} />
               </div>
             </div>
           </PrintReadyChecker>
