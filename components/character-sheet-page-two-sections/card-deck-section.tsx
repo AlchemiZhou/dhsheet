@@ -260,6 +260,7 @@ export function CardDeckSection({
   // 移动端检测
   const isMobile = useIsMobile();
   // 卡组视图状态
+  const [showEmptySlots, setShowEmptySlots] = useState(false)
   const [activeDeck, setActiveDeck] = useState<'focused' | 'inventory'>('focused');
 
   const [hoveredCard, setHoveredCard] = useState<number | null>(null)
@@ -335,6 +336,8 @@ export function CardDeckSection({
   const isSpecialSlot = (index: number): boolean => {
     return activeDeck === 'focused' && index < 5;
   }
+
+  const nextEmptyIndex = cards.findIndex((card, index) => !isSpecialSlot(index) && isEmptyCard(card))
 
   // 处理卡牌右键点击事件 - 使用 store 方法
   const handleCardRightClick = (index: number, e: React.MouseEvent) => {
@@ -475,6 +478,7 @@ export function CardDeckSection({
         {cards &&
           Array.isArray(cards) &&
           cards.map((card: StandardCard, index: number) => {
+            if (!showEmptySlots && isEmptyCard(card) && !isSpecialSlot(index) && index !== nextEmptyIndex) return null
             if (completeAncestryCard && index === 3) return null
             if (completeAncestryCard && index === 2) card = completeAncestryCard
             if (!card) {
@@ -520,6 +524,10 @@ export function CardDeckSection({
             );
           })}
       </div>
+
+      <button type="button" className="native-empty-slots-toggle mt-2 rounded border border-gray-300 px-3 py-1 text-xs print:hidden" aria-expanded={showEmptySlots} onClick={() => setShowEmptySlots(value => !value)}>
+        {showEmptySlots ? '收起空白卡位' : '展开空白卡位'}
+      </button>
 
       {/* 卡牌选择模态框 */}
       {selectedCardIndex !== null && (

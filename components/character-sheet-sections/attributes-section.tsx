@@ -105,7 +105,8 @@ export function AttributesSection() {
           { name: "风度", key: "presence", skills: ["魅力", "表演", "欺骗"] },
           { name: "知识", key: "knowledge", skills: ["回忆", "分析", "理解"] },
         ].map((attr) => (
-          <div key={attr.name} className="flex flex-col items-center">
+          <div key={attr.name} className="sheet-attribute flex flex-col items-center" data-attribute={attr.key}
+            data-spellcasting={isAttributeValue(formData[attr.key as AttributeKey]) && formData[attr.key as AttributeKey]?.spellcasting ? 'true' : 'false'}>
             <div className="sheet-attribute-heading flex items-center justify-between w-full bg-gray-800 text-white px-1 rounded-t-md py-0.5">
               <div className="flex items-center">
                 <div className="text-[12px] font-bold">{attr.name}</div>
@@ -121,6 +122,7 @@ export function AttributesSection() {
                         }`}
                       title="施法属性标记"
                       aria-label="施法属性标记"
+                      aria-pressed={Boolean(isSpellcasting)}
                     >
                       ✦
                     </button>

@@ -1,0 +1,89 @@
+{
+  "frontHeight": 1119.375,
+  "resourcesOneRowAtTwelve": true,
+  "reserveToggle": true,
+  "backHeight": 1273.71875,
+  "upgradesExpand": true,
+  "emptySlotsToggle": true,
+  "addCardAccessible": true,
+  "viewports": [
+    {
+      "width": 320,
+      "tab": "第一页",
+      "overflow": false,
+      "oneRow": true
+    },
+    {
+      "width": 320,
+      "tab": "第二页",
+      "overflow": false,
+      "oneRow": true
+    },
+    {
+      "width": 390,
+      "tab": "第一页",
+      "overflow": false,
+      "oneRow": true
+    },
+    {
+      "width": 390,
+      "tab": "第二页",
+      "overflow": false,
+      "oneRow": true
+    },
+    {
+      "width": 768,
+      "tab": "第一页",
+      "overflow": false,
+      "oneRow": true
+    },
+    {
+      "width": 768,
+      "tab": "第二页",
+      "overflow": false,
+      "oneRow": true
+    },
+    {
+      "width": 1024,
+      "tab": "第一页",
+      "overflow": false,
+      "oneRow": true
+    },
+    {
+      "width": 1024,
+      "tab": "第二页",
+      "overflow": false,
+      "oneRow": true
+    },
+    {
+      "width": 1440,
+      "tab": "第一页",
+      "overflow": false,
+      "oneRow": true
+    },
+    {
+      "width": 1440,
+      "tab": "第二页",
+      "overflow": false,
+      "oneRow": true
+    }
+  ],
+  "originalBanners": [
+    "bard",
+    "druid",
+    "guardian",
+    "ranger",
+    "rogue",
+    "seraph",
+    "sorcerer",
+    "warrior",
+    "wizard",
+    "assassin",
+    "brawler",
+    "warlock",
+    "witch"
+  ],
+  "spellcastingImmediateAndCleared": true,
+  "nativeExportPreserved": true,
+  "pageErrors": []
+}

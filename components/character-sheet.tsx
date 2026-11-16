@@ -118,6 +118,8 @@ export default function CharacterSheet({ currentCharacterId }: CharacterSheetPro
   // 模态框状态
   const [weaponModalOpen, setWeaponModalOpen] = useState(false)
   const [currentWeaponSlot, setCurrentWeaponSlot] = useState<WeaponSlotSelection>({ slotType: "primary" })
+  const [showReserveWeapons, setShowReserveWeapons] = useState(false)
+  const hasReserveWeapons = safeFormData.equipment.weaponSlots.inventory.some(slot => slot.name || slot.trait || slot.damage || slot.feature || slot.modifierContributions.length > 0)
   const [armorModalOpen, setArmorModalOpen] = useState(false)
   const [modalOpen, setModalOpen] = useState(false)
   const [currentModal, setCurrentModal] = useState<{ type: "profession" | "ancestry" | "community" | "subclass" | "transformation"; field?: string; levelFilter?: number }>({ type: "profession" })
@@ -508,8 +510,11 @@ export default function CharacterSheet({ currentCharacterId }: CharacterSheetPro
               <EditorPanel title="背包" className="sheet-inventory"><InventorySection /></EditorPanel>
               <EditorPanel title="备用武器" className="sheet-inventory native-reserve" action={<EquipmentProviderAnchor slotRef={{ type: "inventoryWeapon", index: 0 }} fallbackLabel="备用武器 1" size="compact" />}>
 
+                {!hasReserveWeapons && <button type="button" className="native-reserve-toggle print:hidden" aria-expanded={showReserveWeapons} onClick={() => setShowReserveWeapons(value => !value)}>{showReserveWeapons ? '收起备用武器' : '展开备用武器'}</button>}
+                <div className="native-reserve-fields" data-collapsed={!hasReserveWeapons && !showReserveWeapons}>
                 <InventoryWeaponSection index={0} onOpenWeaponModal={openWeaponModal} />
                 <InventoryWeaponSection index={1} onOpenWeaponModal={openWeaponModal} />
+                </div>
               </EditorPanel>
             </div>
           </div>

@@ -39,6 +39,16 @@ describe('card deck preview input handling', () => {
     viewport.mobile = false
     useCardStore.setState({ initialized: false, loading: false })
   })
+  it('compacts empty slots without hiding an owned card and can reveal every slot', () => {
+    const { container } = render(<CardDeckSection formData={sheet} />)
+    expect(container.querySelectorAll('.sheet-deck-grid > div')).toHaveLength(7)
+    expect(screen.getByText('测试领域卡')).toBeInTheDocument()
+    fireEvent.click(screen.getByRole('button', { name: '展开空白卡位' }))
+    expect(container.querySelectorAll('.sheet-deck-grid > div')).toHaveLength(20)
+    fireEvent.click(screen.getByRole('button', { name: '收起空白卡位' }))
+    expect(container.querySelectorAll('.sheet-deck-grid > div')).toHaveLength(7)
+    expect(sheet.cards[8].name).toBe('测试领域卡')
+  })
   it('ignores compatibility mouse events on phones when tapping an already selected card', () => {
     viewport.mobile = true
     render(<CardDeckSection formData={sheet} />)

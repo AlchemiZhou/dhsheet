@@ -13,6 +13,8 @@ import { PageHeader } from "@/components/page-header"
 import { getSheetAncestryCard } from '@/character/ancestry/complete-card'
 import { ProfessionDomainBadges } from '@/components/profession-domain-badges'
 
+import { getProfessionPreset, resolveProfessionPresetId } from "@/character/profession-setup/catalog"
+import { getBasePath } from "@/lib/utils"
 import { EditorTypeface } from "@/components/layout/editor-panel"
 
 interface HeaderSectionProps {
@@ -144,6 +146,9 @@ export function HeaderSection({
   const selectedProfessionTitle = formData.professionRef?.name === formData.cards?.[0]?.name || formData.professionRef?.name?.startsWith(`${formData.cards?.[0]?.name}  -  `)
     ? formData.cards?.[0]?.name : formData.professionRef?.name
 
+  const nativeHeaderId = selectedProfessionTitle === getProfessionPreset(formData.cards?.[0])?.name
+    ? resolveProfessionPresetId(formData.cards?.[0]) : undefined
+
   const completeAncestryCard = getSheetAncestryCard(formData)
   const {
     hoveredCard,
@@ -185,9 +190,13 @@ export function HeaderSection({
       <button
         type="button"
         onClick={onSelect}
+        aria-label={field === 'professionRef' && nativeHeaderId ? `${selectedProfessionTitle}，${formData.cards?.[0]?.cardSelectDisplay?.item1}、${formData.cards?.[0]?.cardSelectDisplay?.item2}；选择职业` : undefined}
+        title={field === 'professionRef' ? '点击更换职业' : undefined}
         className="min-w-0 flex-1 truncate px-2 py-0.5 text-left text-xs text-gray-800 hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500"
       >
-        {displayName || choiceName || <span className="print:hidden">{placeholder}</span>}
+        {field === 'professionRef' && nativeHeaderId
+          ? <img className="native-profession-art" src={`${getBasePath()}/print-templates/profession-headers/${nativeHeaderId}.webp`} alt="" />
+          : displayName || choiceName || <span className="print:hidden">{placeholder}</span>}
       </button>
       {reference?.name && <button
         type="button"
@@ -206,7 +215,7 @@ export function HeaderSection({
     <div className="sheet-header relative flex items-center gap-2 rounded-t-md bg-gray-800 p-2 pb-5 text-white">
       <EditorTypeface />
       <div className="sheet-identity-fields grid min-w-0 flex-1 grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)_minmax(0,1fr)] items-end gap-x-2 gap-y-2">
-        <div className="flex min-w-0 flex-col gap-1" role="group" aria-label="职业" data-title-length={Array.from(selectedProfessionTitle || "选择职业").length > 3 ? "long" : "short"}>
+        <div className="flex min-w-0 flex-col gap-1" role="group" aria-label="职业" data-native-header={nativeHeaderId ? "true" : undefined} data-title-length={Array.from(selectedProfessionTitle || "选择职业").length > 3 ? "long" : "short"}>
           <div className="flex min-h-5 items-center justify-between gap-1"><span className="text-[9px] text-gray-300">职业</span><ProfessionDomainBadges /></div>
           {renderChoiceControl('professionRef', openProfessionModal, '选择职业', selectedProfessionTitle)}
         </div>

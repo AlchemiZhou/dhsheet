@@ -17,3 +17,5 @@ This is an editable, responsive layout; it expands for control sizes and long te
 - No browser page errors. Structured browser results and desktop/mobile captures are adjacent.
 
 Browser checks use Chromium and viewport emulation, not actual Safari or Android browser devices. Exported HTML was replayed offline in an opaque document; the managed browser blocks direct file:// navigation.
+
+Later banner fidelity and compact-layout changes: [compact editor](../compact-editor/README.md).

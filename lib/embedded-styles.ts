@@ -1,6 +1,6 @@
 /**
  * 自动生成的CSS内容文件
- * 生成时间: 2026-11-16T19:45:59.358Z
+ * 生成时间: 2026-11-16T20:02:24.277Z
  * 
  * 该文件包含了应用的所有CSS样式，用于HTML导出功能
  * 请勿手动编辑此文件，它会在构建时自动生成
@@ -11,7 +11,7 @@
 
 /**
  * 完整的CSS内容（包含Tailwind CSS和应用样式）
- * 大小: 167.08 KB
+ * 大小: 174.39 KB
  */
 export const embeddedStyles = `*, ::before, ::after {
   --tw-border-spacing-x: 0;
@@ -4562,6 +4562,125 @@ html {
   .native-editor .sheet-header [aria-label="职业"] .domain-badge svg { width: 22px; height: 22px; stroke-width: 1.6; }
 }
 
+/* Exact PDF banner, displayed at its original PDF-point to CSS-pixel scale. */
+@media all {
+  .sheet-reader .native-editor .sheet-header {
+    grid-template-columns: 264.431px minmax(0,1fr) minmax(0,1fr) 56px;
+    gap: 4px 8px;
+    padding: 0 12px 7px 0;
+    margin-bottom: 10px;
+  }
+  .native-editor .sheet-header [aria-label="职业"] { grid-area: 1 / 1 / 3 / 2; }
+  .native-editor .sheet-header [aria-label="职业"][data-native-header=true] {
+    width: 264.431px; height: 74.071px; display: block;
+    margin: 0; padding: 0; clip-path: none; background: transparent;
+    align-self: start;
+  }
+  .native-editor .sheet-header [aria-label="职业"][data-native-header=true] > div:first-child { display: none; }
+  .sheet-reader .native-editor .sheet-header [data-native-header=true] .profession-choice {
+    display: block; position: relative; width: 264.431px; height: 74.071px;
+    margin: 0; padding: 0; border: 0; border-radius: 0;
+  }
+  .sheet-appearance .native-editor .sheet-header [data-native-header=true] .profession-choice > button:first-child {
+    display: block; width: 100%; height: 100%; margin: 0; padding: 0;
+    background: transparent;
+  }
+  .native-profession-art { display: block; width: 264.431px; height: 74.071px; max-width: none; }
+  .sheet-reader .native-editor .sheet-header [data-native-header=true] button[title="编辑名称"] {
+    position: absolute; right: 28px; bottom: 4px; width: 24px; height: 24px;
+    min-height: 24px; border: 0; background: transparent; color: white;
+  }
+  .native-editor .sheet-identity-fields > div:nth-child(2) { grid-area: 1 / 2 / 2 / 3; }
+  .native-editor .sheet-header [aria-label="种族"] { grid-area: 1 / 3 / 2 / 4; }
+  .native-editor .sheet-header [aria-label="社群"] { grid-area: 2 / 2 / 3 / 3; }
+  .native-editor .sheet-header [aria-label="子职业"] { grid-area: 2 / 3 / 3 / 4; }
+  .sheet-reader .native-editor .sheet-level-control { grid-area: 1 / 4 / 3 / 5; }
+  .native-editor .sheet-identity-fields > div:nth-child(6) { grid-area: 3 / 1 / 4 / 2; justify-self: end; padding-right: 10px; }
+  .sheet-reader .native-editor .sheet-header > [aria-label="转变"] { grid-area: 3 / 2 / 4 / 4; }
+  .native-summary { margin-bottom: 16px; gap: 12px; }
+  .native-columns { gap: 12px; }
+  .native-column { gap: 12px; }
+  .native-panel { padding: 0 8px 7px; }
+  .native-panel-heading { margin-bottom: 5px; }
+  .native-editor .native-features { min-height: 180px; }
+  .native-editor .sheet-equipment-slot { margin: 4px 0 8px; }
+  .native-editor .sheet-equipment-slot label { font-size: 9px; }
+  .native-editor .sheet-equipment-slot .notebook-textarea {
+    line-height: 19px !important;
+    background-image: repeating-linear-gradient(to bottom,transparent 0,transparent 18px,#9ca3af 18px,#9ca3af 19px) !important;
+    background-size: 100% 19px !important;
+  }
+  .native-editor .sheet-inventory .native-panel-content > div > .space-y-1 > input { min-height: 28px; }
+  .native-editor .native-panel-content .sheet-gold { margin-bottom: 0; }
+  .native-editor .native-panel-content .sheet-hope { margin-bottom: 0; }
+  .sheet-reader .native-editor .sheet-resource-marks {
+    display: grid; grid-template-columns: repeat(12,minmax(0,1fr)); gap: 3px;
+  }
+  .sheet-reader .native-editor .sheet-resource-marks > div { display: contents; }
+  .sheet-reader .native-editor .sheet-attribute[data-spellcasting=true] .sheet-attribute-heading {
+    position: relative; background: var(--sheet-primary); color: white;
+  }
+  .native-editor .sheet-attribute[data-spellcasting=true] .sheet-attribute-heading::before {
+    content: '施法属性'; position: absolute; bottom: 100%; left: 0; right: 0;
+    background: var(--sheet-primary); color: white; font-size: 9px; text-align: center; line-height: 13px;
+  }
+  .sheet-reader .native-editor .sheet-attribute[data-spellcasting=true] .h-14 > div {
+    border-color: var(--sheet-primary); box-shadow: inset 0 0 0 1px var(--sheet-primary);
+  }
+}
+@media screen and (min-width: 1024px) {
+  .sheet-reader .native-editor .sheet-defense-row { grid-template-columns: 74px 74px minmax(0,1fr); gap: 6px; }
+  .sheet-reader .native-editor .sheet-armor-track { grid-column: 3; grid-row: 1; }
+  .sheet-reader .native-editor .sheet-armor-track > .grid { grid-template-columns: repeat(3,minmax(0,1fr)); gap: 3px; }
+  .sheet-reader .native-editor .sheet-armor-track [role=checkbox] { height: 14px; }
+  .native-editor .sheet-armor-track span { font-size: 9px; }
+  .native-editor .sheet-attributes .h-14 { height: 82px; }
+  .native-editor .sheet-resources { margin-bottom: 0; padding-block: 0; }
+  .native-editor .sheet-resource-entry { padding-block: 2px; }
+  .native-editor .sheet-resource-heading { margin-bottom: 3px; }
+  .native-editor .sheet-hope .mb-2 { margin-bottom: 5px; }
+  .native-editor .sheet-equipment-slot textarea { font-size: 12px; }
+  .native-editor .native-reserve .native-panel-content { display: grid; gap: 8px; }
+  .native-editor .native-reserve .native-panel-content > div { margin: 0; }
+  .native-editor .sheet-gold > .flex > div > .flex { flex-direction: row; gap: 3px; }
+  .native-editor .sheet-gold [role=checkbox] { width: 12px; height: 12px; border-width: 1px; }
+  .native-editor .sheet-gold .gap-2 { gap: 3px; }
+  .native-editor .native-panel-content > .py-1 > .space-y-1\\.5 > .flex input { padding-block: 2px; height: 25px; }
+}
+@media screen and (max-width: 1023px) {
+  .sheet-reader .native-editor .sheet-header {
+    padding: 0 12px 10px;
+    grid-template-columns: minmax(0,1fr) minmax(0,1fr) 56px;
+  }
+  .sheet-reader .native-editor .sheet-header [aria-label="职业"] { grid-area: 1 / 1 / 2 / 4; margin-left: -12px; }
+  .native-editor .sheet-identity-fields > div:nth-child(2) { grid-area: 2 / 1 / 3 / 3; }
+  .native-editor .sheet-header [aria-label="种族"] { grid-area: 3 / 1 / 4 / 3; }
+  .native-editor .sheet-header [aria-label="社群"] { grid-area: 4 / 1 / 5 / 2; }
+  .native-editor .sheet-header [aria-label="子职业"] { grid-area: 4 / 2 / 5 / 4; }
+  .sheet-reader .native-editor .sheet-level-control { grid-area: 2 / 3 / 4 / 4; }
+  .native-editor .sheet-identity-fields > div:nth-child(6) { grid-area: 5 / 1 / 6 / 2; padding: 0; justify-self: stretch; }
+  .sheet-reader .native-editor .sheet-header > [aria-label="转变"] { grid-area: 5 / 2 / 6 / 4; }
+  .sheet-reader .native-editor .sheet-resource-marks { grid-template-columns: repeat(12,minmax(0,1fr)); gap: 2px; }
+  .sheet-reader .native-editor .sheet-resource-marks [role=checkbox] { height: 38px; min-height: 38px; }
+  .native-column { gap: 20px; }
+  .native-editor .sheet-equipment-slot input { min-height: 44px; }
+}
+
+@media all {
+  .native-editor .sheet-header [aria-label="职业"]:not([data-native-header]) { margin: 0; min-height: 74.071px; padding: 8px 12px; }
+  .native-upgrade-toggle { display: flex; align-items: center; justify-content: space-between; width: 100%; min-height: 40px; padding: 6px 12px; border: 1px solid var(--editor-line); border-bottom: 2px solid var(--sheet-secondary); background: white; font-size: 13px; font-weight: 700; }
+}
+@media screen {
+  .native-upgrade-options[data-collapsed=true] > .sheet-upgrade-grid { display: none; }
+  .sheet-reader .native-editor { min-height: 0; }
+  .native-reserve-fields[data-collapsed=true] { display: none; }
+  .native-reserve-toggle { width: 100%; min-height: 32px; color: var(--sheet-primary); font-size: 12px; text-align: center; }
+}
+@media all {
+  /* Clip to the original PDF polygon; adjacent form labels are outside it. */
+  .native-profession-art { clip-path: polygon(0 0,100% 0,85.555789% 100%,0 100%); }
+}
+
 @media screen and (max-width: 1023px) {
   .equipment-modal.equipment-mobile-dialog {
     position: fixed !important;
@@ -6546,7 +6665,7 @@ export function getStylesInfo() {
     size: embeddedStyles.length,
     sizeKB: (embeddedStyles.length / 1024).toFixed(2),
     sizeMB: (embeddedStyles.length / 1024 / 1024).toFixed(2),
-    generated: '2026-11-16T19:45:59.359Z',
+    generated: '2026-11-16T20:02:24.278Z',
     compressed: false
   };
 }

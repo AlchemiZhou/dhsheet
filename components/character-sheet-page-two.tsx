@@ -42,6 +42,8 @@ export default function CharacterSheetPageTwo({ currentCharacterId }: { currentC
     onSaveAbility: setCardAbilityChoiceValuesForInstance,
   })
 
+  const [showUpgradeOptions, setShowUpgradeOptions] = useState(false)
+
   // State for upgrade domain card modal
   const [upgradeDomainModalOpen, setUpgradeDomainModalOpen] = useState(false);
   const [upgradeDomainCardIndex, setUpgradeDomainCardIndex] = useState<number>(-1);
@@ -207,6 +209,10 @@ export default function CharacterSheetPageTwo({ currentCharacterId }: { currentC
 
 
           {/* Upgrade Section */}
+        <section className="native-upgrade-options" data-collapsed={!showUpgradeOptions}>
+          <button type="button" className="native-upgrade-toggle print:hidden" aria-expanded={showUpgradeOptions} onClick={() => setShowUpgradeOptions(value => !value)}>
+            <span>升级选项 · 等级 2–10</span><span aria-hidden="true">{showUpgradeOptions ? '−' : '＋'}</span>
+          </button>
         <div className="sheet-upgrade-grid mt-3 grid grid-cols-3 gap-3 text-m">
             {/* Tier 1: Levels 2-4 */}
             <UpgradeSection
@@ -247,6 +253,7 @@ export default function CharacterSheetPageTwo({ currentCharacterId }: { currentC
               onOpenSubclassModal={handleOpenUpgradeSubclassModal}
           />
         </div>
+        </section>
         <div className="native-deck"><CardDeckSection formData={safeFormData} /></div>
         <div className="native-footer">Daggerheart © Darrington Press 2025</div>
       </div>
