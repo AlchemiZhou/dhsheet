@@ -1,6 +1,6 @@
 /**
  * 自动生成的CSS内容文件
- * 生成时间: 2026-11-16T20:02:24.277Z
+ * 生成时间: 2026-11-16T20:05:53.102Z
  * 
  * 该文件包含了应用的所有CSS样式，用于HTML导出功能
  * 请勿手动编辑此文件，它会在构建时自动生成
@@ -11,7 +11,7 @@
 
 /**
  * 完整的CSS内容（包含Tailwind CSS和应用样式）
- * 大小: 174.39 KB
+ * 大小: 176.42 KB
  */
 export const embeddedStyles = `*, ::before, ::after {
   --tw-border-spacing-x: 0;
@@ -4681,6 +4681,37 @@ html {
   .native-profession-art { clip-path: polygon(0 0,100% 0,85.555789% 100%,0 100%); }
 }
 
+/* Keep the previously accepted identity-field arrangement around the PDF banner. */
+@media all {
+  .sheet-reader .native-editor .sheet-header {
+    grid-template-columns: 264.431px repeat(3,minmax(0,1fr)) 56px;
+  }
+  .native-editor .sheet-header [aria-label="职业"] { grid-area: 1 / 1 / 4 / 2; }
+  .native-editor .sheet-identity-fields > div:nth-child(2) { grid-area: 1 / 2 / 2 / 4; }
+  .native-editor .sheet-header [aria-label="种族"] { grid-area: 1 / 4 / 2 / 5; }
+  .native-editor .sheet-header [aria-label="社群"] { grid-area: 2 / 2 / 3 / 3; }
+  .native-editor .sheet-header [aria-label="子职业"] { grid-area: 2 / 3 / 3 / 5; }
+  .native-editor .sheet-identity-fields > div:nth-child(6) { grid-area: 3 / 2 / 4 / 3; padding: 0; justify-self: start; }
+  .sheet-reader .native-editor .sheet-header > [aria-label="转变"] { grid-area: 3 / 3 / 4 / 5; }
+  .sheet-reader .native-editor .sheet-level-control { grid-area: 1 / 5 / 4 / 6; }
+}
+@media screen and (max-width: 1023px) {
+  .sheet-reader .native-editor .sheet-header { grid-template-columns: minmax(0,1fr) minmax(0,1fr) 56px; }
+  .sheet-reader .native-editor .sheet-header [aria-label="职业"] { grid-area: 1 / 1 / 2 / 3; }
+  .sheet-reader .native-editor .sheet-level-control { grid-area: 1 / 3 / 2 / 4; }
+  .native-editor .sheet-identity-fields > div:nth-child(2) { grid-area: 2 / 1 / 3 / 4; }
+  .native-editor .sheet-header [aria-label="种族"] { grid-area: 3 / 1 / 4 / 4; }
+  .native-editor .sheet-header [aria-label="社群"] { grid-area: 4 / 1 / 5 / 2; }
+  .native-editor .sheet-header [aria-label="子职业"] { grid-area: 4 / 2 / 5 / 4; }
+  .native-editor .sheet-identity-fields > div:nth-child(6) { grid-area: 5 / 1 / 6 / 2; justify-self: stretch; }
+  .sheet-reader .native-editor .sheet-header > [aria-label="转变"] { grid-area: 5 / 2 / 6 / 4; }
+}
+@media screen and (max-width: 350px) {
+  .sheet-reader .native-editor .sheet-level-control { grid-area: 2 / 3 / 4 / 4; }
+  .native-editor .sheet-identity-fields > div:nth-child(2) { grid-area: 2 / 1 / 3 / 3; }
+  .native-editor .sheet-header [aria-label="种族"] { grid-area: 3 / 1 / 4 / 3; }
+}
+
 @media screen and (max-width: 1023px) {
   .equipment-modal.equipment-mobile-dialog {
     position: fixed !important;
@@ -6665,7 +6696,7 @@ export function getStylesInfo() {
     size: embeddedStyles.length,
     sizeKB: (embeddedStyles.length / 1024).toFixed(2),
     sizeMB: (embeddedStyles.length / 1024 / 1024).toFixed(2),
-    generated: '2026-11-16T20:02:24.278Z',
+    generated: '2026-11-16T20:05:53.102Z',
     compressed: false
   };
 }

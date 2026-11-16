@@ -1,0 +1,70 @@
+{
+  "desktopIdentity": {
+    "name": {
+      "x": 595.5625,
+      "y": 88,
+      "width": 294.171875,
+      "height": 45.5
+    },
+    "ancestry": {
+      "x": 897.734375,
+      "y": 88,
+      "width": 143.09375,
+      "height": 45.5
+    },
+    "community": {
+      "x": 595.5625,
+      "y": 137.5,
+      "width": 143.078125,
+      "height": 45.5
+    },
+    "subclass": {
+      "x": 746.640625,
+      "y": 137.5,
+      "width": 294.1875,
+      "height": 45.5
+    },
+    "mixed": {
+      "x": 595.5625,
+      "y": 195.75,
+      "width": 103,
+      "height": 28
+    },
+    "transformation": {
+      "x": 746.640625,
+      "y": 187,
+      "width": 294.1875,
+      "height": 45.5
+    },
+    "level": {
+      "x": 1048.828125,
+      "y": 107.25,
+      "width": 56,
+      "height": 106
+    }
+  },
+  "widths": [
+    {
+      "width": 320,
+      "noOverlap": true
+    },
+    {
+      "width": 390,
+      "noOverlap": true
+    },
+    {
+      "width": 768,
+      "noOverlap": true
+    },
+    {
+      "width": 1024,
+      "noOverlap": true
+    },
+    {
+      "width": 1440,
+      "noOverlap": true
+    }
+  ],
+  "nameEditable": true,
+  "pageErrors": []
+}

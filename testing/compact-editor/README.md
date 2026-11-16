@@ -16,3 +16,5 @@ Life and stress each keep all twelve cells on a single row. The compact form red
 - Native offline HTML/PDF still used the original two-sheet renderer with the page-two portrait and a separate card page. No browser page errors.
 
 For the same sample character at 794 px paper width, the default front page shrank from 1547 px to about 1119 px (28%), and the back from 1856 px to about 1274 px (31%). Expanded sections and longer character text naturally add height. These are Chromium measurements and viewport emulation, not real-device Safari/Android validation. The managed browser blocks file://; offline HTML was replayed without network in an opaque document.
+
+The previously accepted identity-field arrangement was restored after this update: name/ancestry on the first row; community/subclass on the second; mixed ancestry and transformation below, with the level control at the right. A 320 px-specific placement keeps the original-size banner from overlapping the level control. See identity-validation.json for the geometry checks across five viewport widths.
