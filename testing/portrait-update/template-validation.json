@@ -5,9 +5,12 @@
     "filename": "吟游诗人角色卡-头像框版.pdf",
     "pages": 2,
     "portraitMM": 45,
+    "borderWidthPt": 0.95,
+    "borderColor": "#8A4567",
+    "appearanceNotesRemoved": true,
     "firstPageUnchanged": true,
     "rightColumnPreserved": true,
-    "bytes": 2485630
+    "bytes": 2485339
   },
   {
     "id": "druid",
@@ -15,9 +18,12 @@
     "filename": "德鲁伊角色卡-头像框版.pdf",
     "pages": 2,
     "portraitMM": 45,
+    "borderWidthPt": 0.95,
+    "borderColor": "#416347",
+    "appearanceNotesRemoved": true,
     "firstPageUnchanged": true,
     "rightColumnPreserved": true,
-    "bytes": 1946089
+    "bytes": 1945792
   },
   {
     "id": "guardian",
@@ -25,9 +31,12 @@
     "filename": "守护者角色卡-头像框版.pdf",
     "pages": 2,
     "portraitMM": 45,
+    "borderWidthPt": 0.95,
+    "borderColor": "#526572",
+    "appearanceNotesRemoved": true,
     "firstPageUnchanged": true,
     "rightColumnPreserved": true,
-    "bytes": 1972253
+    "bytes": 1971959
   },
   {
     "id": "ranger",
@@ -35,9 +44,12 @@
     "filename": "游侠角色卡-头像框版.pdf",
     "pages": 2,
     "portraitMM": 45,
+    "borderWidthPt": 0.95,
+    "borderColor": "#416347",
+    "appearanceNotesRemoved": true,
     "firstPageUnchanged": true,
     "rightColumnPreserved": true,
-    "bytes": 1907617
+    "bytes": 1907322
   },
   {
     "id": "rogue",
@@ -45,9 +57,12 @@
     "filename": "游荡者角色卡-头像框版.pdf",
     "pages": 2,
     "portraitMM": 45,
+    "borderWidthPt": 0.95,
+    "borderColor": "#343544",
+    "appearanceNotesRemoved": true,
     "firstPageUnchanged": true,
     "rightColumnPreserved": true,
-    "bytes": 1955776
+    "bytes": 1955481
   },
   {
     "id": "seraph",
@@ -55,9 +70,12 @@
     "filename": "神使角色卡-头像框版.pdf",
     "pages": 2,
     "portraitMM": 45,
+    "borderWidthPt": 0.95,
+    "borderColor": "#80652F",
+    "appearanceNotesRemoved": true,
     "firstPageUnchanged": true,
     "rightColumnPreserved": true,
-    "bytes": 1904174
+    "bytes": 1903882
   },
   {
     "id": "sorcerer",
@@ -65,9 +83,12 @@
     "filename": "术士角色卡-头像框版.pdf",
     "pages": 2,
     "portraitMM": 45,
+    "borderWidthPt": 0.95,
+    "borderColor": "#4D628A",
+    "appearanceNotesRemoved": true,
     "firstPageUnchanged": true,
     "rightColumnPreserved": true,
-    "bytes": 1962478
+    "bytes": 1962188
   },
   {
     "id": "warrior",
@@ -75,9 +96,12 @@
     "filename": "战士角色卡-头像框版.pdf",
     "pages": 2,
     "portraitMM": 45,
+    "borderWidthPt": 0.95,
+    "borderColor": "#873E3E",
+    "appearanceNotesRemoved": true,
     "firstPageUnchanged": true,
     "rightColumnPreserved": true,
-    "bytes": 1927970
+    "bytes": 1927671
   },
   {
     "id": "wizard",
@@ -85,9 +109,12 @@
     "filename": "法师角色卡-头像框版.pdf",
     "pages": 2,
     "portraitMM": 45,
+    "borderWidthPt": 0.95,
+    "borderColor": "#315F63",
+    "appearanceNotesRemoved": true,
     "firstPageUnchanged": true,
     "rightColumnPreserved": true,
-    "bytes": 1908302
+    "bytes": 1908003
   },
   {
     "id": "assassin",
@@ -95,9 +122,12 @@
     "filename": "刺客角色卡-头像框版.pdf",
     "pages": 2,
     "portraitMM": 45,
+    "borderWidthPt": 0.95,
+    "borderColor": "#343544",
+    "appearanceNotesRemoved": true,
     "firstPageUnchanged": true,
     "rightColumnPreserved": true,
-    "bytes": 1799592
+    "bytes": 1799294
   },
   {
     "id": "brawler",
@@ -105,9 +135,12 @@
     "filename": "格斗家角色卡-头像框版.pdf",
     "pages": 2,
     "portraitMM": 45,
+    "borderWidthPt": 0.95,
+    "borderColor": "#93602F",
+    "appearanceNotesRemoved": true,
     "firstPageUnchanged": true,
     "rightColumnPreserved": true,
-    "bytes": 1787847
+    "bytes": 1787552
   },
   {
     "id": "warlock",
@@ -115,9 +148,12 @@
     "filename": "邪术师角色卡-头像框版.pdf",
     "pages": 2,
     "portraitMM": 45,
+    "borderWidthPt": 0.95,
+    "borderColor": "#4D3A69",
+    "appearanceNotesRemoved": true,
     "firstPageUnchanged": true,
     "rightColumnPreserved": true,
-    "bytes": 1805638
+    "bytes": 1805341
   },
   {
     "id": "witch",
@@ -125,8 +161,11 @@
     "filename": "灵巫角色卡-头像框版.pdf",
     "pages": 2,
     "portraitMM": 45,
+    "borderWidthPt": 0.95,
+    "borderColor": "#416347",
+    "appearanceNotesRemoved": true,
     "firstPageUnchanged": true,
     "rightColumnPreserved": true,
-    "bytes": 1806236
+    "bytes": 1805941
   }
 ]

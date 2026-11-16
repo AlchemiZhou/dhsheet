@@ -25,7 +25,8 @@
 .reference-character-portrait {
   position: absolute;
   box-sizing: border-box;
-  border: .6pt solid var(--reference-ink, #243d34);
+  /* Original page-two rules are approximately .95pt. */
+  border: .95pt solid var(--reference-primary, #3d3d3d);
   background: #fff;
   padding: 2pt;
   overflow: hidden;
@@ -45,22 +46,6 @@
   text-align: center;
   color: #292929;
   font: bold 8.5pt Arial, "Noto Sans CJK SC", sans-serif;
-}
-.reference-portrait-notes {
-  position: absolute;
-  left: 4.8%;
-  top: 24.45%;
-  width: 30%;
-  height: 1.2%;
-  display: flex;
-  align-items: baseline;
-  gap: 4pt;
-  color: #555;
-  font: 7pt Arial, "Noto Sans CJK SC", sans-serif;
-}
-.reference-portrait-notes-line {
-  flex: 1;
-  border-bottom: .4pt solid #858585;
 }
 .sheet-print-mono .reference-character-portrait {
   border-color: #303030;

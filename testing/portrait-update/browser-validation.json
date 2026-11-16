@@ -22,5 +22,10 @@
     "top": 101.328125,
     "paperWidth": 793.6875
   },
+  "border": {
+    "width": "1px",
+    "color": "rgb(135, 62, 62)"
+  },
+  "appearanceNotesRemoved": true,
   "pageErrors": []
 }

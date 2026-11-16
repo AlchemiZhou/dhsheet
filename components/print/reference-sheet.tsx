@@ -12,7 +12,7 @@ import {
   PROFESSION_PRESETS,
   type ProfessionPreset,
 } from "@/character/profession-setup/catalog";
-import type { ProfessionThemeId } from "@/character/appearance/theme";
+import { DOMAIN_COLORS, PROFESSION_THEMES, type ProfessionThemeId } from "@/character/appearance/theme";
 import {
   referenceValues,
   referenceCheckValue,
@@ -67,10 +67,6 @@ function CharacterPortrait({ image }: { image: string }) {
         }}
       >
         <img src={image} alt="角色头像" loading="eager" />
-      </div>
-      <div className="reference-portrait-notes">
-        <span>外貌简述</span>
-        <span className="reference-portrait-notes-line" aria-hidden="true" />
       </div>
     </>
   );
@@ -346,6 +342,7 @@ export function ReferenceSheet({
       style={
         {
           "--reference-ink": preset.ink,
+          "--reference-primary": DOMAIN_COLORS[PROFESSION_THEMES[id].domains[0]],
         } as CSSProperties
       }
     >

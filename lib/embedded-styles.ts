@@ -1,6 +1,6 @@
 /**
  * 自动生成的CSS内容文件
- * 生成时间: 2026-11-16T17:50:12.697Z
+ * 生成时间: 2026-11-16T19:14:46.814Z
  * 
  * 该文件包含了应用的所有CSS样式，用于HTML导出功能
  * 请勿手动编辑此文件，它会在构建时自动生成
@@ -11,7 +11,7 @@
 
 /**
  * 完整的CSS内容（包含Tailwind CSS和应用样式）
- * 大小: 152.44 KB
+ * 大小: 152.20 KB
  */
 export const embeddedStyles = `*, ::before, ::after {
   --tw-border-spacing-x: 0;
@@ -4436,7 +4436,8 @@ html {
 .reference-character-portrait {
   position: absolute;
   box-sizing: border-box;
-  border: .6pt solid var(--reference-ink, #243d34);
+  /* Original page-two rules are approximately .95pt. */
+  border: .95pt solid var(--reference-primary, #3d3d3d);
   background: #fff;
   padding: 2pt;
   overflow: hidden;
@@ -4456,22 +4457,6 @@ html {
   text-align: center;
   color: #292929;
   font: bold 8.5pt Arial, "Noto Sans CJK SC", sans-serif;
-}
-.reference-portrait-notes {
-  position: absolute;
-  left: 4.8%;
-  top: 24.45%;
-  width: 30%;
-  height: 1.2%;
-  display: flex;
-  align-items: baseline;
-  gap: 4pt;
-  color: #555;
-  font: 7pt Arial, "Noto Sans CJK SC", sans-serif;
-}
-.reference-portrait-notes-line {
-  flex: 1;
-  border-bottom: .4pt solid #858585;
 }
 .sheet-print-mono .reference-character-portrait {
   border-color: #303030;
@@ -6338,7 +6323,7 @@ export function getStylesInfo() {
     size: embeddedStyles.length,
     sizeKB: (embeddedStyles.length / 1024).toFixed(2),
     sizeMB: (embeddedStyles.length / 1024 / 1024).toFixed(2),
-    generated: '2026-11-16T17:50:12.698Z',
+    generated: '2026-11-16T19:14:46.815Z',
     compressed: false
   };
 }
