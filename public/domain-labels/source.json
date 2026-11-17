@@ -1,0 +1,42 @@
+{
+  "source": "领域标签.zip",
+  "sha256": "6e619c7f16bee51177ea39b8355c786a4330095bed03e484d94d890d87773fd9",
+  "assets": {
+    "arcana": {
+      "member": "领域标签/奥术标签.png",
+      "sha256": "c593d75e854ef61974a826c1beca1932eb215239652a7672885dc902f387c9bf"
+    },
+    "blade": {
+      "member": "领域标签/利刃标签.png",
+      "sha256": "e97696ce211445b9f6adc79f2d38ca95b10a2ff0d6f340cd1c486d577d7458b1"
+    },
+    "bone": {
+      "member": "领域标签/骸骨标签.png",
+      "sha256": "1a4b75089ecbde90b8aaeea2715aab853b9a69e70de67d8061b41ac3360aa1e2"
+    },
+    "codex": {
+      "member": "领域标签/典籍标签.png",
+      "sha256": "b90ae37d5a2ba380f7afe55a50179e3180c504b5aba7971863083dc4cd9994eb"
+    },
+    "grace": {
+      "member": "领域标签/优雅标签.png",
+      "sha256": "07deda8af9691ef015472fc67367e0904c93facf3bf68c31aa2aa6d9ba7eaf84"
+    },
+    "midnight": {
+      "member": "领域标签/午夜标签.png",
+      "sha256": "41e82d26b6568961363eab9ffe68dffbe024956ed5245ff1abe0f1ff35b2a5c7"
+    },
+    "sage": {
+      "member": "领域标签/贤者标签.png",
+      "sha256": "5ae19c8b272aa7fbff8f3a0d7698cd6a5f754b55f3e601cbf52a25aa8cc9bc00"
+    },
+    "splendor": {
+      "member": "领域标签/辉耀标签.png",
+      "sha256": "94d88fd58d39da028769d74e07a52bdc8de7f242ef12948c3cc69c63ccb048c5"
+    },
+    "valor": {
+      "member": "领域标签/勇气标签.png",
+      "sha256": "e456113d5863ddcec890d611ca517a2bd47d765300601eb6b6e11bf1fae958df"
+    }
+  }
+}

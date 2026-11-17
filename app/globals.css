@@ -26,28 +26,8 @@ body {
   font-size: 16px !important;
 }
 
-/* Keep the author action reachable independently of the long mobile footer. */
-.sheet-author-action {
-  position: fixed;
-  left: 8px;
-  bottom: 80px;
-  bottom: calc(80px + env(safe-area-inset-bottom, 0px));
-  z-index: 45;
-  display: inline-flex;
-  align-items: center;
-  max-width: calc(100vw - 16px);
-  min-height: 44px;
-  padding: 6px 10px;
-  border: 1px solid #d5d2cd;
-  border-radius: 6px;
-  background: #f5f4f1;
-  color: #616161;
-  font-size: 12px;
-  line-height: 1.4;
-}
-@media print {
-  .sheet-author-action { display: none !important; }
-}
+/* The interactive author credit inherits the other attribution lines. */
+.sheet-credit-author { display:block; padding:0; border:0; background:transparent; color:inherit; font:inherit; line-height:inherit; }
 
 html {
   margin: 0;
@@ -139,7 +119,7 @@ html {
     line-height: 1.1 !important;
   }
 
-  .print-card-header span {
+  .print-card-header .print-card-type {
     font-size: 7pt !important;
     background-color: #e0e0e0 !important;
     padding: 1px 6px !important;

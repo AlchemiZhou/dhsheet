@@ -1,0 +1,18 @@
+
+ RUN  v3.2.4 /tmp/dhsheet-html-update
+
+
+warn - As of Tailwind CSS v3.3, the `@tailwindcss/line-clamp` plugin is now included by default.
+warn - Remove it from the `plugins` array in your configuration to eliminate this warning.
+stdout | components/character-sheet-page-two-sections/__tests__/card-deck-preview.test.tsx
+[Unified Card System] System loaded, waiting for client initialization...
+
+stdout | components/character-sheet-page-two-sections/__tests__/card-deck-preview.test.tsx
+[Card System] 🚀 Using UNIFIED card system implementation (default)
+
+ ✓ components/character-sheet-page-two-sections/__tests__/card-deck-preview.test.tsx (5 tests) 187ms
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  07:07:42
+   Duration  2.66s (transform 980ms, setup 12ms, collect 1.93s, tests 187ms, environment 244ms, prepare 80ms)

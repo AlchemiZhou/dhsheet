@@ -1,0 +1,9 @@
+
+ RUN  v3.2.4 /tmp/dhsheet-html-update
+
+ ✓ tests/unit/profession-appearance.test.tsx (16 tests) 29ms
+
+ Test Files  1 passed (1)
+      Tests  16 passed (16)
+   Start at  07:12:33
+   Duration  1.74s (transform 556ms, setup 21ms, collect 1.10s, tests 29ms, environment 278ms, prepare 76ms)

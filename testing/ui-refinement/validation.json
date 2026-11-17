@@ -1,0 +1,128 @@
+{
+  "bannerNotClipped": true,
+  "headerPositions": {
+    "profession": {
+      "x": 323.140625,
+      "y": 88,
+      "width": 264.421875,
+      "height": 74.0625
+    },
+    "name": {
+      "x": 595.5625,
+      "y": 88,
+      "width": 187.234375,
+      "height": 35.03125
+    },
+    "ancestry": {
+      "x": 790.796875,
+      "y": 88,
+      "width": 156.03125,
+      "height": 35.03125
+    },
+    "community": {
+      "x": 595.5625,
+      "y": 127.03125,
+      "width": 187.234375,
+      "height": 35.03125
+    },
+    "subclass": {
+      "x": 790.796875,
+      "y": 127.03125,
+      "width": 156.03125,
+      "height": 35.03125
+    },
+    "mixed": {
+      "x": 954.828125,
+      "y": 88,
+      "width": 86,
+      "height": 35.03125
+    },
+    "transformation": {
+      "x": 954.828125,
+      "y": 127.03125,
+      "width": 86,
+      "height": 35.03125
+    },
+    "level": {
+      "x": 1048.828125,
+      "y": 88,
+      "width": 56,
+      "height": 74.0625
+    }
+  },
+  "switchesKeepTwoRows": true,
+  "attributeInsets": {
+    "left": "6px",
+    "right": "6px"
+  },
+  "spellcastingClearOfHeader": true,
+  "primaryPanelRules": true,
+  "equipmentFeatures14px": true,
+  "upgradesLast": true,
+  "emptySlotPrompt": true,
+  "emptySlotOpensPicker": true,
+  "discreetCredit": true,
+  "exports": [
+    {
+      "illustrated": false,
+      "externalRequests": 0
+    },
+    {
+      "illustrated": true,
+      "externalRequests": 0
+    }
+  ],
+  "viewports": [
+    {
+      "width": 320,
+      "tab": "第一页",
+      "overflow": false
+    },
+    {
+      "width": 320,
+      "tab": "第二页",
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "tab": "第一页",
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "tab": "第二页",
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "tab": "第一页",
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "tab": "第二页",
+      "overflow": false
+    },
+    {
+      "width": 1024,
+      "tab": "第一页",
+      "overflow": false
+    },
+    {
+      "width": 1024,
+      "tab": "第二页",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "tab": "第一页",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "tab": "第二页",
+      "overflow": false
+    }
+  ],
+  "pageErrors": []
+}

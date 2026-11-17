@@ -249,30 +249,31 @@ export function HeaderSection({
             </>}
           </div>
         </div>
-        <div className="flex h-7 min-w-0 items-center print:invisible">
+        <div className="sheet-mixed-control flex min-w-0 flex-col gap-1 print:invisible">
+          <span className="text-[9px] text-gray-300">混血</span>
           <button
             type="button"
             role="switch"
             aria-checked={mixedAncestry}
+            aria-label={`混血：${mixedAncestry ? "开启" : "关闭"}`}
             onClick={() => onMixedAncestryChange(!mixedAncestry)}
             className={`inline-flex h-7 items-center gap-1.5 rounded-md border px-2 text-[11px] font-semibold shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white ${mixedAncestry ? 'border-red-300 bg-red-600 text-white hover:bg-red-500' : 'border-gray-300 bg-white text-gray-800 hover:bg-sky-100'}`}
           >
             <span aria-hidden="true" className={`relative h-3.5 w-6 shrink-0 rounded-full ${mixedAncestry ? 'bg-red-200' : 'bg-gray-300'}`}>
               <span className={`absolute left-0 top-0.5 h-2.5 w-2.5 rounded-full bg-white shadow transition-transform ${mixedAncestry ? 'translate-x-3' : 'translate-x-0.5'}`} />
             </span>
-            混血：{mixedAncestry ? '开启' : '关闭'}
+            {mixedAncestry ? '开启' : '关闭'}
           </button>
         </div>
       </div>
-      <div className="grid w-28 shrink-0 grid-rows-2 gap-y-2 self-stretch" role="group" aria-label="转变">
-        <div className="flex flex-col justify-end gap-1 print:hidden">
-          <span className="text-[9px] text-gray-300">转变</span>
-          <button type="button" role="switch" aria-checked={transformationEnabled} onClick={() => onTransformationEnabledChange?.(!transformationEnabled)} className={`h-7 rounded border px-2 text-left text-[11px] font-semibold ${transformationEnabled ? 'border-red-300 bg-red-600 text-white hover:bg-red-500' : 'border-gray-300 bg-white text-gray-800 hover:bg-gray-100'}`}>转变：{transformationEnabled ? '开启' : '关闭'}</button>
+      <div className="sheet-transformation-control flex w-28 min-w-0 shrink-0 flex-col gap-1" role="group" aria-label="转变" data-enabled={transformationEnabled}>
+        <span className="text-[9px] text-gray-300">转变</span>
+        <div className="sheet-transformation-fields flex min-w-0 items-center gap-1">
+          <button type="button" role="switch" aria-label={`转变：${transformationEnabled ? '开启' : '关闭'}`} aria-checked={transformationEnabled} onClick={() => onTransformationEnabledChange?.(!transformationEnabled)} className={`h-7 min-w-0 rounded border px-2 text-[11px] font-semibold print:hidden ${transformationEnabled ? 'border-red-300 bg-red-600 text-white hover:bg-red-500' : 'border-gray-300 bg-white text-gray-800 hover:bg-gray-100'}`}>
+            <span className="sheet-transformation-state">{transformationEnabled ? '开' : '关闭'}</span>
+          </button>
+          {transformationEnabled && <button type="button" onClick={onOpenTransformationModal} className="sheet-transformation-card h-7 min-w-0 flex-1 truncate rounded border border-gray-400 bg-white px-1 text-left text-xs text-gray-800" aria-label={transformationName ? `更换转变卡：${transformationName}` : '选择转变卡'} title={transformationName || '选择转变卡'}>{transformationName || <span className="print:hidden">选卡</span>}</button>}
         </div>
-        {transformationEnabled && <div className="flex min-w-0 flex-col justify-end gap-1">
-          <span className="text-[9px] text-gray-300">转变卡</span>
-          <button type="button" onClick={onOpenTransformationModal} className="h-7 min-w-0 truncate rounded border border-gray-400 bg-white px-2 text-left text-xs text-gray-800" title={transformationName}>{transformationName || <span className="print:hidden">选择转变卡</span>}</button>
-        </div>}
       </div>
       <div className="sheet-level-control flex shrink-0 flex-col items-center self-center">
         <div className="sheet-level-frame w-16 h-16 bg-white text-gray-800 rounded-md border-4 border-gray-600 flex items-center justify-center">

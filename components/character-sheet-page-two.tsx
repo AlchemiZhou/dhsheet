@@ -209,6 +209,7 @@ export default function CharacterSheetPageTwo({ currentCharacterId }: { currentC
 
 
           {/* Upgrade Section */}
+        <div className="native-deck"><CardDeckSection formData={safeFormData} /></div>
         <section className="native-upgrade-options" data-collapsed={!showUpgradeOptions}>
           <button type="button" className="native-upgrade-toggle print:hidden" aria-expanded={showUpgradeOptions} onClick={() => setShowUpgradeOptions(value => !value)}>
             <span>升级选项 · 等级 2–10</span><span aria-hidden="true">{showUpgradeOptions ? '−' : '＋'}</span>
@@ -254,7 +255,6 @@ export default function CharacterSheetPageTwo({ currentCharacterId }: { currentC
           />
         </div>
         </section>
-        <div className="native-deck"><CardDeckSection formData={safeFormData} /></div>
         <div className="native-footer">Daggerheart © Darrington Press 2025</div>
       </div>
       </div>

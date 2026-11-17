@@ -6,7 +6,7 @@ import { useTextModeStore } from '@/lib/text-mode-store'
 import { showFadeNotification } from '@/components/ui/fade-notification'
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu'
 
-export function CardArtworkToggle({ floating = false, menuItem = false }: { floating?: boolean; menuItem?: boolean }) {
+export function CardArtworkToggle({ menuItem = false }: { menuItem?: boolean }) {
   const enabled = useCardArtworkStore((state) => state.enabled)
   const hydrate = useCardArtworkStore((state) => state.hydrate)
   useEffect(() => {
@@ -25,7 +25,7 @@ export function CardArtworkToggle({ floating = false, menuItem = false }: { floa
     <button
       type="button"
       aria-pressed={enabled}
-      className={`${floating ? 'sheet-author-action print:hidden' : ''} pointer-events-auto min-h-11 cursor-pointer text-left underline-offset-4 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2`}
+      className="sheet-credit-author pointer-events-auto cursor-pointer text-left underline-offset-4 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
       onClick={toggle}
     >
       由 炼金术士阿刻米 特调

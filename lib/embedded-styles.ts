@@ -1,6 +1,6 @@
 /**
  * 自动生成的CSS内容文件
- * 生成时间: 2026-11-16T20:05:53.102Z
+ * 生成时间: 2026-11-17T07:10:06.312Z
  * 
  * 该文件包含了应用的所有CSS样式，用于HTML导出功能
  * 请勿手动编辑此文件，它会在构建时自动生成
@@ -11,7 +11,7 @@
 
 /**
  * 完整的CSS内容（包含Tailwind CSS和应用样式）
- * 大小: 176.42 KB
+ * 大小: 181.21 KB
  */
 export const embeddedStyles = `*, ::before, ::after {
   --tw-border-spacing-x: 0;
@@ -1803,9 +1803,6 @@ video {
 }
 .grid-cols-\\[repeat\\(auto-fit\\2c minmax\\(min\\(18rem\\2c 100\\%\\)\\2c 18rem\\)\\)\\] {
   grid-template-columns: repeat(auto-fit,minmax(min(18rem,100%),18rem));
-}
-.grid-rows-2 {
-  grid-template-rows: repeat(2, minmax(0, 1fr));
 }
 .flex-row {
   flex-direction: row;
@@ -3647,28 +3644,8 @@ body {
   font-size: 16px !important;
 }
 
-/* Keep the author action reachable independently of the long mobile footer. */
-.sheet-author-action {
-  position: fixed;
-  left: 8px;
-  bottom: 80px;
-  bottom: calc(80px + env(safe-area-inset-bottom, 0px));
-  z-index: 45;
-  display: inline-flex;
-  align-items: center;
-  max-width: calc(100vw - 16px);
-  min-height: 44px;
-  padding: 6px 10px;
-  border: 1px solid #d5d2cd;
-  border-radius: 6px;
-  background: #f5f4f1;
-  color: #616161;
-  font-size: 12px;
-  line-height: 1.4;
-}
-@media print {
-  .sheet-author-action { display: none !important; }
-}
+/* The interactive author credit inherits the other attribution lines. */
+.sheet-credit-author { display:block; padding:0; border:0; background:transparent; color:inherit; font:inherit; line-height:inherit; }
 
 html {
   margin: 0;
@@ -3760,7 +3737,7 @@ html {
     line-height: 1.1 !important;
   }
 
-  .print-card-header span {
+  .print-card-header .print-card-type {
     font-size: 7pt !important;
     background-color: #e0e0e0 !important;
     padding: 1px 6px !important;
@@ -4681,36 +4658,67 @@ html {
   .native-profession-art { clip-path: polygon(0 0,100% 0,85.555789% 100%,0 100%); }
 }
 
-/* Keep the previously accepted identity-field arrangement around the PDF banner. */
+/* Two equally tall form rows, aligned with the original profession banner. */
 @media all {
   .sheet-reader .native-editor .sheet-header {
-    grid-template-columns: 264.431px repeat(3,minmax(0,1fr)) 56px;
+    grid-template-columns: 264.431px minmax(0,1.2fr) minmax(0,1fr) 86px 56px;
+    grid-template-rows: 35.0355px 35.0355px;
+    align-items: stretch;
+    gap: 4px 8px;
+    margin-bottom: 22px;
   }
-  .native-editor .sheet-header [aria-label="职业"] { grid-area: 1 / 1 / 4 / 2; }
-  .native-editor .sheet-identity-fields > div:nth-child(2) { grid-area: 1 / 2 / 2 / 4; }
-  .native-editor .sheet-header [aria-label="种族"] { grid-area: 1 / 4 / 2 / 5; }
+  .native-editor .sheet-header [aria-label="职业"] { grid-area: 1 / 1 / 3 / 2; }
+  .native-editor .sheet-identity-fields > div:nth-child(2) { grid-area: 1 / 2 / 2 / 3; }
+  .native-editor .sheet-header [aria-label="种族"] { grid-area: 1 / 3 / 2 / 4; }
   .native-editor .sheet-header [aria-label="社群"] { grid-area: 2 / 2 / 3 / 3; }
-  .native-editor .sheet-header [aria-label="子职业"] { grid-area: 2 / 3 / 3 / 5; }
-  .native-editor .sheet-identity-fields > div:nth-child(6) { grid-area: 3 / 2 / 4 / 3; padding: 0; justify-self: start; }
-  .sheet-reader .native-editor .sheet-header > [aria-label="转变"] { grid-area: 3 / 3 / 4 / 5; }
-  .sheet-reader .native-editor .sheet-level-control { grid-area: 1 / 5 / 4 / 6; }
+  .native-editor .sheet-header [aria-label="子职业"] { grid-area: 2 / 3 / 3 / 4; }
+  .sheet-reader .native-editor .sheet-identity-fields > .sheet-mixed-control { grid-area: 1 / 4 / 2 / 5; padding: 0; justify-self: stretch; height: auto; }
+  .sheet-reader .native-editor .sheet-header > [aria-label="转变"] { grid-area: 2 / 4 / 3 / 5; display: flex; flex-direction: column; align-items: stretch; gap: 1px; }
+  .sheet-reader .native-editor .sheet-level-control { grid-area: 1 / 5 / 3 / 6; align-self: stretch; }
+  .native-editor .sheet-identity-fields > div:not([aria-label="职业"]) { gap: 1px; }
+  .native-editor .sheet-header :is(label,span.text-\\[9px\\]) { font-size: 9px; line-height: 9px; }
+  .sheet-reader .native-editor .sheet-header :is(input.h-7,.group.h-7:not(.profession-choice),[role=switch],.sheet-transformation-card) { height: 25px; min-height: 25px; }
+  .native-editor .sheet-header [role=switch] { width: 100%; justify-content: center; padding-inline: 5px; gap: 5px; box-shadow: none; }
+  .sheet-reader .native-editor .sheet-header > .sheet-transformation-control > div { flex: initial; }
+  .sheet-transformation-fields > [role=switch] { flex: 1; }
+  .sheet-transformation-control[data-enabled=true] .sheet-transformation-fields > [role=switch] { flex: 0 0 23px; width: 23px; padding: 0; }
+  .sheet-reader .native-editor .sheet-level-frame { height: 52px; width: 56px; }
+  .native-editor .sheet-level-control > button { height: 18px; min-height: 18px; line-height: 18px; padding: 0 3px; font-size: 8px; white-space: nowrap; }
+  .sheet-reader .native-editor .sheet-attribute-heading { padding: 3px 6px; gap: 3px; min-height: 25px; }
+  .native-editor .sheet-attribute-heading > div:first-child { flex-wrap: nowrap; gap: 2px; }
+  .native-editor .sheet-attribute-heading > div:first-child :is(button,span) { margin-left: 0; }
+  .native-editor .sheet-attribute-heading > [role=checkbox] { flex-shrink: 0; margin-right: 1px; }
+  .native-editor .sheet-attribute[data-spellcasting=true] .sheet-attribute-heading::before { bottom: calc(100% + 2px); left: 6px; right: 6px; }
+  .native-panel-heading::before { border-top-color: var(--sheet-primary); }
+  .native-upgrade-toggle { border-bottom-color: var(--sheet-primary); }
+  .native-editor .profession-story-section > .grid > div > div:first-child { border-bottom-color: var(--sheet-primary); }
+  .native-editor .sheet-equipment-slot .notebook-textarea { font-size: 14px; }
 }
 @media screen and (max-width: 1023px) {
-  .sheet-reader .native-editor .sheet-header { grid-template-columns: minmax(0,1fr) minmax(0,1fr) 56px; }
+  .sheet-reader .native-editor .sheet-header { grid-template-columns: minmax(0,1fr) minmax(0,1fr) 56px; grid-template-rows: auto; gap: 10px 8px; }
   .sheet-reader .native-editor .sheet-header [aria-label="职业"] { grid-area: 1 / 1 / 2 / 3; }
-  .sheet-reader .native-editor .sheet-level-control { grid-area: 1 / 3 / 2 / 4; }
+  .sheet-reader .native-editor .sheet-level-control { grid-area: 1 / 3 / 2 / 4; align-self: start; }
   .native-editor .sheet-identity-fields > div:nth-child(2) { grid-area: 2 / 1 / 3 / 4; }
   .native-editor .sheet-header [aria-label="种族"] { grid-area: 3 / 1 / 4 / 4; }
   .native-editor .sheet-header [aria-label="社群"] { grid-area: 4 / 1 / 5 / 2; }
   .native-editor .sheet-header [aria-label="子职业"] { grid-area: 4 / 2 / 5 / 4; }
-  .native-editor .sheet-identity-fields > div:nth-child(6) { grid-area: 5 / 1 / 6 / 2; justify-self: stretch; }
+  .sheet-reader .native-editor .sheet-identity-fields > .sheet-mixed-control { grid-area: 5 / 1 / 6 / 2; justify-self: stretch; }
   .sheet-reader .native-editor .sheet-header > [aria-label="转变"] { grid-area: 5 / 2 / 6 / 4; }
+  .sheet-reader .native-editor .sheet-header :is(input.h-7,.group.h-7:not(.profession-choice),[role=switch],.sheet-transformation-card) { height: 44px; min-height: 44px; }
+  .native-editor .sheet-header :is(label,span.text-\\[9px\\]) { font-size: 12px; line-height: 16px; }
+  .native-editor .sheet-identity-fields > div:not([aria-label="职业"]), .sheet-reader .native-editor .sheet-header > [aria-label="转变"] { gap: 4px; }
+  .sheet-reader .native-editor .sheet-level-frame { height: 56px; }
+  .native-editor .sheet-level-control > button { height: 24px; min-height: 24px; line-height: 24px; font-size: 9px; }
+  .sheet-reader .native-editor .sheet-attributes > .grid { row-gap: 22px; }
+  .sheet-transformation-control[data-enabled=true] .sheet-transformation-fields > [role=switch] { flex-basis: 44px; width: 44px; }
 }
 @media screen and (max-width: 350px) {
   .sheet-reader .native-editor .sheet-level-control { grid-area: 2 / 3 / 4 / 4; }
   .native-editor .sheet-identity-fields > div:nth-child(2) { grid-area: 2 / 1 / 3 / 3; }
   .native-editor .sheet-header [aria-label="种族"] { grid-area: 3 / 1 / 4 / 3; }
 }
+
+.native-editor .native-deck .sheet-deck-grid { row-gap: 22px; }
 
 @media screen and (max-width: 1023px) {
   .equipment-modal.equipment-mobile-dialog {
@@ -4990,6 +4998,29 @@ html {
     break-after: page;
   }
 }
+
+.domain-card-label { display:inline-flex; align-items:center; gap:4px; flex-shrink:0; max-width:100%; min-width:0; padding:1px 3px 0; border-top:2px solid var(--card-domain-color); color:#292929; background:#fff; font:11px/1.2 Arial,sans-serif; vertical-align:middle; }
+.domain-label-art { display:block; width:14px; height:22px; object-fit:contain; flex-shrink:0; }
+.domain-label-name { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:7em; font-weight:600; }
+.domain-label-level { white-space:nowrap; font-variant-numeric:tabular-nums; }
+.domain-label-fallback { display:flex; align-items:center; justify-content:center; width:14px; height:22px; flex-shrink:0; color:var(--card-domain-color); background:white; clip-path:polygon(0 0,100% 0,100% 100%,50% 86%,0 100%); }
+.sheet-domain-slot .domain-card-label { font-size:10px; gap:3px; padding-inline:0; }
+.sheet-domain-slot .domain-label-name { max-width:5em; }
+.domain-print-heading { align-items:flex-start; gap:5px; }
+.domain-print-heading .domain-card-label { margin-top:-1px; font-size:10px; }
+.domain-print-heading > :first-child { white-space:normal; overflow-wrap:anywhere; }
+.sheet-appearance.sheet-print-mono .domain-card-label { border-top-color:#303030; color:#292929; }
+.sheet-appearance.sheet-print-mono .domain-label-fallback { color:#303030; background:white; }
+.sheet-empty-domain-slot { display:flex; align-items:center; justify-content:center; gap:4px; height:100%; min-height:40px; text-align:center; color:#616161; font-size:12px; line-height:1.4; }
+.sheet-empty-domain-slot > span:first-child { color:var(--sheet-primary,#616161); font-size:20px; }
+@media print {
+  .domain-card-label { color:#292929!important; background:#fff!important; print-color-adjust:exact; -webkit-print-color-adjust:exact; }
+  .sheet-empty-domain-slot { display:none!important; }
+}
+/* Keep exported cards neutral, including Markdown emphasis and slate borders. */
+.sheet-appearance.sheet-print-mono .print-deck-section,
+.sheet-appearance.sheet-print-mono .print-deck-section * { color:#292929!important; border-color:#707070!important; }
+.print-all-pages .sheet-empty-domain-slot { display:none!important; }
 .file\\:border-0::file-selector-button {
   border-width: 0px;
 }
@@ -6696,7 +6727,7 @@ export function getStylesInfo() {
     size: embeddedStyles.length,
     sizeKB: (embeddedStyles.length / 1024).toFixed(2),
     sizeMB: (embeddedStyles.length / 1024 / 1024).toFixed(2),
-    generated: '2026-11-16T20:05:53.102Z',
+    generated: '2026-11-17T07:10:06.313Z',
     compressed: false
   };
 }

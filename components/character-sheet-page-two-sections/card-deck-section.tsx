@@ -1,4 +1,5 @@
 "use client"
+import { DomainCardLabel } from "@/components/ui/domain-card-label"
 
 import type React from "react"
 import { useState, useRef, memo, useCallback, useEffect } from "react"
@@ -124,7 +125,11 @@ function Card({
 
   return (
     <div
-      className={`relative cursor-pointer transition-colors rounded-md p-1 h-16 group ${isSelected ? "border-3" : "border"
+      role={!isSpecial && isEmptyCard(standardCard) ? "button" : undefined}
+      aria-label={!isSpecial && isEmptyCard(standardCard) ? "点击添加新领域卡" : undefined}
+      tabIndex={!isSpecial && isEmptyCard(standardCard) ? 0 : undefined}
+      onKeyDown={event => { if (event.target === event.currentTarget && !isSpecial && isEmptyCard(standardCard) && (event.key === "Enter" || event.key === " ")) { event.preventDefault(); onCardClick(index) } }}
+      className={`relative ${standardCard?.type === "domain" ? "sheet-domain-slot" : ""} cursor-pointer transition-colors rounded-md p-1 h-16 group ${isSelected ? "border-3" : "border"
         } ${getBorderColor(isSpecial)}`}
       onClick={() => onCardClick(index)}
       onContextMenu={(e) => onCardRightClick(index, e)}
@@ -181,15 +186,17 @@ function Card({
         </div>
       )}
 
+      {!isSpecial && isEmptyCard(standardCard) && <div className="sheet-empty-domain-slot print:hidden"><span aria-hidden="true">＋</span><span>点击添加新领域卡</span></div>}
+
       {/* 分隔线 */}
-      <div className="h-px bg-gray-300 w-full my-0.5"></div>
+      {card?.name && <div className="h-px bg-gray-300 w-full my-0.5"></div>}
 
       {/* 卡牌底部信息 */}
       {card?.name && (
         <div className="flex justify-between items-center !text-xs text-gray-500">
-          <span className="truncate max-w-[33%]">
+          {standardCard?.type === 'domain' ? <DomainCardLabel card={standardCard} /> : <span className="truncate max-w-[33%]">
             {standardCard?.cardSelectDisplay?.item1 || ""}
-          </span>
+          </span>}
           <span className="truncate max-w-[33%]">{standardCard ? getCompactCardTier(standardCard) : ""}</span>
           <span className="truncate max-w-[33%]">{standardCard?.cardSelectDisplay?.item3 || ""}</span>
         </div>
@@ -205,7 +212,7 @@ function Card({
       )}
 
       {/* 卡牌类型标签 */}
-      {!isSpecial && card?.name && standardCard?.type && (
+      {!isSpecial && card?.name && standardCard?.type && standardCard.type !== 'domain' && (
         <div className="absolute -top-4 left-0 right-0 text-center">
           <span
             className={`text-[10px] font-medium px-1 py-0 rounded-t-sm border border-b-0 ${isVariantCard(standardCard)

@@ -1,0 +1,24 @@
+{
+  "text-color": {
+    "pages": 3,
+    "A4": true,
+    "domainLabelsInText": true
+  },
+  "text-mono": {
+    "pages": 3,
+    "A4": true,
+    "coloredPixels": 0,
+    "domainLabelsInText": true
+  },
+  "illustrated-color": {
+    "pages": 3,
+    "A4": true,
+    "domainLabelsInText": true
+  },
+  "illustrated-mono": {
+    "pages": 3,
+    "A4": true,
+    "coloredPixels": 0,
+    "domainLabelsInText": true
+  }
+}

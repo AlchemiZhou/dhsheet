@@ -49,6 +49,16 @@ describe('card deck preview input handling', () => {
     expect(container.querySelectorAll('.sheet-deck-grid > div')).toHaveLength(7)
     expect(sheet.cards[8].name).toBe('测试领域卡')
   })
+  it('labels the empty domain slot and opens its picker with either keyboard activation key', () => {
+    render(<CardDeckSection formData={sheet} />)
+    const empty = screen.getByRole('button', { name: '点击添加新领域卡' })
+    expect(empty).toHaveTextContent('点击添加新领域卡')
+    for (const key of ['Enter', ' ']) {
+      fireEvent.keyDown(empty, { key })
+      expect(screen.getByRole('dialog', { name: '选择领域卡' })).toBeInTheDocument()
+      fireEvent.click(screen.getByText('关闭选卡'))
+    }
+  })
   it('ignores compatibility mouse events on phones when tapping an already selected card', () => {
     viewport.mobile = true
     render(<CardDeckSection formData={sheet} />)

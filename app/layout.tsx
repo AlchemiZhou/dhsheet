@@ -195,8 +195,8 @@ export default function RootLayout({
               作者：RidRisR
               <br />
               翻译及校对：PolearmMaster, 末楔, 里予, 一得, RisRisR
+              <CardArtworkToggle />
             </div>
-            <CardArtworkToggle floating />
           </ProgressModalProvider>
         </ThemeProvider>
       </body>

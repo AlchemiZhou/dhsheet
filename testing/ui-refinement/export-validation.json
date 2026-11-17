@@ -1,0 +1,14 @@
+{
+  "discreetCredit": true,
+  "exports": [
+    {
+      "illustrated": false,
+      "externalRequests": 0
+    },
+    {
+      "illustrated": true,
+      "externalRequests": 0
+    }
+  ],
+  "pageErrors": []
+}
