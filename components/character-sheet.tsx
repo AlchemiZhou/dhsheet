@@ -1,6 +1,8 @@
 "use client"
 
 import type React from "react"
+import { PaperSheetEditor, type PaperDetail } from "@/components/paper-editor/paper-sheet-editor"
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 
 import { useState, useEffect, useRef } from "react"
 import {
@@ -114,6 +116,8 @@ export default function CharacterSheet({ currentCharacterId }: CharacterSheetPro
     lastAuditedSheetLoadRevisionRef.current = sheetLoadRevision
     auditCardInstancesOnLoad((templateId) => getRuntimeCardById(templateId) ?? undefined)
   }, [auditCardInstancesOnLoad, cardsInitialized, cardsLoading, getRuntimeCardById, sheetLoadRevision])
+
+  const [paperDetails, setPaperDetails] = useState<PaperDetail | undefined>()
 
   // 模态框状态
   const [weaponModalOpen, setWeaponModalOpen] = useState(false)
@@ -288,6 +292,7 @@ export default function CharacterSheet({ currentCharacterId }: CharacterSheetPro
     field?: string,
     levelFilter?: number,
   ) => {
+    setPaperDetails(undefined)
     setCurrentModal({ type, field, levelFilter })
     setModalOpen(true)
   }
@@ -324,18 +329,7 @@ export default function CharacterSheet({ currentCharacterId }: CharacterSheetPro
   }
 
 
-  return (
-    <>
-      {/* 固定位置的按钮 - 移除建卡指引按钮，因为已经移到父组件 */}
-      <div></div>
-
-      <div className="w-full max-w-[210mm] mx-auto">
-        <div
-          className="a4-page sheet-primary-page native-editor p-2 bg-white text-gray-800 shadow-lg print:shadow-none rounded-md"
-          style={{ width: "210mm" }}
-        >
-          {/* Header Section */}
-          <HeaderSection
+  const header = <HeaderSection
             onOpenProfessionModal={openProfessionModal}
             onOpenAncestryModal={openAncestryModal}
             onOpenCommunityModal={openCommunityModal}
@@ -351,6 +345,36 @@ export default function CharacterSheet({ currentCharacterId }: CharacterSheetPro
               if (result.kind === 'failure') toast.error(result.message)
             }}
           />
+  const paperEquipment = (slot: 'main' | 'off' | 'armor' | 'reserve1' | 'reserve2') => {
+    setPaperDetails(undefined)
+    if (slot === 'armor') openArmorModal()
+    else openWeaponModal(slot === 'main' ? { slotType: 'primary' } : slot === 'off' ? { slotType: 'secondary' } : { slotType: 'inventory', index: slot === 'reserve1' ? 0 : 1 })
+  }
+  const paperChoice = (kind: 'profession' | 'ancestry' | 'community' | 'subclass') => {
+    if (kind === 'profession') openProfessionModal()
+    if (kind === 'ancestry') mixedAncestry ? setPaperDetails('identity') : openAncestryModal('ancestry1')
+    if (kind === 'community') openCommunityModal()
+    if (kind === 'subclass') openSubclassModal()
+  }
+
+
+  return (
+    <>
+      {/* 固定位置的按钮 - 移除建卡指引按钮，因为已经移到父组件 */}
+      <div></div>
+
+      <PaperSheetEditor page={1} onDetails={setPaperDetails} onChoice={paperChoice} onEquipment={paperEquipment} onMixedChange={setMixedAncestry} onTransformationChange={enabled => {
+        const result = setTransformationEnabled(enabled)
+        if (result.kind === 'failure') { toast.error(result.message); return }
+        if (enabled && !getSelectedTransformationCard(safeFormData)?.id) openGenericModal('transformation')
+      }} onConfigureTransformation={() => openGenericModal('transformation')}>
+      <div className="w-full max-w-[210mm] mx-auto">
+        <div
+          className="a4-page sheet-primary-page native-editor p-2 bg-white text-gray-800 shadow-lg print:shadow-none rounded-md"
+          style={{ width: "210mm" }}
+        >
+          {/* Header Section */}
+          {header}
 
           <div className="native-summary">
             <div className="native-defenses">
@@ -522,6 +546,24 @@ export default function CharacterSheet({ currentCharacterId }: CharacterSheetPro
         </div>
       </div>
 
+      </PaperSheetEditor>
+      <Dialog open={Boolean(paperDetails)} onOpenChange={open => { if (!open) setPaperDetails(undefined) }}>
+        <DialogContent className="paper-details-dialog">
+          <DialogTitle>编辑角色卡</DialogTitle>
+          <DialogDescription className="sr-only">更改会同步到当前角色卡。</DialogDescription>
+          <div className="paper-details-body">
+            {paperDetails === 'identity' && <HeaderSection {...header.props} nativeBanner={false} />}
+            {paperDetails === 'resources' && <HitPointsSection />}
+            {paperDetails === 'attributes' && <AttributesSection />}
+            {paperDetails === 'hope' && <HopeSection />}
+            {paperDetails === 'main' && <WeaponSection isPrimary slotType="primary" onOpenWeaponModal={() => paperEquipment('main')} />}
+            {paperDetails === 'off' && <WeaponSection isPrimary={false} slotType="secondary" onOpenWeaponModal={() => paperEquipment('off')} />}
+            {paperDetails === 'armor' && <ArmorSection onOpenArmorModal={() => paperEquipment('armor')} />}
+            {paperDetails === 'reserve1' && <InventoryWeaponSection index={0} onOpenWeaponModal={() => paperEquipment('reserve1')} />}
+            {paperDetails === 'reserve2' && <InventoryWeaponSection index={1} onOpenWeaponModal={() => paperEquipment('reserve2')} />}
+          </div>
+        </DialogContent>
+      </Dialog>
       {/* Modals */}
       <WeaponSelectionModal
         isOpen={weaponModalOpen}

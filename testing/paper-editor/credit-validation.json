@@ -1,0 +1,27 @@
+{
+  "desktop": {
+    "font": "12px",
+    "parentFont": "12px",
+    "color": "rgb(136, 136, 136)",
+    "parentColor": "rgb(136, 136, 136)",
+    "position": "static",
+    "border": "0px",
+    "padding": "0px",
+    "last": true,
+    "height": 16
+  },
+  "togglePersistence": true,
+  "upgradePickerOutsideInspector": true,
+  "mobile": {
+    "font": "12px",
+    "parentFont": "12px",
+    "color": "rgb(136, 136, 136)",
+    "parentColor": "rgb(136, 136, 136)",
+    "position": "static",
+    "border": "0px",
+    "padding": "0px",
+    "last": true,
+    "height": 16
+  },
+  "pageErrors": []
+}

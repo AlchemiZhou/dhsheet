@@ -18,6 +18,7 @@ import { getBasePath } from "@/lib/utils"
 import { EditorTypeface } from "@/components/layout/editor-panel"
 
 interface HeaderSectionProps {
+  nativeBanner?: boolean;
   onOpenProfessionModal: () => void;
   onOpenAncestryModal: (field: string) => void;
   onOpenCommunityModal: () => void;
@@ -32,6 +33,7 @@ interface HeaderSectionProps {
 }
 
 export function HeaderSection({
+  nativeBanner = true,
   onOpenProfessionModal,
   onOpenAncestryModal,
   onOpenCommunityModal,
@@ -146,7 +148,7 @@ export function HeaderSection({
   const selectedProfessionTitle = formData.professionRef?.name === formData.cards?.[0]?.name || formData.professionRef?.name?.startsWith(`${formData.cards?.[0]?.name}  -  `)
     ? formData.cards?.[0]?.name : formData.professionRef?.name
 
-  const nativeHeaderId = selectedProfessionTitle === getProfessionPreset(formData.cards?.[0])?.name
+  const nativeHeaderId = nativeBanner && selectedProfessionTitle === getProfessionPreset(formData.cards?.[0])?.name
     ? resolveProfessionPresetId(formData.cards?.[0]) : undefined
 
   const completeAncestryCard = getSheetAncestryCard(formData)

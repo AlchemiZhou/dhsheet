@@ -1,0 +1,4 @@
+TypeScript verification
+Command: node_modules/.bin/tsc --noEmit
+Exit code: 0
+Next.js production build also completed its TypeScript validity check.

@@ -29,6 +29,10 @@ import {
   REFERENCE_CHARACTER_PORTRAIT,
   splitReferenceFeature,
 } from "@/character/print-reference/layout";
+import { compactIdentityField } from "@/character/print-reference/identity-controls";
+import { ReferenceIdentityFrames } from "./reference-identity-frames";
+import { Tick } from "./reference-tick";
+import { ReferenceAttributeHeadings } from "./reference-attribute-headings";
 import "./reference-sheet.css";
 
 export interface PrintOverflow {
@@ -39,7 +43,7 @@ export interface PrintOverflow {
 const width = REFERENCE_PAGE_WIDTH,
   height = REFERENCE_PAGE_HEIGHT;
 
-function CharacterPortrait({ image }: { image: string }) {
+function CharacterPortrait({ image }: { image?: string }) {
   const { mask, left, top, sizeMM } = REFERENCE_CHARACTER_PORTRAIT;
   return (
     <>
@@ -66,7 +70,7 @@ function CharacterPortrait({ image }: { image: string }) {
           height: `${sizeMM}mm`,
         }}
       >
-        <img src={image} alt="角色头像" loading="eager" />
+        {image && <img src={image} alt="角色头像" loading="eager" />}
       </div>
     </>
   );
@@ -297,27 +301,22 @@ function FeatureFields({
     </>
   );
 }
-export function Tick({ rect, checked }: { rect: number[]; checked: boolean }) {
-  if (!checked) return null;
-  const [x, y, x2, y2] = rect,
-    w = x2 - x,
-    h = y2 - y;
-  return (
-    <path
-      className="reference-tick"
-      d={`M${x + w * 0.16} ${y + h * 0.53}l${w * 0.24} ${h * 0.28} ${w * 0.47} ${-h * 0.64}`}
-    />
-  );
-}
+export { Tick } from "./reference-tick";
 export function ReferenceSheet({
   sheet,
   id,
   page,
   onOverflow,
+  showEmptyPortrait = false,
+  screenImageSize,
+  compactIdentity = false,
 }: {
   sheet: SheetData;
   id: ProfessionThemeId;
   page: 1 | 2;
+  showEmptyPortrait?: boolean;
+  screenImageSize?: string;
+  compactIdentity?: boolean;
   onOverflow: (entry: PrintOverflow | undefined, key: string) => void;
 }) {
   const preset = PROFESSION_PRESETS[id] as ProfessionPreset;
@@ -327,6 +326,7 @@ export function ReferenceSheet({
   >;
   const values = referenceValues(sheet);
   const fontUrl = `${getBasePath()}/print-templates/form-ink.woff2`;
+  const labelFontUrl = `${getBasePath()}/print-templates/form-label-bold.ttf`;
   const story =
     sheet.professionStory ?? createProfessionStory(sheet.cards?.[0]);
   const modes = storyWritingModes(sheet);
@@ -350,13 +350,17 @@ export function ReferenceSheet({
         <style
           data-reference-font={fontUrl}
         >{`@font-face{font-family:'Reference Ink';src:url('${fontUrl}') format('woff2');font-display:block}`}</style>
+        <style data-reference-font={labelFontUrl}>{`@font-face{font-family:'Reference Labels';src:url('${labelFontUrl}') format('truetype');font-weight:700;font-display:block}`}</style>
         <img
           className="reference-background"
           src={`${getBasePath()}/print-templates/${id}-${page}.webp`}
+          srcSet={screenImageSize ? `${getBasePath()}/print-templates/screen/${id}-${page}.webp 1600w, ${getBasePath()}/print-templates/${id}-${page}.webp 3308w` : undefined}
+          sizes={screenImageSize}
           alt={`${preset.name}第${page}页原版版式`}
           loading="eager"
         />
-        {page === 2 && sheet.characterImage && (
+        {page === 1 && compactIdentity && <ReferenceIdentityFrames id={id} />}
+        {page === 2 && (sheet.characterImage || showEmptyPortrait) && (
           <CharacterPortrait image={sheet.characterImage} />
         )}
         {Object.entries(fields)
@@ -374,7 +378,7 @@ export function ReferenceSheet({
               !name.endsWith("feature2"),
           )
           .map(([name, definition]) => {
-            let adjusted = definition;
+            let adjusted = page === 1 && compactIdentity ? compactIdentityField(name, definition) : definition;
             if (name.endsWith(".feature")) {
               const second = fields[name + "2"];
               if (second)
@@ -568,6 +572,7 @@ export function ReferenceSheet({
             </>
           )}
         </svg>
+        {page === 1 && <ReferenceAttributeHeadings sheet={sheet} id={id} fields={fields} />}
       </div>
     </section>
   );

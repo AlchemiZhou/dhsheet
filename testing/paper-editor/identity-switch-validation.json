@@ -1,0 +1,15 @@
+{
+  "nativeFrames": true,
+  "defaultOff": true,
+  "mixedOnOff": true,
+  "transformationSelectAndReload": true,
+  "exportCardIncluded": true,
+  "controlsNotPrinted": true,
+  "widths": [
+    320,
+    390,
+    768,
+    1440
+  ],
+  "pageErrors": []
+}

@@ -1,0 +1,12 @@
+{
+  "color": {
+    "pages": 3,
+    "A4": true,
+    "coloredPixels": 26147
+  },
+  "mono": {
+    "pages": 3,
+    "A4": true,
+    "coloredPixels": 0
+  }
+}

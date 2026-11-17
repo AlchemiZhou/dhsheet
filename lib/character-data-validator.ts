@@ -1,3 +1,4 @@
+import { isReferenceFieldValues } from "@/character/print-reference/extra-values"
 import { normalizeProfessionStory } from "@/character/profession-setup/story"
 /**
  * 角色数据验证器 - 通用的数据验证和清理功能
@@ -34,6 +35,8 @@ export function validateSheetData(data: any): data is SheetData {
   if (!data || typeof data !== 'object') {
     return false
   }
+
+  if (data.referenceFieldValues !== undefined && !isReferenceFieldValues(data.referenceFieldValues)) return false
 
   // 检查必需字段
   const requiredFields = ['name', 'level', 'gold', 'experience', 'hope', 'inventory', 'cards']
