@@ -1,20 +1,41 @@
 "use client";
 import { useSheetStore } from "@/lib/sheet-store";
-import { getProfessionPreset } from "@/character/profession-setup/catalog";
+import { getProfessionHeaderDisplay } from "@/card/display/profession-header";
+import { ProfessionHeaderArt } from "./profession-header-art";
 import { ProfessionDomainBadges } from "@/components/profession-domain-badges";
 import { createProfessionStory } from "@/character/profession-setup/story";
 import { EditorTypeface } from "./editor-panel";
 
 export function NativeBackHeader() {
   const profession = useSheetStore((s) => s.sheetData.cards?.[0]);
-  const preset = getProfessionPreset(profession);
+  const referenceName = useSheetStore((s) => s.sheetData.professionRef?.name);
+  const { title, nativeId } = getProfessionHeaderDisplay(
+    profession,
+    referenceName,
+  );
+  const domains = [
+    profession?.cardSelectDisplay?.item1,
+    profession?.cardSelectDisplay?.item2,
+  ]
+    .filter(Boolean)
+    .join("、");
   return (
-    <header className="native-back-header">
+    <header
+      className="native-back-header"
+      data-native-header={nativeId ? "true" : undefined}
+    >
       <EditorTypeface />
-      <div>
-        <h2>{preset?.name || profession?.name || "角色指南"}</h2>
-        <ProfessionDomainBadges />
-      </div>
+      {nativeId ? (
+        <ProfessionHeaderArt
+          id={nativeId}
+          alt={`${title}${domains ? `，${domains}` : ""}`}
+        />
+      ) : (
+        <div>
+          <h2>{title || profession?.name || "角色指南"}</h2>
+          <ProfessionDomainBadges />
+        </div>
+      )}
       <p>角色头像、背景与关系</p>
     </header>
   );

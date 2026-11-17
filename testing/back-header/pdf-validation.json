@@ -1,0 +1,22 @@
+[
+  {
+    "file": "text-color.pdf",
+    "pages": 3,
+    "a4": true
+  },
+  {
+    "file": "text-mono.pdf",
+    "pages": 3,
+    "a4": true
+  },
+  {
+    "file": "illustrated-mono.pdf",
+    "pages": 3,
+    "a4": true
+  },
+  {
+    "file": "illustrated-color.pdf",
+    "pages": 3,
+    "a4": true
+  }
+]

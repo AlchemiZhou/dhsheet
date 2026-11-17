@@ -1,0 +1,222 @@
+{
+  "professions": [
+    {
+      "id": "bard",
+      "identicalBanner": true,
+      "src": "/dhsheet/print-templates/profession-headers/bard.webp",
+      "width": 264.421875,
+      "height": 74.0625,
+      "naturalWidth": 1102
+    },
+    {
+      "id": "druid",
+      "identicalBanner": true,
+      "src": "/dhsheet/print-templates/profession-headers/druid.webp",
+      "width": 264.421875,
+      "height": 74.0625,
+      "naturalWidth": 1102
+    },
+    {
+      "id": "guardian",
+      "identicalBanner": true,
+      "src": "/dhsheet/print-templates/profession-headers/guardian.webp",
+      "width": 264.421875,
+      "height": 74.0625,
+      "naturalWidth": 1102
+    },
+    {
+      "id": "ranger",
+      "identicalBanner": true,
+      "src": "/dhsheet/print-templates/profession-headers/ranger.webp",
+      "width": 264.421875,
+      "height": 74.0625,
+      "naturalWidth": 1102
+    },
+    {
+      "id": "rogue",
+      "identicalBanner": true,
+      "src": "/dhsheet/print-templates/profession-headers/rogue.webp",
+      "width": 264.421875,
+      "height": 74.0625,
+      "naturalWidth": 1102
+    },
+    {
+      "id": "seraph",
+      "identicalBanner": true,
+      "src": "/dhsheet/print-templates/profession-headers/seraph.webp",
+      "width": 264.421875,
+      "height": 74.0625,
+      "naturalWidth": 1102
+    },
+    {
+      "id": "sorcerer",
+      "identicalBanner": true,
+      "src": "/dhsheet/print-templates/profession-headers/sorcerer.webp",
+      "width": 264.421875,
+      "height": 74.0625,
+      "naturalWidth": 1102
+    },
+    {
+      "id": "warrior",
+      "identicalBanner": true,
+      "src": "/dhsheet/print-templates/profession-headers/warrior.webp",
+      "width": 264.421875,
+      "height": 74.0625,
+      "naturalWidth": 1102
+    },
+    {
+      "id": "wizard",
+      "identicalBanner": true,
+      "src": "/dhsheet/print-templates/profession-headers/wizard.webp",
+      "width": 264.421875,
+      "height": 74.0625,
+      "naturalWidth": 1102
+    },
+    {
+      "id": "assassin",
+      "identicalBanner": true,
+      "src": "/dhsheet/print-templates/profession-headers/assassin.webp",
+      "width": 264.421875,
+      "height": 74.0625,
+      "naturalWidth": 1102
+    },
+    {
+      "id": "brawler",
+      "identicalBanner": true,
+      "src": "/dhsheet/print-templates/profession-headers/brawler.webp",
+      "width": 264.421875,
+      "height": 74.0625,
+      "naturalWidth": 1102
+    },
+    {
+      "id": "warlock",
+      "identicalBanner": true,
+      "src": "/dhsheet/print-templates/profession-headers/warlock.webp",
+      "width": 264.421875,
+      "height": 74.0625,
+      "naturalWidth": 1102
+    },
+    {
+      "id": "witch",
+      "identicalBanner": true,
+      "src": "/dhsheet/print-templates/profession-headers/witch.webp",
+      "width": 264.421875,
+      "height": 74.0625,
+      "naturalWidth": 1102
+    }
+  ],
+  "viewports": [
+    {
+      "width": 320,
+      "tab": "第一页",
+      "overflow": false,
+      "banner": {
+        "src": "/dhsheet/print-templates/profession-headers/witch.webp",
+        "width": 264.421875,
+        "height": 74.0625,
+        "naturalWidth": 1102
+      }
+    },
+    {
+      "width": 320,
+      "tab": "第二页",
+      "overflow": false,
+      "banner": {
+        "src": "/dhsheet/print-templates/profession-headers/witch.webp",
+        "width": 264.421875,
+        "height": 74.0625,
+        "naturalWidth": 1102
+      }
+    },
+    {
+      "width": 390,
+      "tab": "第一页",
+      "overflow": false,
+      "banner": {
+        "src": "/dhsheet/print-templates/profession-headers/witch.webp",
+        "width": 264.421875,
+        "height": 74.0625,
+        "naturalWidth": 1102
+      }
+    },
+    {
+      "width": 390,
+      "tab": "第二页",
+      "overflow": false,
+      "banner": {
+        "src": "/dhsheet/print-templates/profession-headers/witch.webp",
+        "width": 264.421875,
+        "height": 74.0625,
+        "naturalWidth": 1102
+      }
+    },
+    {
+      "width": 768,
+      "tab": "第一页",
+      "overflow": false,
+      "banner": {
+        "src": "/dhsheet/print-templates/profession-headers/witch.webp",
+        "width": 264.421875,
+        "height": 74.0625,
+        "naturalWidth": 1102
+      }
+    },
+    {
+      "width": 768,
+      "tab": "第二页",
+      "overflow": false,
+      "banner": {
+        "src": "/dhsheet/print-templates/profession-headers/witch.webp",
+        "width": 264.421875,
+        "height": 74.0625,
+        "naturalWidth": 1102
+      }
+    },
+    {
+      "width": 1024,
+      "tab": "第一页",
+      "overflow": false,
+      "banner": {
+        "src": "/dhsheet/print-templates/profession-headers/witch.webp",
+        "width": 264.421875,
+        "height": 74.0625,
+        "naturalWidth": 1102
+      }
+    },
+    {
+      "width": 1024,
+      "tab": "第二页",
+      "overflow": false,
+      "banner": {
+        "src": "/dhsheet/print-templates/profession-headers/witch.webp",
+        "width": 264.421875,
+        "height": 74.0625,
+        "naturalWidth": 1102
+      }
+    },
+    {
+      "width": 1440,
+      "tab": "第一页",
+      "overflow": false,
+      "banner": {
+        "src": "/dhsheet/print-templates/profession-headers/witch.webp",
+        "width": 264.421875,
+        "height": 74.0625,
+        "naturalWidth": 1102
+      }
+    },
+    {
+      "width": 1440,
+      "tab": "第二页",
+      "overflow": false,
+      "banner": {
+        "src": "/dhsheet/print-templates/profession-headers/witch.webp",
+        "width": 264.421875,
+        "height": 74.0625,
+        "naturalWidth": 1102
+      }
+    }
+  ],
+  "reload": true,
+  "pageErrors": []
+}

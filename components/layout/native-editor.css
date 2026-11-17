@@ -419,3 +419,12 @@
 }
 
 .native-editor .native-deck .sheet-deck-grid { row-gap: 22px; }
+
+/* The back page reuses the front page's original profession lockup at the same size. */
+.native-editor .native-back-header[data-native-header=true] { padding:0 16px 7px 0; align-items:center; }
+.native-back-header[data-native-header=true] > .native-profession-art { flex:0 0 264.431px; margin:0; }
+.native-back-header[data-native-header=true] > p { margin:0; min-width:0; }
+@media screen and (max-width:1023px) {
+  .native-editor .native-back-header[data-native-header=true] { flex-wrap:wrap; gap:6px 0; padding:0 12px 8px 0; }
+  .native-back-header[data-native-header=true] > p { flex:0 0 100%; padding-left:12px; }
+}

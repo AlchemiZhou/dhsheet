@@ -71,9 +71,9 @@ function IllustratedPrintImageCard({ card }: PrintImageCardProps) {
     const displayItem4 = card.cardSelectDisplay?.item4 || ""
 
     return (
-        <div className="flex flex-col overflow-hidden rounded-lg border border-gray-400 bg-white h-full shadow-sm print-card">
+        <div className="flex flex-col overflow-hidden rounded-lg border border-gray-400 bg-white h-full shadow-sm print-card" data-card-domain={card.type === CardType.Domain ? "true" : undefined}>
             {/* 图片容器 */}
-            <div className="relative w-full aspect-[1.6] overflow-hidden bg-gray-100">
+            <div className="relative w-full aspect-[1.6] overflow-hidden bg-gray-100 print-card-artwork">
                 {imageSrc && (
                     <Image
                         src={imageSrc}
@@ -85,16 +85,20 @@ function IllustratedPrintImageCard({ card }: PrintImageCardProps) {
                         priority
                     />
                 )}
+                {card.type === CardType.Domain && <DomainCardLabel card={card} variant="ribbon" />}
             </div>
 
             {/* 标题栏 */}
-            <div className={`px-2 py-1.5 border-b border-gray-200 bg-gray-50 print-card-header ${card.type === CardType.Domain ? "domain-print-summary" : ""}`}>
-                {card.type === CardType.Domain && <DomainCardLabel card={card} variant="ribbon" />}
+            <div className={`px-2 py-1.5 border-b border-gray-200 bg-gray-50 print-card-header ${card.type === CardType.Domain ? "print-domain-header" : ""}`}>
                 <div className="flex items-center justify-between gap-2">
+
                     <h3 className="text-sm font-bold text-gray-900 leading-none flex-1">{displayName}</h3>
                     {card.type !== CardType.Domain && <span className="print-card-type text-[11px] font-medium text-gray-600 flex-shrink-0">{getDisplayTypeName(card)}</span>}
+                    {card.type === CardType.Domain && <div className="print-domain-metadata">
+                        {[displayItem1, displayItem2, displayItem3].filter(Boolean).map((item, index) => <span key={index}>{item}</span>)}
+                    </div>}
                 </div>
-                {(displayItem1 || displayItem2 || displayItem3 || displayItem4) && (
+                {card.type !== CardType.Domain && (displayItem1 || displayItem2 || displayItem3 || displayItem4) && (
                     <div className="flex flex-row flex-wrap items-center gap-2 print-card-tags mt-0.5">
                         {displayItem1 && <div className="text-[9px] font-medium text-gray-500">{displayItem1}</div>}
                         {displayItem2 && <div className="text-[9px] font-medium text-gray-500">{displayItem2}</div>}

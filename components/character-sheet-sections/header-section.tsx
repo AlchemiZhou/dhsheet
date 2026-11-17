@@ -13,8 +13,8 @@ import { PageHeader } from "@/components/page-header"
 import { getSheetAncestryCard } from '@/character/ancestry/complete-card'
 import { ProfessionDomainBadges } from '@/components/profession-domain-badges'
 
-import { getProfessionPreset, resolveProfessionPresetId } from "@/character/profession-setup/catalog"
-import { getBasePath } from "@/lib/utils"
+import { getProfessionHeaderDisplay } from "@/card/display/profession-header"
+import { ProfessionHeaderArt } from "@/components/layout/profession-header-art"
 import { EditorTypeface } from "@/components/layout/editor-panel"
 
 interface HeaderSectionProps {
@@ -143,11 +143,7 @@ export function HeaderSection({
     minFontSize: 10
   })
 
-  const selectedProfessionTitle = formData.professionRef?.name === formData.cards?.[0]?.name || formData.professionRef?.name?.startsWith(`${formData.cards?.[0]?.name}  -  `)
-    ? formData.cards?.[0]?.name : formData.professionRef?.name
-
-  const nativeHeaderId = selectedProfessionTitle === getProfessionPreset(formData.cards?.[0])?.name
-    ? resolveProfessionPresetId(formData.cards?.[0]) : undefined
+  const { title: selectedProfessionTitle, nativeId: nativeHeaderId } = getProfessionHeaderDisplay(formData.cards?.[0], formData.professionRef?.name)
 
   const completeAncestryCard = getSheetAncestryCard(formData)
   const {
@@ -195,7 +191,7 @@ export function HeaderSection({
         className="min-w-0 flex-1 truncate px-2 py-0.5 text-left text-xs text-gray-800 hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500"
       >
         {field === 'professionRef' && nativeHeaderId
-          ? <img className="native-profession-art" src={`${getBasePath()}/print-templates/profession-headers/${nativeHeaderId}.webp`} alt="" />
+          ? <ProfessionHeaderArt id={nativeHeaderId} />
           : displayName || choiceName || <span className="print:hidden">{placeholder}</span>}
       </button>
       {reference?.name && <button
