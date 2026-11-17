@@ -21,3 +21,11 @@ The explicit Browserslist target includes Chromium 70, Firefox 67 and Safari 12.
 Some privacy-restricted WebViews expose `navigator.serviceWorker` but throw `SecurityError` when read or when registering. Worker retirement is optional to opening the character editor, so synchronous and asynchronous registration failures are logged with `[ServiceWorkerLifecycle]` and isolated from React effects. They do not trigger reloads, wipe caches or touch stored characters. Tests cover absent support, rejected registration, a throwing getter and a synchronous exception. Remove this isolation only when supported environments guarantee worker access.
 
 Startup diagnostics also capture unhandled promise rejections and error stacks locally; there is no automatic reporting or storage clearing. Device/brand-specific success still requires testing on those actual browsers.
+
+## Domain ribbon identifiers
+
+Domain flags use fixed 37 × 58px boxes, source PNG artwork and SVG level text. Their geometry does not require CSS aspect-ratio, masks, remote fonts or flex-gap. PNG avoids WebP decoding requirements for these identifiers; cached older app chunks retain their existing WebP URLs. HTML export preserves original ribbon bytes instead of passing them through the general WebP canvas encoder. Other illustration formats retain their existing behavior.
+
+Failed or unavailable flag images render a solid SVG fallback with domain text and level retained. Pale Bone/Splendor artwork uses dark numbers; fallback frames use white numbers. Artwork preference and character save schemas are unchanged.
+
+Validation includes desktop scaling, six viewport widths, missing image requests, missing early APIs and opaque offline HTML. The older-API simulation also removes support for addEventListener's signal option when removing AbortController; combining polyfilled signals with a modern native signal brand check is not an accurate old-browser simulation. Actual Firefox/WebKit installation was blocked by the environment's download policy, so those engines and physical Safari/Android vendor browsers are not claimed as tested. Detailed results are under testing/domain-ribbons.

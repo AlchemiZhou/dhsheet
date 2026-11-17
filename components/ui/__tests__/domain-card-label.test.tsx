@@ -1,4 +1,4 @@
-import { cleanup, render } from "@testing-library/react";
+import { cleanup, render, fireEvent } from "@testing-library/react";
 import { afterEach, describe, expect, it } from "vitest";
 import { DomainCardLabel } from "../domain-card-label";
 import { CardContent } from "../card-content";
@@ -31,6 +31,40 @@ describe("shared domain identifiers", () => {
     expect(
       container.querySelector('[aria-label="利刃领域，等级 1"]'),
     ).not.toBeNull();
+  });
+  it("places the level on the ribbon and retains metadata when a PNG cannot load", () => {
+    const { container, rerender } = render(
+      <DomainCardLabel card={domain} variant="ribbon" />,
+    );
+    expect(container.querySelector("img")?.getAttribute("src")).toMatch(
+      /blade\.png$/,
+    );
+    expect(
+      container.querySelector(".domain-ribbon-number text")?.textContent,
+    ).toBe("1");
+    fireEvent.error(container.querySelector("img")!);
+    expect(container.querySelector("img")).toBeNull();
+    expect(container.querySelector(".domain-ribbon-fallback")).not.toBeNull();
+    expect(
+      container.querySelector(".domain-ribbon-number text")?.textContent,
+    ).toBe("1");
+    rerender(
+      <DomainCardLabel
+        card={{ ...domain, class: "骸骨", level: 10 }}
+        variant="ribbon"
+      />,
+    );
+    expect(container.querySelector("img")?.getAttribute("src")).toMatch(
+      /bone\.png$/,
+    );
+    expect(
+      container
+        .querySelector(".domain-ribbon-number text")
+        ?.getAttribute("fill"),
+    ).toBe("#292929");
+    expect(
+      container.querySelector(".domain-ribbon-number text")?.textContent,
+    ).toBe("10");
   });
   it("retains textual labels for missing and custom artwork without broken image requests", () => {
     const { container } = render(

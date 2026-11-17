@@ -380,7 +380,8 @@ class CanvasManager {
  * 将图片转换为Base64（优化版）
  */
 function imageToBase64(img: HTMLImageElement): Promise<string> {
-  if (img.classList.contains("reference-background")) return readPrintAssetDataUrl(img.currentSrc || img.src)
+  // Keep the original PNG ribbon format instead of re-encoding it as WebP.
+  if (img.classList.contains("reference-background") || img.hasAttribute("data-domain-ribbon")) return readPrintAssetDataUrl(img.currentSrc || img.src)
   return new Promise((resolve, reject) => {
     const canvasManager = new CanvasManager()
     

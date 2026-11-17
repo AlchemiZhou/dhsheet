@@ -90,6 +90,21 @@ describe('character export image preparation', () => {
     expect((embeddedData as { imageAssets?: unknown }).imageAssets).toBeUndefined()
   })
 
+  it('preserves PNG ribbon bytes in standalone HTML even when the browser can encode WebP', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
+      ok: true,
+      blob: async () => new Blob(['original-ribbon'], { type: 'image/png' }),
+    }))
+    const transcode = vi.spyOn(HTMLCanvasElement.prototype, 'toDataURL').mockReturnValue('data:image/webp;base64,not-the-original')
+    document.body.innerHTML = '<div class="print-all-pages"><img data-domain-ribbon src="/domain-labels/grace.png" alt=""></div>'
+    const image = document.querySelector('img')!
+    Object.defineProperties(image, { complete: { value: true }, naturalWidth: { value: 160 }, naturalHeight: { value: 253 } })
+    const html = await getHTMLContent(sheet(), { includeStyles: false })
+    const exported = new DOMParser().parseFromString(html, 'text/html')
+    expect(exported.querySelector('img')?.src).toMatch(/^data:image\/png;base64,/)
+    expect(transcode).not.toHaveBeenCalled()
+  })
+
   it('keeps print-only resource values while removing ordinary hidden controls without changing the live sheet', async () => {
     document.body.innerHTML = `<div class="print-all-pages">
       <span class="resource-print-value hidden print:inline">上限 6</span>

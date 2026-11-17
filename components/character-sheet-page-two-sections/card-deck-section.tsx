@@ -1,4 +1,5 @@
 "use client"
+import { getDomainCardLabel } from "@/card/display/domain-label"
 import { DomainCardLabel } from "@/components/ui/domain-card-label"
 
 import type React from "react"
@@ -144,6 +145,7 @@ function Card({
         onHover(null);
       }}
     >
+      {standardCard?.type === "domain" && card?.name && <DomainCardLabel card={standardCard} variant="ribbon" />}
       {/* 卡牌标题 */}
       {card?.name && (
         <div className="group flex items-center justify-between !text-sm font-medium">
@@ -194,9 +196,9 @@ function Card({
       {/* 卡牌底部信息 */}
       {card?.name && (
         <div className="flex justify-between items-center !text-xs text-gray-500">
-          {standardCard?.type === 'domain' ? <DomainCardLabel card={standardCard} /> : <span className="truncate max-w-[33%]">
-            {standardCard?.cardSelectDisplay?.item1 || ""}
-          </span>}
+          <span className="truncate max-w-[33%]">
+            {getDomainCardLabel(standardCard)?.name || standardCard?.cardSelectDisplay?.item1 || ""}
+          </span>
           <span className="truncate max-w-[33%]">{standardCard ? getCompactCardTier(standardCard) : ""}</span>
           <span className="truncate max-w-[33%]">{standardCard?.cardSelectDisplay?.item3 || ""}</span>
         </div>

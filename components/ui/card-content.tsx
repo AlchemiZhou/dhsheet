@@ -1,4 +1,5 @@
 "use client"
+import { getDomainCardLabel } from "@/card/display/domain-label"
 import { DomainCardLabel } from "./domain-card-label"
 
 import React from "react"
@@ -13,18 +14,22 @@ interface CardContentProps {
 
 // 共享的卡牌内容渲染组件
 export const CardContent: React.FC<CardContentProps> = ({ card, className = "" }) => {
+    const domainLabel = getDomainCardLabel(card)
+    const firstLabel = domainLabel?.name || card.cardSelectDisplay?.item1
     return (
         <div className={`${className} flex flex-col h-full`}>
-            <div className={`flex items-center justify-between mb-1 ${card.type === CardType.Domain ? "domain-print-heading" : ""}`}>
-                <span className="font-semibold text-base truncate max-w-[60%]">{card.name}</span>
-                {card.type === CardType.Domain ? <DomainCardLabel card={card} /> : <span className="text-xs text-gray-500">
+            <div className={card.type === CardType.Domain ? "domain-print-summary" : undefined}>
+            {card.type === CardType.Domain && <DomainCardLabel card={card} variant="ribbon" />}
+            <div className="flex items-center justify-between mb-1">
+                <span className={`font-semibold text-base truncate ${card.type === CardType.Domain ? "max-w-full" : "max-w-[60%]"}`}>{card.name}</span>
+                {card.type !== CardType.Domain && <span className="text-xs text-gray-500">
                     {getCardTypeName(card.type as CardType)}
                 </span>}
             </div>
-            {card.cardSelectDisplay && (card.cardSelectDisplay.item1 || card.cardSelectDisplay.item2 || card.cardSelectDisplay.item3 || card.cardSelectDisplay.item4) && (
+            {card.cardSelectDisplay && (firstLabel || card.cardSelectDisplay.item2 || card.cardSelectDisplay.item3 || card.cardSelectDisplay.item4) && (
                 <div className="flex flex-row flex-wrap items-center gap-2 text-xs bg-gray-100 rounded px-2 py-1 mb-4">
-                    {card.type !== CardType.Domain && card.cardSelectDisplay.item1 && <span className="text-gray-800">{card.cardSelectDisplay.item1}</span>}
-                    {card.type !== CardType.Domain && card.cardSelectDisplay.item1 && card.cardSelectDisplay.item2 && <span className="text-gray-400">•</span>}
+                    {firstLabel && <span className="text-gray-800">{firstLabel}</span>}
+                    {firstLabel && card.cardSelectDisplay.item2 && <span className="text-gray-400">•</span>}
                     {card.cardSelectDisplay.item2 && <span className="text-gray-800">{card.cardSelectDisplay.item2}</span>}
                     {card.cardSelectDisplay.item2 && card.cardSelectDisplay.item3 && <span className="text-gray-400">•</span>}
                     {card.cardSelectDisplay.item3 && <span className="text-gray-800">{card.cardSelectDisplay.item3}</span>}
@@ -32,6 +37,7 @@ export const CardContent: React.FC<CardContentProps> = ({ card, className = "" }
                     {card.type !== CardType.Domain && card.cardSelectDisplay.item4 && <span className="text-gray-800">{card.cardSelectDisplay.item4}</span>}
                 </div>
             )}
+            </div>
             {card.description && (
                 <div className="card-description text-xs text-gray-800 leading-snug flex-1">
                     <CardMarkdown

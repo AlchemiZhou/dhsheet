@@ -1,0 +1,42 @@
+[
+  {
+    "mode": "text",
+    "externalRequests": 0,
+    "ribbons": [
+      {
+        "png": true,
+        "width": 160,
+        "loaded": true
+      },
+      {
+        "png": true,
+        "width": 160,
+        "loaded": true
+      }
+    ],
+    "svgLevels": [
+      "1",
+      "1"
+    ]
+  },
+  {
+    "mode": "illustrated",
+    "externalRequests": 0,
+    "ribbons": [
+      {
+        "png": true,
+        "width": 160,
+        "loaded": true
+      },
+      {
+        "png": true,
+        "width": 160,
+        "loaded": true
+      }
+    ],
+    "svgLevels": [
+      "1",
+      "1"
+    ]
+  }
+]

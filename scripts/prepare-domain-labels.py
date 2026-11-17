@@ -22,7 +22,10 @@ with ZipFile(archive) as source:
         raw = source.read(member)
         with Image.open(BytesIO(raw)) as image:
             image = image.convert('RGBA')
-            image.resize((160, round(image.height*160/image.width)), Image.Resampling.LANCZOS).save(output/f'{domain}.webp', lossless=True, method=6)
+            resized = image.resize((160, round(image.height*160/image.width)), Image.Resampling.LANCZOS)
+            # PNG is supported by Safari 12; retain WebP paths for cached older app chunks.
+            resized.save(output/f'{domain}.png', optimize=True)
+            resized.save(output/f'{domain}.webp', lossless=True, method=6)
         manifest['assets'][domain] = {'member':member, 'sha256':hashlib.sha256(raw).hexdigest()}
 (output/'source.json').write_text(json.dumps(manifest, ensure_ascii=False, indent=2)+'\n')
 print('Prepared nine original domain ribbons; Dread/custom domains use the existing icon and domain palette.')

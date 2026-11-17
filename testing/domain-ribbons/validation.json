@@ -1,0 +1,477 @@
+{
+  "profiles": [
+    {
+      "name": "desktop-125-percent",
+      "rows": [
+        {
+          "domain": "grace",
+          "level": "1",
+          "width": 187.421875,
+          "height": 64,
+          "ribbonWidth": 37,
+          "ribbonHeight": 58,
+          "inside": true,
+          "titleGap": 6,
+          "noOverflow": true
+        },
+        {
+          "domain": "arcana",
+          "level": "1",
+          "width": 187.421875,
+          "height": 64,
+          "ribbonWidth": 37,
+          "ribbonHeight": 58,
+          "inside": true,
+          "titleGap": 6,
+          "noOverflow": true
+        },
+        {
+          "domain": "blade",
+          "level": "1",
+          "width": 187.421875,
+          "height": 64,
+          "ribbonWidth": 37,
+          "ribbonHeight": 58,
+          "inside": true,
+          "titleGap": 6,
+          "noOverflow": true
+        },
+        {
+          "domain": "bone",
+          "level": "1",
+          "width": 187.421875,
+          "height": 64,
+          "ribbonWidth": 37,
+          "ribbonHeight": 58,
+          "inside": true,
+          "titleGap": 6,
+          "noOverflow": true
+        },
+        {
+          "domain": "codex",
+          "level": "1",
+          "width": 187.421875,
+          "height": 64,
+          "ribbonWidth": 37,
+          "ribbonHeight": 58,
+          "inside": true,
+          "titleGap": 6,
+          "noOverflow": true
+        },
+        {
+          "domain": "midnight",
+          "level": "1",
+          "width": 187.421875,
+          "height": 64,
+          "ribbonWidth": 37,
+          "ribbonHeight": 58,
+          "inside": true,
+          "titleGap": 6,
+          "noOverflow": true
+        },
+        {
+          "domain": "sage",
+          "level": "1",
+          "width": 187.421875,
+          "height": 64,
+          "ribbonWidth": 37,
+          "ribbonHeight": 58,
+          "inside": true,
+          "titleGap": 6,
+          "noOverflow": true
+        },
+        {
+          "domain": "splendor",
+          "level": "1",
+          "width": 187.421875,
+          "height": 64,
+          "ribbonWidth": 37,
+          "ribbonHeight": 58,
+          "inside": true,
+          "titleGap": 6,
+          "noOverflow": true
+        },
+        {
+          "domain": "valor",
+          "level": "1",
+          "width": 187.421875,
+          "height": 64,
+          "ribbonWidth": 37,
+          "ribbonHeight": 58,
+          "inside": true,
+          "titleGap": 6,
+          "noOverflow": true
+        },
+        {
+          "domain": "dread",
+          "level": "1",
+          "width": 187.421875,
+          "height": 64,
+          "ribbonWidth": 37,
+          "ribbonHeight": 58,
+          "inside": true,
+          "titleGap": 6,
+          "noOverflow": true
+        },
+        {
+          "domain": "bone",
+          "level": "10",
+          "width": 187.421875,
+          "height": 64,
+          "ribbonWidth": 37,
+          "ribbonHeight": 58,
+          "inside": true,
+          "titleGap": 6,
+          "noOverflow": true
+        },
+        {
+          "domain": "custom",
+          "level": "3",
+          "width": 187.421875,
+          "height": 64,
+          "ribbonWidth": 37,
+          "ribbonHeight": 58,
+          "inside": true,
+          "titleGap": 6,
+          "noOverflow": true
+        },
+        {
+          "domain": "grace",
+          "width": 187.421875,
+          "height": 64,
+          "ribbonWidth": 37,
+          "ribbonHeight": 58,
+          "inside": true,
+          "titleGap": 6,
+          "noOverflow": true
+        }
+      ],
+      "viewports": [
+        320,
+        360,
+        390,
+        768,
+        1024,
+        1440
+      ],
+      "selectThroughRibbon": true,
+      "pageErrors": []
+    },
+    {
+      "name": "legacy-mobile-apis",
+      "rows": [
+        {
+          "domain": "grace",
+          "level": "1",
+          "width": 171,
+          "height": 64,
+          "ribbonWidth": 37,
+          "ribbonHeight": 58,
+          "inside": true,
+          "titleGap": 6,
+          "noOverflow": true
+        },
+        {
+          "domain": "arcana",
+          "level": "1",
+          "width": 171,
+          "height": 64,
+          "ribbonWidth": 37,
+          "ribbonHeight": 58,
+          "inside": true,
+          "titleGap": 6,
+          "noOverflow": true
+        },
+        {
+          "domain": "blade",
+          "level": "1",
+          "width": 171,
+          "height": 64,
+          "ribbonWidth": 37,
+          "ribbonHeight": 58,
+          "inside": true,
+          "titleGap": 6,
+          "noOverflow": true
+        },
+        {
+          "domain": "bone",
+          "level": "1",
+          "width": 171,
+          "height": 64,
+          "ribbonWidth": 37,
+          "ribbonHeight": 58,
+          "inside": true,
+          "titleGap": 6,
+          "noOverflow": true
+        },
+        {
+          "domain": "codex",
+          "level": "1",
+          "width": 171,
+          "height": 64,
+          "ribbonWidth": 37,
+          "ribbonHeight": 58,
+          "inside": true,
+          "titleGap": 6,
+          "noOverflow": true
+        },
+        {
+          "domain": "midnight",
+          "level": "1",
+          "width": 171,
+          "height": 64,
+          "ribbonWidth": 37,
+          "ribbonHeight": 58,
+          "inside": true,
+          "titleGap": 6,
+          "noOverflow": true
+        },
+        {
+          "domain": "sage",
+          "level": "1",
+          "width": 171,
+          "height": 64,
+          "ribbonWidth": 37,
+          "ribbonHeight": 58,
+          "inside": true,
+          "titleGap": 6,
+          "noOverflow": true
+        },
+        {
+          "domain": "splendor",
+          "level": "1",
+          "width": 171,
+          "height": 64,
+          "ribbonWidth": 37,
+          "ribbonHeight": 58,
+          "inside": true,
+          "titleGap": 6,
+          "noOverflow": true
+        },
+        {
+          "domain": "valor",
+          "level": "1",
+          "width": 171,
+          "height": 64,
+          "ribbonWidth": 37,
+          "ribbonHeight": 58,
+          "inside": true,
+          "titleGap": 6,
+          "noOverflow": true
+        },
+        {
+          "domain": "dread",
+          "level": "1",
+          "width": 171,
+          "height": 64,
+          "ribbonWidth": 37,
+          "ribbonHeight": 58,
+          "inside": true,
+          "titleGap": 6,
+          "noOverflow": true
+        },
+        {
+          "domain": "bone",
+          "level": "10",
+          "width": 171,
+          "height": 64,
+          "ribbonWidth": 37,
+          "ribbonHeight": 58,
+          "inside": true,
+          "titleGap": 6,
+          "noOverflow": true
+        },
+        {
+          "domain": "custom",
+          "level": "3",
+          "width": 171,
+          "height": 64,
+          "ribbonWidth": 37,
+          "ribbonHeight": 58,
+          "inside": true,
+          "titleGap": 6,
+          "noOverflow": true
+        },
+        {
+          "domain": "grace",
+          "width": 171,
+          "height": 64,
+          "ribbonWidth": 37,
+          "ribbonHeight": 58,
+          "inside": true,
+          "titleGap": 6,
+          "noOverflow": true
+        }
+      ],
+      "viewports": [
+        320,
+        360,
+        390,
+        768,
+        1024,
+        1440
+      ],
+      "selectThroughRibbon": true,
+      "touchGesture": true,
+      "pageErrors": []
+    },
+    {
+      "name": "blocked-ribbon-images",
+      "rows": [
+        {
+          "domain": "grace",
+          "level": "1",
+          "width": 156,
+          "height": 64,
+          "ribbonWidth": 37,
+          "ribbonHeight": 58,
+          "inside": true,
+          "titleGap": 6,
+          "noOverflow": true
+        },
+        {
+          "domain": "arcana",
+          "level": "1",
+          "width": 156,
+          "height": 64,
+          "ribbonWidth": 37,
+          "ribbonHeight": 58,
+          "inside": true,
+          "titleGap": 6,
+          "noOverflow": true
+        },
+        {
+          "domain": "blade",
+          "level": "1",
+          "width": 156,
+          "height": 64,
+          "ribbonWidth": 37,
+          "ribbonHeight": 58,
+          "inside": true,
+          "titleGap": 6,
+          "noOverflow": true
+        },
+        {
+          "domain": "bone",
+          "level": "1",
+          "width": 156,
+          "height": 64,
+          "ribbonWidth": 37,
+          "ribbonHeight": 58,
+          "inside": true,
+          "titleGap": 6,
+          "noOverflow": true
+        },
+        {
+          "domain": "codex",
+          "level": "1",
+          "width": 156,
+          "height": 64,
+          "ribbonWidth": 37,
+          "ribbonHeight": 58,
+          "inside": true,
+          "titleGap": 6,
+          "noOverflow": true
+        },
+        {
+          "domain": "midnight",
+          "level": "1",
+          "width": 156,
+          "height": 64,
+          "ribbonWidth": 37,
+          "ribbonHeight": 58,
+          "inside": true,
+          "titleGap": 6,
+          "noOverflow": true
+        },
+        {
+          "domain": "sage",
+          "level": "1",
+          "width": 156,
+          "height": 64,
+          "ribbonWidth": 37,
+          "ribbonHeight": 58,
+          "inside": true,
+          "titleGap": 6,
+          "noOverflow": true
+        },
+        {
+          "domain": "splendor",
+          "level": "1",
+          "width": 156,
+          "height": 64,
+          "ribbonWidth": 37,
+          "ribbonHeight": 58,
+          "inside": true,
+          "titleGap": 6,
+          "noOverflow": true
+        },
+        {
+          "domain": "valor",
+          "level": "1",
+          "width": 156,
+          "height": 64,
+          "ribbonWidth": 37,
+          "ribbonHeight": 58,
+          "inside": true,
+          "titleGap": 6,
+          "noOverflow": true
+        },
+        {
+          "domain": "dread",
+          "level": "1",
+          "width": 156,
+          "height": 64,
+          "ribbonWidth": 37,
+          "ribbonHeight": 58,
+          "inside": true,
+          "titleGap": 6,
+          "noOverflow": true
+        },
+        {
+          "domain": "bone",
+          "level": "10",
+          "width": 156,
+          "height": 64,
+          "ribbonWidth": 37,
+          "ribbonHeight": 58,
+          "inside": true,
+          "titleGap": 6,
+          "noOverflow": true
+        },
+        {
+          "domain": "custom",
+          "level": "3",
+          "width": 156,
+          "height": 64,
+          "ribbonWidth": 37,
+          "ribbonHeight": 58,
+          "inside": true,
+          "titleGap": 6,
+          "noOverflow": true
+        },
+        {
+          "domain": "grace",
+          "width": 156,
+          "height": 64,
+          "ribbonWidth": 37,
+          "ribbonHeight": 58,
+          "inside": true,
+          "titleGap": 6,
+          "noOverflow": true
+        }
+      ],
+      "viewports": [
+        320,
+        360,
+        390,
+        768,
+        1024,
+        1440
+      ],
+      "selectThroughRibbon": true,
+      "touchGesture": true,
+      "pageErrors": []
+    }
+  ]
+}

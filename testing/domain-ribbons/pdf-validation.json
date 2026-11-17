@@ -1,0 +1,24 @@
+{
+  "text-color": {
+    "pages": 3,
+    "A4": true,
+    "selectableLevelNumbers": 2
+  },
+  "text-mono": {
+    "pages": 3,
+    "A4": true,
+    "coloredPixels": 0,
+    "selectableLevelNumbers": 2
+  },
+  "illustrated-color": {
+    "pages": 3,
+    "A4": true,
+    "selectableLevelNumbers": 2
+  },
+  "illustrated-mono": {
+    "pages": 3,
+    "A4": true,
+    "coloredPixels": 0,
+    "selectableLevelNumbers": 2
+  }
+}

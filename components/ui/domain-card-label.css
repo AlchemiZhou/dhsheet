@@ -5,9 +5,6 @@
 .domain-label-fallback { display:flex; align-items:center; justify-content:center; width:14px; height:22px; flex-shrink:0; color:var(--card-domain-color); background:white; clip-path:polygon(0 0,100% 0,100% 100%,50% 86%,0 100%); }
 .sheet-domain-slot .domain-card-label { font-size:10px; gap:3px; padding-inline:0; }
 .sheet-domain-slot .domain-label-name { max-width:5em; }
-.domain-print-heading { align-items:flex-start; gap:5px; }
-.domain-print-heading .domain-card-label { margin-top:-1px; font-size:10px; }
-.domain-print-heading > :first-child { white-space:normal; overflow-wrap:anywhere; }
 .sheet-appearance.sheet-print-mono .domain-card-label { border-top-color:#303030; color:#292929; }
 .sheet-appearance.sheet-print-mono .domain-label-fallback { color:#303030; background:white; }
 .sheet-empty-domain-slot { display:flex; align-items:center; justify-content:center; gap:4px; height:100%; min-height:40px; text-align:center; color:#616161; font-size:12px; line-height:1.4; }
@@ -20,3 +17,28 @@
 .sheet-appearance.sheet-print-mono .print-deck-section,
 .sheet-appearance.sheet-print-mono .print-deck-section * { color:#292929!important; border-color:#707070!important; }
 .print-all-pages .sheet-empty-domain-slot { display:none!important; }
+
+/* The supplied reference uses a full-height left ribbon, with the level above its emblem. */
+.domain-card-label.domain-card-label--ribbon {
+  display:block; position:absolute; top:0; left:3px; width:37px; height:58px;
+  min-width:37px; max-width:none; margin:0; padding:0; border:0; background:transparent;
+  pointer-events:none;
+}
+.domain-card-label--ribbon .domain-label-art { width:37px; height:58px; max-width:none; object-fit:contain; }
+.domain-ribbon-number,.domain-ribbon-fallback { position:absolute; top:0; left:0; display:block; width:37px; height:58px; overflow:visible; }
+.domain-ribbon-field { fill:var(--card-domain-color); }
+.domain-ribbon-edge { fill:none; stroke:#e8c469; stroke-width:1; }
+.sheet-appearance.sheet-print-mono .domain-ribbon-field { fill:#303030; }
+.sheet-appearance.sheet-print-mono .domain-ribbon-edge { stroke:#b0b0b0; }
+.sheet-domain-slot { padding-left:46px; }
+.sheet-domain-slot > .domain-card-label--ribbon { top:0; left:3px; }
+.domain-print-summary { position:relative; min-height:62px; padding-left:46px; }
+.domain-print-summary > .domain-card-label--ribbon { left:0; }
+.print-card .print-card-header.domain-print-summary { min-height:64px; padding-left:48px; }
+.print-card-header.domain-print-summary > .domain-card-label--ribbon { left:5px; top:3px; }
+@media print {
+  .domain-card-label.domain-card-label--ribbon { background:transparent!important; }
+  .print-card .print-card-header.domain-print-summary { padding-left:48px!important; }
+}
+
+.domain-print-summary > .flex > :first-child { white-space:normal; overflow-wrap:anywhere; }

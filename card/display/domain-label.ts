@@ -26,6 +26,6 @@ export function getDomainCardLabel(card?: StandardCard | null) {
     name,
     level,
     color: id ? DOMAIN_COLORS[id] : "#616161",
-    asset: id && id !== "dread" ? `/domain-labels/${id}.webp` : undefined,
+    asset: id && id !== "dread" ? `/domain-labels/${id}.png` : undefined,
   };
 }

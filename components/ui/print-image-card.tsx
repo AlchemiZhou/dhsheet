@@ -1,4 +1,5 @@
 "use client"
+import { getDomainCardLabel } from "@/card/display/domain-label"
 import { DomainCardLabel } from "./domain-card-label"
 import { useCardArtworkStore } from '@/lib/card-artwork-store'
 import { CardContent } from './card-content'
@@ -64,7 +65,7 @@ function IllustratedPrintImageCard({ card }: PrintImageCardProps) {
 
     const displayName = card.name || "未命名卡牌"
     const displayDescription = card.description || "无描述。"
-    const displayItem1 = card.cardSelectDisplay?.item1 || ""
+    const displayItem1 = getDomainCardLabel(card)?.name || card.cardSelectDisplay?.item1 || ""
     const displayItem2 = card.cardSelectDisplay?.item2 || ""
     const displayItem3 = card.cardSelectDisplay?.item3 || ""
     const displayItem4 = card.cardSelectDisplay?.item4 || ""
@@ -87,14 +88,15 @@ function IllustratedPrintImageCard({ card }: PrintImageCardProps) {
             </div>
 
             {/* 标题栏 */}
-            <div className="px-2 py-1.5 border-b border-gray-200 bg-gray-50 print-card-header">
-                <div className={`flex items-center justify-between gap-2 ${card.type === CardType.Domain ? "domain-print-heading" : ""}`}>
+            <div className={`px-2 py-1.5 border-b border-gray-200 bg-gray-50 print-card-header ${card.type === CardType.Domain ? "domain-print-summary" : ""}`}>
+                {card.type === CardType.Domain && <DomainCardLabel card={card} variant="ribbon" />}
+                <div className="flex items-center justify-between gap-2">
                     <h3 className="text-sm font-bold text-gray-900 leading-none flex-1">{displayName}</h3>
-                    {card.type === CardType.Domain ? <DomainCardLabel card={card} /> : <span className="print-card-type text-[11px] font-medium text-gray-600 flex-shrink-0">{getDisplayTypeName(card)}</span>}
+                    {card.type !== CardType.Domain && <span className="print-card-type text-[11px] font-medium text-gray-600 flex-shrink-0">{getDisplayTypeName(card)}</span>}
                 </div>
                 {(displayItem1 || displayItem2 || displayItem3 || displayItem4) && (
                     <div className="flex flex-row flex-wrap items-center gap-2 print-card-tags mt-0.5">
-                        {card.type !== CardType.Domain && displayItem1 && <div className="text-[9px] font-medium text-gray-500">{displayItem1}</div>}
+                        {displayItem1 && <div className="text-[9px] font-medium text-gray-500">{displayItem1}</div>}
                         {displayItem2 && <div className="text-[9px] font-medium text-gray-500">{displayItem2}</div>}
                         {displayItem3 && <div className="text-[9px] font-medium text-gray-500">{displayItem3}</div>}
                         {card.type !== CardType.Domain && displayItem4 && <div className="text-[9px] font-medium text-gray-500">{displayItem4}</div>}

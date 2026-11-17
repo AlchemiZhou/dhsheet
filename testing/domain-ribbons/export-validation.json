@@ -1,0 +1,16 @@
+{
+  "discreetCredit": true,
+  "exports": [
+    {
+      "illustrated": false,
+      "externalRequests": 0,
+      "pngRibbonsPreserved": true
+    },
+    {
+      "illustrated": true,
+      "externalRequests": 0,
+      "pngRibbonsPreserved": true
+    }
+  ],
+  "pageErrors": []
+}

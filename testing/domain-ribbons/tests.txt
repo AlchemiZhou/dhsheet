@@ -1,0 +1,120 @@
+
+ RUN  v3.2.4 /tmp/dhsheet-html-update
+
+ ✓ tests/unit/legacy-browser-cloning.test.ts (3 tests) 484ms
+   ✓ legacy browser state compatibility > creates unique card IDs with secure random bytes when randomUUID is absent  365ms
+
+warn - As of Tailwind CSS v3.3, the `@tailwindcss/line-clamp` plugin is now included by default.
+warn - Remove it from the `plugins` array in your configuration to eliminate this warning.
+stdout | components/character-sheet-page-two-sections/__tests__/card-deck-preview.test.tsx
+[Unified Card System] System loaded, waiting for client initialization...
+
+stdout | components/character-sheet-page-two-sections/__tests__/card-deck-preview.test.tsx
+[Card System] 🚀 Using UNIFIED card system implementation (default)
+
+stdout | tests/unit/card-artwork-toggle.test.tsx
+[Unified Card System] System loaded, waiting for client initialization...
+
+stdout | tests/unit/card-artwork-toggle.test.tsx
+[Card System] 🚀 Using UNIFIED card system implementation (default)
+
+stdout | tests/unit/character-export-image-preparation.test.ts
+[Unified Card System] System loaded, waiting for client initialization...
+
+stdout | tests/unit/character-export-image-preparation.test.ts
+[Card System] 🚀 Using UNIFIED card system implementation (default)
+
+stderr | tests/unit/card-artwork-toggle.test.tsx > card artwork preference > does not load hidden artwork in selectors, drawers, hover previews, print cards or complete ancestries
+[Unified Card System] System not initialized, returning null. Use async version for automatic initialization.
+[Unified Card System] System not initialized, returning null. Use async version for automatic initialization.
+[Unified Card System] System not initialized, returning null. Use async version for automatic initialization.
+[Unified Card System] System not initialized, returning null. Use async version for automatic initialization.
+
+stderr | tests/unit/card-artwork-toggle.test.tsx > card artwork preference > does not load hidden artwork in selectors, drawers, hover previews, print cards or complete ancestries
+[Unified Card System] System not initialized, returning null. Use async version for automatic initialization.
+[Unified Card System] System not initialized, returning null. Use async version for automatic initialization.
+[Unified Card System] System not initialized, returning null. Use async version for automatic initialization.
+
+ ✓ tests/unit/card-artwork-toggle.test.tsx (2 tests) 157ms
+stdout | tests/unit/character-export-image-preparation.test.ts > character export image preparation > HTML content embeds portable sheet data
+[HTML导出] 等待图片加载完成...
+[HTML导出] 没有找到图片，继续导出
+
+stdout | tests/unit/character-export-image-preparation.test.ts > character export image preparation > HTML content embeds portable sheet data
+[HTML导出] 开始转换 0 张图片为Base64...
+[HTML导出] 图片转换完成，成功转换 0/0 张图片
+
+stdout | tests/unit/character-export-image-preparation.test.ts > character export image preparation > HTML content embeds portable sheet data
+[HTML导出] 图片替换完成，共替换 0 次
+
+stdout | tests/unit/character-export-image-preparation.test.ts > character export image preparation > preserves PNG ribbon bytes in standalone HTML even when the browser can encode WebP
+[HTML导出] 等待图片加载完成...
+[HTML导出] 图片加载进度: 1/1
+[HTML导出] 所有图片已加载完成
+
+stdout | tests/unit/character-export-image-preparation.test.ts > character export image preparation > preserves PNG ribbon bytes in standalone HTML even when the browser can encode WebP
+[HTML导出] 开始转换 1 张图片为Base64...
+
+stdout | tests/unit/character-export-image-preparation.test.ts > character export image preparation > preserves PNG ribbon bytes in standalone HTML even when the browser can encode WebP
+[HTML导出] 已转换图片 1/1: grace.png
+
+stdout | tests/unit/character-export-image-preparation.test.ts > character export image preparation > preserves PNG ribbon bytes in standalone HTML even when the browser can encode WebP
+[HTML导出] 图片转换完成，成功转换 1/1 张图片
+
+stdout | tests/unit/character-export-image-preparation.test.ts > character export image preparation > preserves PNG ribbon bytes in standalone HTML even when the browser can encode WebP
+[HTML导出] 图片替换完成，共替换 1 次
+
+stdout | tests/unit/character-export-image-preparation.test.ts > character export image preparation > keeps print-only resource values while removing ordinary hidden controls without changing the live sheet
+[HTML导出] 等待图片加载完成...
+[HTML导出] 没有找到图片，继续导出
+
+stdout | tests/unit/character-export-image-preparation.test.ts > character export image preparation > keeps print-only resource values while removing ordinary hidden controls without changing the live sheet
+[HTML导出] 开始转换 0 张图片为Base64...
+[HTML导出] 图片转换完成，成功转换 0/0 张图片
+
+stdout | tests/unit/character-export-image-preparation.test.ts > character export image preparation > keeps print-only resource values while removing ordinary hidden controls without changing the live sheet
+[HTML导出] 图片替换完成，共替换 0 次
+
+stdout | tests/unit/character-export-image-preparation.test.ts > character export image preparation > preserves paragraph breaks in editable story answers and continuation notes
+[HTML导出] 等待图片加载完成...
+[HTML导出] 没有找到图片，继续导出
+
+stdout | tests/unit/character-export-image-preparation.test.ts > character export image preparation > preserves paragraph breaks in editable story answers and continuation notes
+[HTML导出] 开始转换 0 张图片为Base64...
+[HTML导出] 图片转换完成，成功转换 0/0 张图片
+
+stdout | tests/unit/character-export-image-preparation.test.ts > character export image preparation > preserves paragraph breaks in editable story answers and continuation notes
+[HTML导出] 图片替换完成，共替换 0 次
+
+stdout | tests/unit/character-export-image-preparation.test.ts > offline reader metadata > identifies the reference layout and carries the same reimportable character data
+[HTML导出] 等待图片加载完成...
+[HTML导出] 没有找到图片，继续导出
+
+stdout | tests/unit/character-export-image-preparation.test.ts > offline reader metadata > identifies the reference layout and carries the same reimportable character data
+[HTML导出] 开始转换 0 张图片为Base64...
+[HTML导出] 图片转换完成，成功转换 0/0 张图片
+
+stdout | tests/unit/character-export-image-preparation.test.ts > offline reader metadata > identifies the reference layout and carries the same reimportable character data
+[HTML导出] 图片替换完成，共替换 0 次
+
+stdout | tests/unit/character-export-image-preparation.test.ts > offline reader metadata > identifies the reference layout and carries the same reimportable character data
+[HTML Import] 开始从HTML中提取角色数据...
+[Data Validation] 开始验证HTML数据...
+[Migration] Removed deprecated includePageThreeInExport field
+[Data Validation] Applied data migrations for HTML
+[Data Validation] HTML数据验证成功: 新版角色
+[HTML Import] 角色数据提取成功: 新版角色
+
+ ✓ tests/unit/character-export-image-preparation.test.ts (7 tests) 143ms
+ ✓ components/character-sheet-page-two-sections/__tests__/card-deck-preview.test.tsx (5 tests) 177ms
+ ✓ tests/unit/browser-compatibility.test.ts (5 tests) 12ms
+ ✓ tests/unit/browser-startup-check.test.ts (4 tests) 23ms
+ ✓ components/ui/__tests__/domain-card-label.test.tsx (3 tests) 37ms
+ ✓ card/display/__tests__/domain-label.test.ts (3 tests) 6ms
+ ✓ tests/unit/browser-build-syntax.test.ts (4 tests) 7ms
+ ✓ tests/unit/mobile-viewport.test.ts (4 tests) 3ms
+
+ Test Files  10 passed (10)
+      Tests  40 passed (40)
+   Start at  07:43:57
+   Duration  4.46s (transform 2.13s, setup 120ms, collect 5.87s, tests 1.05s, environment 2.37s, prepare 738ms)
