@@ -1,3 +1,4 @@
+import { downloadCharacterFile } from "./download-character-file";
 import {
   getStandardCardsByTypeAsync,
   CardType, // Import CardType
@@ -41,12 +42,7 @@ export async function exportCharacterData(formData: SheetData): Promise<void> {
 
     const portableData = await prepareSheetForExport(formData);
     const dataStr = JSON.stringify(portableData, null, 2);
-    const dataUri = `data:application/json;charset=utf-8,${encodeURIComponent(dataStr)}`;
-
-    const linkElement = document.createElement("a");
-    linkElement.setAttribute("href", dataUri);
-    linkElement.setAttribute("download", exportFileDefaultName);
-    linkElement.click();
+    downloadCharacterFile(new Blob([dataStr], { type: 'application/json;charset=utf-8' }), exportFileDefaultName)
   } catch (error) {
     console.error("导出角色数据失败:", error)
     alert("导出角色数据失败")

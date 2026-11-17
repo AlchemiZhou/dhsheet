@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useCallback, useRef } from 'react'
 import { flushSync } from 'react-dom'
 import { getStandardCardById } from '@/card'
 import { exportToHTML } from '@/lib/html-exporter'
@@ -28,7 +28,7 @@ function waitForAllImagesLoaded(): Promise<void> {
     const startTime = Date.now()
 
     const checkImages = () => {
-      const images = document.querySelectorAll('img')
+      const images = document.querySelectorAll<HTMLImageElement>('.print-all-pages img')
       const total = images.length
 
       if (total === 0) {
@@ -72,8 +72,18 @@ export function useExportHandlers({
   setReferencePrintOverride,
 }: UseExportHandlersProps) {
 
+  const quickPrint = useRef(false)
+  const onAfterPrint = useCallback(() => {
+    if (quickPrint.current) {
+      quickPrint.current = false
+      setIsPrintingAll(false)
+      document.title = APP_TITLE
+    }
+  }, [setIsPrintingAll])
+
   // 打印所有页面
   const handlePrintAll = useCallback(async () => {
+    quickPrint.current = false
     const getCardClass = (cardId: string | undefined): string => {
       if (!cardId) return '()'
       try {
@@ -136,15 +146,8 @@ export function useExportHandlers({
     try {
       console.log('[ExportHandlers] 快速 PDF 导出')
       await handlePrintAll()
-      await waitForAllImagesLoaded()
-      await document.fonts?.ready
-
+      quickPrint.current = true
       await printSheetPDF(mode)
-
-      setTimeout(() => {
-        setIsPrintingAll(false)
-        document.title = APP_TITLE
-      }, 300)
     } catch (error) {
       console.error('[ExportHandlers] 快速 PDF 导出失败:', error)
       alert('PDF导出失败: ' + (error instanceof Error ? error.message : '未知错误'))
@@ -161,29 +164,14 @@ export function useExportHandlers({
       await waitForAllImagesLoaded()
       await document.fonts?.ready
       await handleExportHTML()
-      setIsPrintingAll(false)
-      document.title = APP_TITLE
     } catch (error) {
       console.error('[ExportHandlers] 快速 HTML 导出失败:', error)
       alert('HTML导出失败: ' + (error instanceof Error ? error.message : '未知错误'))
-    }
-  }, [handlePrintAll, handleExportHTML, setIsPrintingAll])
-
-  // 快速 JSON 导出
-  const handleQuickExportJSON = useCallback(async () => {
-    try {
-      console.log('[ExportHandlers] 快速 JSON 导出')
-      await handlePrintAll()
-      await waitForAllImagesLoaded()
-      await document.fonts?.ready
-      await handleExportJSON()
+    } finally {
       setIsPrintingAll(false)
       document.title = APP_TITLE
-    } catch (error) {
-      console.error('[ExportHandlers] 快速 JSON 导出失败:', error)
-      alert('JSON导出失败: ' + (error instanceof Error ? error.message : '未知错误'))
     }
-  }, [handlePrintAll, handleExportJSON, setIsPrintingAll])
+  }, [handlePrintAll, handleExportHTML, setIsPrintingAll])
 
   return {
     handlePrintAll,
@@ -191,6 +179,7 @@ export function useExportHandlers({
     handleExportJSON,
     handleQuickExportPDF,
     handleQuickExportHTML,
-    handleQuickExportJSON,
+    handleQuickExportJSON: handleExportJSON,
+    onAfterPrint,
   }
 }

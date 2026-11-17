@@ -1,3 +1,4 @@
+import { downloadCharacterFile } from './download-character-file'
 import { embedReferencePrintFonts, readPrintAssetDataUrl } from '@/character/print-reference/embed-font'
 /**
  * HTML导出器 - 从打印预览页面提取HTML并导出
@@ -153,29 +154,14 @@ function getBasicFallbackStyles(): string {
 /**
  * 清理提取的HTML内容
  */
-function cleanupExtractedHTML(htmlContent: string): string {
-  return htmlContent
-    // 移除data属性（保留字体调整相关的和state属性）
-    .replace(/\s*data-(?!text|max-font|min-font|state)[^=]*="[^"]*"/g, '')
-    // 移除React和Next.js相关属性
-    .replace(/\s*data-react[^=]*="[^"]*"/g, '')
-    .replace(/\s*on[a-z]+="[^"]*"/g, '')
-    // 移除脚本和无用标签
-    .replace(/<script[\s\S]*?<\/script>/gi, '')
-    .replace(/<noscript[\s\S]*?<\/noscript>/gi, '')
-    .replace(/<div[^>]*id="__next"[^>]*>[\s\S]*?<\/div>/gi, '')
-    // 移除localStorage相关引用
-    .replace(/localStorage[^;]*;?/gi, '')
-    .replace(/window\.localStorage[^;]*;?/gi, '')
-    .replace(/window\.(characterList|sheetData|focusedCards|characterData)\s*=[\s\S]*?[;}]/gi, '')
-    // 移除React相关代码
-    .replace(/useState\([^)]*\)/gi, '')
-    .replace(/useEffect\([^)]*\)/gi, '')
-    .replace(/<!--[\s\S]*?localStorage[\s\S]*?-->/gi, '')
-    // 清理空白
-    .replace(/\s*class=""\s*/g, ' ')
-    // Preserve line breaks in story answers and pre-wrapped template fields.
-    .replace(/>\s+</g, '><')
+function cleanupSnapshotAttributes(root: HTMLElement) {
+  for (const element of [root, ...Array.from(root.querySelectorAll('*'))]) {
+    for (const { name } of Array.from(element.attributes)) {
+      if (name.startsWith('on') || name.startsWith('data-react')) {
+        element.removeAttribute(name)
+      }
+    }
+  }
 }
 
 /**
@@ -303,8 +289,6 @@ function transformHTMLContent(htmlContent: string): string {
   transformed = addCustomCheckboxInteraction(transformed);
   transformed = addHopePointInteraction(transformed);
 
-  // 最后清理React onClick属性
-  transformed = transformed.replace(/onClick[^=]*="[^"]*"/g, '');
 
   return transformed;
 }
@@ -412,7 +396,6 @@ class ExportStateManager {
   private static instance: ExportStateManager
   private isExporting: boolean = false
   private currentProgressModal: UnifiedProgressModalManager | null = null
-  private exportTimeout: NodeJS.Timeout | null = null
 
   static getInstance(): ExportStateManager {
     if (!ExportStateManager.instance) {
@@ -433,7 +416,6 @@ class ExportStateManager {
 
   finishExport(): void {
     this.isExporting = false
-    this.clearTimeout()
     this.closeProgressModal()
     
     // 强制垃圾回收（如果可能）以防止内存泄漏
@@ -463,25 +445,7 @@ class ExportStateManager {
     }
   }
 
-  setTimeout(callback: () => void, delay: number): void {
-    this.clearTimeout()
-    this.exportTimeout = setTimeout(() => {
-      console.warn('[导出状态] 导出超时')
-      this.finishExport()
-      callback()
-    }, delay)
-  }
 
-  clearTimeout(): void {
-    if (this.exportTimeout) {
-      clearTimeout(this.exportTimeout)
-      this.exportTimeout = null
-    }
-  }
-
-  isCurrentlyExporting(): boolean {
-    return this.isExporting
-  }
 }
 
 const exportStateManager = ExportStateManager.getInstance()
@@ -490,59 +454,35 @@ const exportStateManager = ExportStateManager.getInstance()
 /**
  * 收集并转换所有图片为Base64
  */
-async function convertImagesToBase64(onProgress?: ProgressCallback): Promise<Map<string, string>> {
-  const imageMap = new Map<string, string>()
-  const images = Array.from(document.querySelectorAll('.print-all-pages img')) as HTMLImageElement[]
-  
-  console.log(`[HTML导出] 开始转换 ${images.length} 张图片为Base64...`)
-  onProgress?.(0, images.length, '开始转换图片...')
-  
-  let processed = 0
-  for (const img of images) {
+async function embedSnapshotImages(root: HTMLElement, originals: Map<HTMLImageElement, HTMLImageElement>, onProgress?: ProgressCallback) {
+  const cache = new Map<string, string>()
+  const images = Array.from(root.querySelectorAll('img'))
+  for (const [index, copy] of images.entries()) {
+    const original = originals.get(copy)!
+    const url = original.currentSrc || original.src
+    const name = original.alt || '卡牌插图'
+    onProgress?.(index, images.length, '正在嵌入：' + name)
     try {
-      // 简单的内存检查
-      if (performance.memory && performance.memory.usedJSHeapSize > 1.5 * 1024 * 1024 * 1024) { // 1.5GB
-        console.warn('[HTML导出] 内存使用过高，强制垃圾回收')
-        // 触发垃圾回收（如果可能）
-        if (window.gc) {
-          window.gc()
+      let encoded = cache.get(url)
+      if (!encoded) {
+        if (!url) throw new Error('缺少图片地址')
+        if (url.startsWith('data:image/')) {
+          encoded = url
+        } else if (original.complete && original.naturalWidth) {
+          encoded = await imageToBase64(original)
+        } else {
+          encoded = await readPrintAssetDataUrl(url)
         }
+        if (!encoded.startsWith('data:image/')) throw new Error('图片未正确加载')
+        cache.set(url, encoded)
       }
-
-      if (img.complete && img.naturalWidth > 0 && img.src) {
-        const fileName = img.src.split('/').pop() || '未知图片'
-        onProgress?.(processed, images.length, `正在转换: ${fileName}`)
-        
-        const base64 = await imageToBase64(img)
-        imageMap.set(img.src, base64)
-        processed++
-        
-        console.log(`[HTML导出] 已转换图片 ${processed}/${images.length}: ${fileName}`)
-        onProgress?.(processed, images.length, `已完成: ${fileName}`)
-        
-        // 短暂延迟让用户看到进度更新，同时让浏览器有机会进行垃圾回收
-        await new Promise(resolve => setTimeout(resolve, 50))
-      } else {
-        console.warn(`[HTML导出] 跳过未加载的图片: ${img.src}`)
-        processed++
-        onProgress?.(processed, images.length, `跳过未加载的图片`)
-      }
+      copy.removeAttribute('srcset')
+      copy.removeAttribute('sizes')
+      copy.src = encoded
     } catch (error) {
-      console.error(`[HTML导出] 转换图片失败: ${img.src}`, error)
-      processed++
-      onProgress?.(processed, images.length, `转换失败: ${img.src.split('/').pop()}`)
-      
-      // 如果是内存相关错误，建议用户刷新页面
-      if (error instanceof Error && error.message.includes('memory')) {
-        console.error('[HTML导出] 检测到内存相关错误，建议刷新页面后重试')
-        throw new Error('内存不足，请刷新页面后重试')
-      }
+      throw new Error('无法嵌入「' + name + '」，请确认图片加载成功后重试。' + (error instanceof Error ? error.message : ''))
     }
   }
-  
-  console.log(`[HTML导出] 图片转换完成，成功转换 ${imageMap.size}/${images.length} 张图片`)
-  onProgress?.(images.length, images.length, '图片转换完成')
-  return imageMap
 }
 
 /**
@@ -599,76 +539,6 @@ function waitForImagesLoaded(): Promise<void> {
 }
 
 /**
- * 替换HTML中的图片为Base64
- */
-function replaceImagesWithBase64(html: string, imageMap: Map<string, string>): string {
-  let updatedHTML = html
-  let replacedCount = 0
-  
-  // 替换所有img标签的src属性
-  imageMap.forEach((base64Data, originalSrc) => {
-    // 使用字符串替换而不是正则表达式，避免"Regular expression too large"错误
-    const variants = [
-      `src="${originalSrc}"`,
-      `src='${originalSrc}'`,
-    ]
-    
-    // 尝试相对路径版本
-    try {
-      const urlPath = new URL(originalSrc, window.location.href).pathname
-      if (urlPath !== originalSrc) {
-        variants.push(`src="${urlPath}"`, `src='${urlPath}'`)
-      }
-    } catch (error) {
-      // 静默处理URL解析错误
-    }
-    
-    // 尝试只匹配文件名
-    const fileName = originalSrc.split('/').pop()
-    if (fileName) {
-      // 使用indexOf来查找包含文件名的src属性
-      let searchIndex = 0
-      while (searchIndex < updatedHTML.length) {
-        const srcIndex = updatedHTML.indexOf(`src=`, searchIndex)
-        if (srcIndex === -1) break
-        
-        const quoteIndex = srcIndex + 4
-        const quote = updatedHTML.charAt(quoteIndex)
-        if (quote === '"' || quote === "'") {
-          const endQuoteIndex = updatedHTML.indexOf(quote, quoteIndex + 1)
-          if (endQuoteIndex !== -1) {
-            const srcValue = updatedHTML.substring(quoteIndex + 1, endQuoteIndex)
-            if (srcValue.endsWith('/' + fileName)) {
-              updatedHTML = updatedHTML.substring(0, quoteIndex + 1) + 
-                          base64Data + 
-                          updatedHTML.substring(endQuoteIndex)
-              replacedCount++
-              searchIndex = quoteIndex + base64Data.length + 1
-              continue
-            }
-          }
-        }
-        searchIndex = srcIndex + 4
-      }
-    }
-    
-    // 使用简单的字符串替换
-    variants.forEach(variant => {
-      const replacement = `src="${base64Data}"`
-      if (updatedHTML.includes(variant)) {
-        updatedHTML = updatedHTML.replace(variant, replacement)
-        replacedCount++
-      }
-    })
-  })
-  
-  // 记录替换结果
-  console.log(`[HTML导出] 图片替换完成，共替换 ${replacedCount} 次`)
-  
-  return updatedHTML
-}
-
-/**
  * 从打印预览页面提取HTML内容
  */
 function extractPrintPreviewHTML(onProgress?: ProgressCallback): Promise<string> {
@@ -682,12 +552,11 @@ function extractPrintPreviewHTML(onProgress?: ProgressCallback): Promise<string>
       // 等待所有图片加载完成
       await waitForImagesLoaded()
 
-      // 转换所有图片为Base64
-      const imageMap = await convertImagesToBase64(onProgress)
-
       // 克隆容器以避免影响原页面
       await document.fonts?.ready
       const clonedContainer = printContainer.cloneNode(true) as HTMLElement
+      const liveImages = printContainer.querySelectorAll('img')
+      const originals = new Map(Array.from(clonedContainer.querySelectorAll('img'), (copy, index) => [copy, liveImages[index]] as const))
       await embedReferencePrintFonts(clonedContainer)
 
       // Preserve values that are hidden on screen but explicitly shown on paper
@@ -745,13 +614,12 @@ function extractPrintPreviewHTML(onProgress?: ProgressCallback): Promise<string>
         }
       })
 
-      // 转换HTML内容
-      let extractedHTML = cleanupExtractedHTML(clonedContainer.outerHTML)
-      extractedHTML = transformHTMLContent(extractedHTML)
-      
-      // 替换图片为Base64
-      extractedHTML = replaceImagesWithBase64(extractedHTML, imageMap)
+      await embedSnapshotImages(clonedContainer, originals, onProgress)
 
+      // 转换HTML内容
+      cleanupSnapshotAttributes(clonedContainer)
+      const extractedHTML = transformHTMLContent(clonedContainer.outerHTML)
+      
       resolve(extractedHTML)
     } catch (error) {
       reject(error)
@@ -779,7 +647,7 @@ async function generateFullHTML(formData: SheetData, options: HTMLExportOptions 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="generator" content="Daggerheart Character Card Viewer v2.0">
   <meta name="description" content="纯净的角色卡导出版本，仅包含当前角色数据">
-  <title>${title}</title>
+  <title>${title.replace(/&/g, '&amp;').replace(/</g, '&lt;')}</title>
   <style>
     ${generateInlineCSS(styles)}
   </style>
@@ -862,22 +730,20 @@ export async function exportToHTML(formData: SheetData, options: HTMLExportOptio
     
     progressModal.showProgress('正在导出HTML文件', 0, imageCount, '正在准备导出...')
     
-    // 设置超时机制（5分钟）
-    exportStateManager.setTimeout(() => {
-      throw new Error('导出超时，请重试')
-    }, 5 * 60 * 1000)
-    
-    // 等待一下让进度条显示
-    await new Promise(resolve => setTimeout(resolve, 100))
-    
-    const portableFormData = await prepareSheetForExport(formData)
-    const html = await generateFullHTML(portableFormData, options, (current, total, message) => {
-      if (progressModal) {
-        progressModal.updateProgress(current, total, message)
-      }
+    const prepareDownload = async () => {
+      const portableFormData = await prepareSheetForExport(formData)
+      const html = await generateFullHTML(portableFormData, options, (current, total, message) => {
+        progressModal?.updateProgress(current, total, message)
+      })
+      return { html, filename: await generateFileName(portableFormData, options) }
+    }
+    let timer: ReturnType<typeof setTimeout> | undefined
+    const timeout = new Promise<never>((_, reject) => {
+      timer = setTimeout(() => reject(new Error('导出超时，请重试')), 5 * 60 * 1000)
     })
-    const filename = await generateFileName(portableFormData, options)
-    
+    const { html, filename } = await Promise.race([prepareDownload(), timeout])
+      .finally(() => clearTimeout(timer))
+
     if (progressModal) {
       progressModal.updateProgress(imageCount, imageCount, '正在生成文件...')
     }
@@ -910,35 +776,14 @@ export async function exportToHTML(formData: SheetData, options: HTMLExportOptio
       }
     }
 
-    // 创建并触发下载
-    let blobUrl: string | null = null
-    try {
-      const blob = new Blob([html], { type: 'text/html;charset=utf-8' })
-      blobUrl = URL.createObjectURL(blob)
-      const link = document.createElement('a')
-
-      link.href = blobUrl
-      link.download = filename
-      link.style.display = 'none'
-
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
-      
-      console.log(`[HTML导出] 导出完成: ${filename} (${fileSizeMB}MB)`)
-    } finally {
-      // 确保Blob URL被释放
-      if (blobUrl) {
-        URL.revokeObjectURL(blobUrl)
-      }
-    }
-    
+    downloadCharacterFile(new Blob([html], { type: 'text/html;charset=utf-8' }), filename)
   } catch (error) {
     console.error('[HTML导出] 导出过程中出错:', error)
     const errorMessage = `HTML导出失败: ${error instanceof Error ? error.message : '未知错误'}`
     throw new Error(errorMessage)
   } finally {
     // 确保所有资源都被清理
+    progressModal = null
     exportStateManager.finishExport()
   }
 }
@@ -1294,8 +1139,12 @@ function generateStorageDisableScript(): string {
  * 生成初始化脚本
  */
 function generateInitScript(formData: SheetData): string {
+  // Keep markup and the legacy import delimiter inside JSON string values.
+  const portableJSON = JSON.stringify(formData, null, 2)
+    .replace(/</g, '\\u003c')
+    .replace(/;/g, '\\u003b')
   return `
-    window.characterData = ${JSON.stringify(formData, null, 2)};
+    window.characterData = ${portableJSON};
     
     function printCharacterSheet() {
       window.print();

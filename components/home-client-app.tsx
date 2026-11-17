@@ -304,6 +304,7 @@ export default function HomeClientApp() {
     handleQuickExportPDF,
     handleQuickExportHTML,
     handleQuickExportJSON,
+    onAfterPrint,
   } = useExportHandlers({ formData, setIsPrintingAll, setReferencePrintOverride })
 
   // 客户端挂载检测
@@ -702,7 +703,7 @@ export default function HomeClientApp() {
         <PrintProvider containerRef={printContainerRef}>
           <PrintReadyChecker onSkipWaiting={handleSkipWaiting}>
             <div className="print-all-pages sheet-print-preview">
-              <PrintHelper />
+              <PrintHelper onAfterPrint={onAfterPrint} />
 
               {/* 顶部提示横条 - 只在屏幕上显示，打印时隐藏 */}
               <div className="fixed top-0 left-0 right-0 z-[70] print:hidden">
@@ -722,7 +723,9 @@ export default function HomeClientApp() {
               <BottomDock
                 mode="preview"
                 isMobile={isMobile}
-                onExportPDF={printSheetPDF}
+                onExportPDF={mode => printSheetPDF(mode).catch(error => {
+                  alert('PDF导出失败：' + (error instanceof Error ? error.message : String(error)))
+                })}
                 onExportHTML={handleExportHTML}
                 onExportJSON={handleExportJSON}
                 onOpenSealDiceExport={() => {

@@ -2,7 +2,7 @@
 
 import { useEffect } from "react"
 
-export default function PrintHelper() {
+export default function PrintHelper({ onAfterPrint }: { onAfterPrint?: () => void }) {
   useEffect(() => {
     const placeholderTexts = ["选择武器", "选择护甲", "选择职业", "选择子职业", "选择种族", "选择社群"];
 
@@ -108,6 +108,7 @@ export default function PrintHelper() {
       document.querySelectorAll(".print-hidden").forEach((element) => {
         element.classList.remove("print-hidden");
       });
+      onAfterPrint?.();
     };
 
     window.addEventListener("beforeprint", handleBeforePrint);
@@ -117,7 +118,7 @@ export default function PrintHelper() {
       window.removeEventListener("beforeprint", handleBeforePrint);
       window.removeEventListener("afterprint", handleAfterPrint);
     };
-  }, []);
+  }, [onAfterPrint]);
 
   return null;
 }

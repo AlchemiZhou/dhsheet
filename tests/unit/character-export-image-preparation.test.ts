@@ -67,10 +67,18 @@ describe('character export image preparation', () => {
       return originalCreateElement(tagName, options)
     })
 
+    let downloaded!: Blob
+    vi.spyOn(URL, 'createObjectURL').mockImplementation(blob => {
+      downloaded = blob as Blob
+      return 'blob:json-file'
+    })
     await exportCharacterData(projected.storedSheet)
-
-    const href = anchor.getAttribute('href') ?? ''
-    const payload = decodeURIComponent(href.replace('data:application/json;charset=utf-8,', ''))
+    expect(anchor.href).toBe('blob:json-file')
+    const payload = await new Promise<string>((resolve) => {
+      const reader = new FileReader()
+      reader.onload = () => resolve(String(reader.result))
+      reader.readAsText(downloaded)
+    })
     expect(payload).toContain('data:image/png;base64')
     expect(payload).not.toContain('imageAssets')
   })
@@ -103,6 +111,34 @@ describe('character export image preparation', () => {
     const exported = new DOMParser().parseFromString(html, 'text/html')
     expect(exported.querySelector('img')?.src).toMatch(/^data:image\/png;base64,/)
     expect(transcode).not.toHaveBeenCalled()
+  })
+
+  it('embeds distinct images with the same basename, reuses duplicates and removes responsive URLs', async () => {
+    const fetchImage = vi.fn(async (url: string) => ({
+      ok: true, blob: async () => new Blob([url], { type: 'image/png' }),
+    }))
+    vi.stubGlobal('fetch', fetchImage)
+    document.body.innerHTML = '<div class="print-all-pages"><p>localStorage 和 useState() 是角色的笔记</p><img data-domain-ribbon src="/a/x.png"><img data-domain-ribbon src="/b/x.png" srcset="/b/x.png 1x"><img data-domain-ribbon src="/a/x.png"></div>'
+    document.querySelectorAll('img').forEach(img => Object.defineProperties(img, {
+      complete: { value: true }, naturalWidth: { value: 1 },
+    }))
+    const html = await getHTMLContent(sheet(), { includeStyles: false })
+    const parsed = new DOMParser().parseFromString(html, 'text/html')
+    const [a, b, repeat] = Array.from(parsed.querySelectorAll('img'))
+    expect(a.src).not.toBe(b.src)
+    expect(repeat.src).toBe(a.src)
+    expect(b.hasAttribute('srcset')).toBe(false)
+    expect(fetchImage).toHaveBeenCalledTimes(2)
+    expect(parsed.querySelector('p')?.textContent).toContain('localStorage 和 useState()')
+  })
+
+  it('round trips free text with markup and the legacy JSON terminator', async () => {
+    document.body.innerHTML = '<div class="print-all-pages"></div>'
+    const name = '笔记 }; 与 </script> 标签'
+    const html = await getHTMLContent(sheet({ name }), { includeStyles: false })
+    const parsed = new DOMParser().parseFromString(html, 'text/html')
+    expect(parsed.querySelector('script')?.textContent).toContain('function printCharacterSheet')
+    expect(extractCharacterDataFromHTML(html).data?.name).toBe(name)
   })
 
   it('keeps print-only resource values while removing ordinary hidden controls without changing the live sheet', async () => {

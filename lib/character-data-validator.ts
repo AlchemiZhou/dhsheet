@@ -68,7 +68,8 @@ export function validateSheetData(data: any): data is SheetData {
   // 检查cards数组中的对象结构
   if (data.cards && data.cards.length > 0) {
     const sampleCard = data.cards[0]
-    if (!sampleCard.id || !sampleCard.name || !sampleCard.type) {
+    const emptySlot = sampleCard?.name === '' && typeof sampleCard.id === 'string' && sampleCard.id.startsWith('empty-')
+    if (!sampleCard?.id || (!sampleCard.name && !emptySlot) || !sampleCard.type) {
       console.warn('Invalid card structure in cards array')
       return false
     }
