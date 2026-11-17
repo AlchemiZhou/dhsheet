@@ -1,0 +1,29 @@
+{
+  "exports": [
+    {
+      "mode": "illustrated",
+      "media": "screen",
+      "externalRequests": 0,
+      "ribbonTop": 2798.125,
+      "artTop": 2798.125,
+      "ribbonBottom": 2876.09375,
+      "artBottom": 2952.21875,
+      "headerTop": 2952.21875,
+      "bodyFits": true,
+      "overflow": false
+    },
+    {
+      "mode": "illustrated",
+      "media": "print",
+      "externalRequests": 0,
+      "ribbonTop": 2644.890625,
+      "artTop": 2644.890625,
+      "ribbonBottom": 2722.40625,
+      "artBottom": 2798.109375,
+      "headerTop": 2798.109375,
+      "bodyFits": true,
+      "overflow": false
+    }
+  ],
+  "pageErrors": []
+}

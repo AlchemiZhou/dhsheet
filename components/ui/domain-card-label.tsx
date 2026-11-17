@@ -78,11 +78,11 @@ export function DomainCardLabel({
         >
           <text
             x="18.5"
-            y="25"
+            y="21"
             textAnchor="middle"
-            fontFamily="Arial Black, Arial, sans-serif"
-            fontWeight="900"
-            fontSize={(label.level?.length || 1) > 1 ? 19 : 23}
+            fontFamily="Arial, Helvetica, sans-serif"
+            fontWeight="700"
+            fontSize={(label.level?.length || 1) > 1 ? 17 : 19}
             fill={ink}
             stroke={ink}
             strokeWidth=".3"
