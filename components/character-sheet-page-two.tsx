@@ -1,8 +1,6 @@
 "use client"
 
 import type React from "react"
-import { PaperSheetEditor, type PaperDetail } from "@/components/paper-editor/paper-sheet-editor"
-import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 import { useState } from "react"
 import { getUpgradeOptions, isUpgradeBandKey } from "@/data/list/upgrade"
 import { useSheetStore, useSafeSheetData } from "@/lib/sheet-store";
@@ -44,7 +42,6 @@ export default function CharacterSheetPageTwo({ currentCharacterId }: { currentC
     onSaveAbility: setCardAbilityChoiceValuesForInstance,
   })
 
-  const [paperDetails, setPaperDetails] = useState<PaperDetail | undefined>()
   const [showUpgradeOptions, setShowUpgradeOptions] = useState(false)
 
   // State for upgrade domain card modal
@@ -175,21 +172,44 @@ export default function CharacterSheetPageTwo({ currentCharacterId }: { currentC
 
   // Handle opening the domain card modal from upgrade section
   const handleOpenUpgradeDomainModal = (cardIndex: number) => {
-    setPaperDetails(undefined)
     setUpgradeDomainCardIndex(cardIndex)
     setUpgradeDomainModalOpen(true)
   }
 
   // Handle opening the subclass card modal from upgrade section
   const handleOpenUpgradeSubclassModal = (cardIndex: number, profession?: string) => {
-    setPaperDetails(undefined)
     setUpgradeSubclassCardIndex(cardIndex)
     setUpgradeSubclassProfession(profession)
     setUpgradeSubclassModalOpen(true)
   }
 
 
-  const upgrades = <section className="native-upgrade-options" data-collapsed={!showUpgradeOptions}>
+  return (
+    <>
+      {/* 固定位置的按钮 - 移除建卡指引按钮，因为已经移到父组件 */}
+      {/* 固定位置的按钮已移至父组件 */}
+      <div></div>
+
+      <div className="w-full max-w-[210mm] mx-auto">
+        <div
+          className="a4-page sheet-detail-page native-editor p-2 bg-white text-gray-800 shadow-lg print:shadow-none rounded-md"
+          style={{ width: "210mm" }}
+        >
+          {/* Header - 调整职业名称显示框的大小 */}
+          <NativeBackHeader />
+          <div className="native-back-guide">
+            <CharacterPortraitEditor currentCharacterId={currentCharacterId} />
+            <NativeProfessionGuide />
+          </div>
+
+          {/* Character Description Section */}
+          <CharacterDescriptionSection formData={safeFormData} handleInputChange={handleInputChange} />
+
+          {/* Card Deck Section */}
+
+
+          {/* Upgrade Section */}
+        <section className="native-upgrade-options" data-collapsed={!showUpgradeOptions}>
           <button type="button" className="native-upgrade-toggle print:hidden" aria-expanded={showUpgradeOptions} onClick={() => setShowUpgradeOptions(value => !value)}>
             <span>升级选项 · 等级 2–10</span><span aria-hidden="true">{showUpgradeOptions ? '−' : '＋'}</span>
           </button>
@@ -234,52 +254,11 @@ export default function CharacterSheetPageTwo({ currentCharacterId }: { currentC
           />
         </div>
         </section>
-
-
-  return (
-    <>
-      {/* 固定位置的按钮 - 移除建卡指引按钮，因为已经移到父组件 */}
-      {/* 固定位置的按钮已移至父组件 */}
-      <div></div>
-
-      <PaperSheetEditor page={2} onDetails={setPaperDetails} after={<CardDeckSection formData={safeFormData} />}>
-      <div className="w-full max-w-[210mm] mx-auto">
-        <div
-          className="a4-page sheet-detail-page native-editor p-2 bg-white text-gray-800 shadow-lg print:shadow-none rounded-md"
-          style={{ width: "210mm" }}
-        >
-          {/* Header - 调整职业名称显示框的大小 */}
-          <NativeBackHeader />
-          <div className="native-back-guide">
-            <CharacterPortraitEditor currentCharacterId={currentCharacterId} />
-            <NativeProfessionGuide />
-          </div>
-
-          {/* Character Description Section */}
-          <CharacterDescriptionSection formData={safeFormData} handleInputChange={handleInputChange} />
-
-          {/* Card Deck Section */}
-
-
-          {/* Upgrade Section */}
-        {upgrades}
         <div className="native-deck"><CardDeckSection formData={safeFormData} /></div>
         <div className="native-footer">Daggerheart © Darrington Press 2025</div>
       </div>
       </div>
 
-      </PaperSheetEditor>
-      <Dialog open={Boolean(paperDetails)} onOpenChange={open => { if (!open) setPaperDetails(undefined) }}>
-        <DialogContent className="paper-details-dialog">
-          <DialogTitle>编辑角色卡</DialogTitle>
-          <DialogDescription className="sr-only">更改会同步到当前角色卡。</DialogDescription>
-          <div className="paper-details-body">
-            {paperDetails === 'portrait' && <CharacterPortraitEditor currentCharacterId={currentCharacterId} />}
-            {paperDetails === 'story' && <CharacterDescriptionSection formData={safeFormData} handleInputChange={handleInputChange} />}
-            {paperDetails === 'upgrades' && upgrades}
-          </div>
-        </DialogContent>
-      </Dialog>
       {/* Modals */}
       <CardSelectionModal
         isOpen={upgradeDomainModalOpen}

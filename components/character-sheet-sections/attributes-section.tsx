@@ -4,8 +4,11 @@ import { useState } from "react"
 import type { SheetData, AttributeValue } from "@/lib/sheet-data"
 import { useSheetStore } from "@/lib/sheet-store";
 import { ModifierFieldAnchor } from "@/components/modifiers/modifier-field-anchor"
-import type { ModifierTargetId } from "@/automation/core/types"
-import { useAttributeCommit } from './use-attribute-commit'
+import type { AttributeTargetId, ModifierTargetId, UserModifierContribution } from "@/automation/core/types"
+import {
+  getAttributeAutoBaseId,
+  shouldRemoveAttributeAutoBase,
+} from "@/automation/core/attribute-auto-base"
 
 type AttributeKey = "agility" | "strength" | "finesse" | "instinct" | "presence" | "knowledge"
 
@@ -13,13 +16,24 @@ function isAttributeValue(val: unknown): val is AttributeValue {
   return val !== undefined && typeof val === "object" && val !== null && "checked" in val && "value" in val;
 }
 
+function attributeTarget(attribute: AttributeKey): AttributeTargetId {
+  return `${attribute}.value` as AttributeTargetId
+}
+
+function userBaseEntriesForTarget(formData: SheetData, target: AttributeTargetId): UserModifierContribution[] {
+  return (formData.userModifierContributions ?? [])
+    .filter(contribution => contribution.definition.target === target && contribution.definition.kind === "base")
+}
+
 export function AttributesSection() {
   const {
     sheetData: formData,
     toggleAttributeChecked,
     setSheetData,
+    setActiveModifierBase,
+    removeUserModifierContribution,
+    commitModifierTargetValue,
   } = useSheetStore();
-  const commitAttribute = useAttributeCommit()
   const [valueDrafts, setValueDrafts] = useState<Partial<Record<AttributeKey, string>>>({})
 
   const handleAttributeValueChange = (attribute: AttributeKey, value: string) => {
@@ -27,9 +41,25 @@ export function AttributesSection() {
   }
 
   const handleAttributeCommit = (attribute: AttributeKey) => {
+    const target = attributeTarget(attribute)
     const attrValue = formData[attribute]
     const submittedValue = valueDrafts[attribute] ?? (isAttributeValue(attrValue) ? attrValue.value : "")
-    commitAttribute(attribute, submittedValue)
+    const existingUserBases = userBaseEntriesForTarget(formData, target)
+
+    if (shouldRemoveAttributeAutoBase({
+      target,
+      level: formData.level,
+      submittedValue,
+      existingUserBases,
+    })) {
+      const autoBaseId = getAttributeAutoBaseId(target)
+      removeUserModifierContribution(autoBaseId)
+      if (formData.modifierState?.targetStates?.[target]?.activeBaseId === autoBaseId) {
+        setActiveModifierBase(target, undefined)
+      }
+    }
+
+    commitModifierTargetValue(target, submittedValue)
     setValueDrafts((drafts) => {
       const next = { ...drafts }
       delete next[attribute]

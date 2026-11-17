@@ -69,7 +69,7 @@
 }
 .reference-sheet .reference-question {
   padding: 0;
-  font-family: "Reference Labels", Arial, "Noto Sans CJK SC", sans-serif;
+  font-family: Arial, "Noto Sans CJK SC", sans-serif;
   font-weight: 600;
   color: #292929;
   justify-content: flex-start;
@@ -201,45 +201,4 @@
     break-before: page;
     break-after: page;
   }
-}
-
-/* Original glyphs and dynamic subclass spellcasting marks share print/editor rendering. */
-.paper-attribute-headings {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-}
-.paper-color-filters {
-  position: absolute;
-  width: 0;
-  height: 0;
-}
-.paper-heading-image {
-  position: absolute;
-  display: block;
-  max-width: none;
-}
-.paper-heading-ticks {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-}
-.paper-heading-ticks .reference-tick {
-  fill: none;
-  stroke: #292929;
-  stroke-width: 1.4;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.paper-heading-caption-mask {
-  position: absolute;
-  background: white;
-}
-
-/* Desaturate the completed tint, preserving the selected attribute's contrast. */
-.sheet-print-mono .paper-attribute-headings { filter: grayscale(1); }
-.sheet-appearance.sheet-print-mono .a4-page img.paper-heading-image {
-  filter: var(--paper-heading-filter, none) !important;
 }

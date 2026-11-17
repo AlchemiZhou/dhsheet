@@ -1,4 +1,3 @@
-import { normalizeReferenceFieldValues } from "@/character/print-reference/extra-values"
 import { normalizeProfessionStory } from "@/character/profession-setup/story"
 /**
  * SheetData 迁移模块
@@ -1282,7 +1281,6 @@ export function normalizeCurrentSheetData(data: Partial<SheetData> | any): Sheet
     ...data,
     imageAssets: sanitizeImageAssets(data?.imageAssets),
     professionStory: normalizeProfessionStory(data?.professionStory),
-    referenceFieldValues: normalizeReferenceFieldValues(data?.referenceFieldValues),
     pageVisibility: normalizePageVisibility(data?.pageVisibility),
     martialStances: normalizeMartialStancesState(data?.martialStances),
     schemaVersion: CURRENT_SCHEMA_VERSION,

@@ -34,12 +34,3 @@ export function splitReferenceFeature(
   });
   return { lines, remaining };
 }
-
-export function referenceRectPosition(rect: readonly number[]) {
-  return {
-    left: `${(rect[0] / REFERENCE_PAGE_WIDTH) * 100}%`,
-    top: `${(rect[1] / REFERENCE_PAGE_HEIGHT) * 100}%`,
-    width: `${((rect[2] - rect[0]) / REFERENCE_PAGE_WIDTH) * 100}%`,
-    height: `${((rect[3] - rect[1]) / REFERENCE_PAGE_HEIGHT) * 100}%`,
-  };
-}

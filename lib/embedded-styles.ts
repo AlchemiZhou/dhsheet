@@ -1,6 +1,6 @@
 /**
  * 自动生成的CSS内容文件
- * 生成时间: 2026-11-17T05:13:34.357Z
+ * 生成时间: 2026-11-16T20:05:53.102Z
  * 
  * 该文件包含了应用的所有CSS样式，用于HTML导出功能
  * 请勿手动编辑此文件，它会在构建时自动生成
@@ -11,7 +11,7 @@
 
 /**
  * 完整的CSS内容（包含Tailwind CSS和应用样式）
- * 大小: 181.85 KB
+ * 大小: 176.42 KB
  */
 export const embeddedStyles = `*, ::before, ::after {
   --tw-border-spacing-x: 0;
@@ -3647,15 +3647,27 @@ body {
   font-size: 16px !important;
 }
 
-/* Match the other attribution lines, with no floating panel or emphasis. */
-.sheet-credit-author {
-  display: block;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  color: inherit;
-  font: inherit;
-  line-height: inherit;
+/* Keep the author action reachable independently of the long mobile footer. */
+.sheet-author-action {
+  position: fixed;
+  left: 8px;
+  bottom: 80px;
+  bottom: calc(80px + env(safe-area-inset-bottom, 0px));
+  z-index: 45;
+  display: inline-flex;
+  align-items: center;
+  max-width: calc(100vw - 16px);
+  min-height: 44px;
+  padding: 6px 10px;
+  border: 1px solid #d5d2cd;
+  border-radius: 6px;
+  background: #f5f4f1;
+  color: #616161;
+  font-size: 12px;
+  line-height: 1.4;
+}
+@media print {
+  .sheet-author-action { display: none !important; }
 }
 
 html {
@@ -4730,214 +4742,6 @@ html {
   }
 }
 
-.paper-editor {
-  width: 100%;
-  min-width: 0;
-}
-.paper-tools {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 0;
-  color: #292929;
-  font:
-    12px Arial,
-    sans-serif;
-}
-.paper-tools :is(button, select) {
-  min-height: 32px;
-  padding: 4px 8px;
-  border: 1px solid #b8b4ad;
-  border-radius: 4px;
-  background: white;
-}
-.paper-tools label {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-.paper-viewport {
-  width: 100%;
-  overflow: auto;
-  overscroll-behavior: contain;
-  background: #e8e6e1;
-  touch-action: pan-x pan-y pinch-zoom;
-}
-.paper-size {
-  position: relative;
-  margin-inline: auto;
-}
-.paper-surface {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 210mm;
-  height: 297mm;
-  transform-origin: top left;
-}
-.sheet-reader .paper-surface .reference-sheet {
-  width: 210mm !important;
-  height: 297mm !important;
-  max-width: none !important;
-  min-width: 210mm;
-  padding: 0;
-  border-radius: 0;
-}
-.paper-hit-layer {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-}
-.paper-hit,
-.paper-inline-value {
-  position: absolute;
-  pointer-events: auto;
-  border: 0;
-  padding: 0;
-  margin: 0;
-  background: transparent;
-  border-radius: 1px;
-}
-.paper-hit {
-  cursor: pointer;
-  color: transparent;
-}
-.paper-hit:hover:not(:disabled),
-.paper-hit:focus-visible {
-  outline: 1px dashed var(--sheet-primary, #526572);
-  outline-offset: 1px;
-  background: #5265720a;
-}
-.paper-hit:disabled {
-  cursor: default;
-}
-.paper-inline-value {
-  z-index: 5;
-}
-.paper-inline-value :is(input, textarea) {
-  width: 100%;
-  height: 100%;
-  min-width: 0;
-  padding: 0 2pt;
-  border: 1px solid var(--sheet-primary, #526572);
-  border-radius: 0;
-  outline: 0;
-  background: white;
-  color: #292929;
-  font-family: "Reference Ink", serif;
-  resize: none;
-  line-height: 1.2;
-}
-.paper-after {
-  margin-top: 18px;
-  padding: 12px;
-  border: 1px solid #858585;
-  background: white;
-}
-.paper-mobile-value-dialog :is(input, textarea) {
-  width: 100%;
-  min-height: 44px;
-  padding: 10px;
-  border: 1px solid #858585;
-  border-radius: 4px;
-  color: #292929;
-  background: white;
-  font-size: 16px;
-  line-height: 1.6;
-}
-.paper-mobile-value-dialog button {
-  min-height: 44px;
-  padding: 8px 18px;
-  border: 1px solid #858585;
-  border-radius: 4px;
-}
-.paper-details-dialog {
-  width: calc(100vw - 24px);
-  max-width: 820px;
-  max-height: 90vh;
-  max-height: 90dvh;
-  overflow: auto;
-  background: white;
-  color: #292929;
-}
-.paper-details-body {
-  --sheet-primary: #526572;
-  --sheet-secondary: #858585;
-  --editor-line: #858585;
-}
-.paper-details-body .sheet-header {
-  color: white;
-}
-.paper-details-body .sheet-upgrade-grid {
-  display: grid !important;
-}
-.paper-details-body .native-upgrade-toggle {
-  display: none;
-}
-.paper-details-body .native-portrait-editor {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-@media screen and (max-width: 1023px) {
-  .paper-tools {
-    gap: 5px;
-    font-size: 12px;
-  }
-  .paper-tools :is(button, select) {
-    min-height: 44px;
-  }
-  .paper-details-body .sheet-upgrade-grid {
-    grid-template-columns: 1fr;
-  }
-  .paper-details-body .sheet-attributes > .grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-  .paper-details-body .sheet-equipment-slot .grid-cols-10 {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-  .paper-details-body .sheet-equipment-slot .col-span-4 {
-    grid-column: 1/-1;
-  }
-  .paper-details-body .sheet-equipment-slot .col-span-3 {
-    grid-column: span 1;
-  }
-  .paper-details-body :is(input, select, button) {
-    min-height: 44px;
-  }
-}
-@media print {
-  .paper-tools,
-  .paper-hit-layer,
-  .paper-after {
-    display: none !important;
-  }
-  .paper-viewport {
-    overflow: visible !important;
-    background: white;
-  }
-  .paper-size {
-    width: 210mm !important;
-    height: 297mm !important;
-  }
-  .paper-surface {
-    position: relative;
-    transform: none !important;
-  }
-}
-
-.paper-identity-frames { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; }
-.paper-identity-control { position:absolute; display:flex; align-items:stretch; pointer-events:auto; color:#717070; }
-.paper-identity-control button { border:0; background:transparent; padding:0; border-radius:0; color:inherit; cursor:pointer; }
-.paper-identity-control button:focus-visible { outline:1px dashed #526572; }
-.paper-native-switch { display:flex; flex:1; gap:3pt; align-items:center; justify-content:center; font:700 6.8087pt "Reference Labels",sans-serif; }
-.paper-native-switch svg { width:7pt; height:7pt; flex-shrink:0; }
-.paper-identity-control .paper-native-switch[aria-checked=true] { color:var(--sheet-primary,#873e3e); }
-.paper-identity-control .paper-native-switch[data-kind=mixed][aria-checked=true] { color:#873e3e; }
-.paper-native-configure { width:9pt; display:flex; align-items:center; justify-content:center; }
-.paper-native-configure svg { width:6pt; height:6pt; }
-
 .reference-companion .reference-companion-portrait {
   position: absolute;
   object-fit: contain;
@@ -5053,7 +4857,7 @@ html {
 }
 .reference-sheet .reference-question {
   padding: 0;
-  font-family: "Reference Labels", Arial, "Noto Sans CJK SC", sans-serif;
+  font-family: Arial, "Noto Sans CJK SC", sans-serif;
   font-weight: 600;
   color: #292929;
   justify-content: flex-start;
@@ -5185,47 +4989,6 @@ html {
     break-before: page;
     break-after: page;
   }
-}
-
-/* Original glyphs and dynamic subclass spellcasting marks share print/editor rendering. */
-.paper-attribute-headings {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-}
-.paper-color-filters {
-  position: absolute;
-  width: 0;
-  height: 0;
-}
-.paper-heading-image {
-  position: absolute;
-  display: block;
-  max-width: none;
-}
-.paper-heading-ticks {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-}
-.paper-heading-ticks .reference-tick {
-  fill: none;
-  stroke: #292929;
-  stroke-width: 1.4;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.paper-heading-caption-mask {
-  position: absolute;
-  background: white;
-}
-
-/* Desaturate the completed tint, preserving the selected attribute's contrast. */
-.sheet-print-mono .paper-attribute-headings { filter: grayscale(1); }
-.sheet-appearance.sheet-print-mono .a4-page img.paper-heading-image {
-  filter: var(--paper-heading-filter, none) !important;
 }
 .file\\:border-0::file-selector-button {
   border-width: 0px;
@@ -6933,7 +6696,7 @@ export function getStylesInfo() {
     size: embeddedStyles.length,
     sizeKB: (embeddedStyles.length / 1024).toFixed(2),
     sizeMB: (embeddedStyles.length / 1024 / 1024).toFixed(2),
-    generated: '2026-11-17T05:13:34.358Z',
+    generated: '2026-11-16T20:05:53.102Z',
     compressed: false
   };
 }

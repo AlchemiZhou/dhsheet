@@ -9,7 +9,6 @@ export const defaultSheetData: SheetData = {
     schemaVersion: CURRENT_SCHEMA_VERSION,
     name: "",
     professionStory: undefined,
-    referenceFieldValues: {},
     characterImage: "",
     imageAssets: {},
     level: "1",

@@ -4,7 +4,6 @@ import type React from "react"
 import { useState } from "react"
 import { useSheetStore } from "@/lib/sheet-store"
 import { ModifierFieldAnchor } from "@/components/modifiers/modifier-field-anchor"
-import { markResourceTrack } from "@/character/resources/mark-track"
 import { CHARACTER_RESOURCE_LIMIT } from "@/character/resources/limits"
 
 export function HitPointsSection() {
@@ -94,7 +93,21 @@ export function HitPointsSection() {
     const fieldArray = Array.from({ length: CHARACTER_RESOURCE_LIMIT }, (_, i) => Boolean(formData[field]?.[i]))
 
     const handleClick = (index: number) => {
-      setSheetData(previous => markResourceTrack(previous, field, index))
+      const newFieldData = [...fieldArray]
+      const lastCheckedIndex = fieldArray.lastIndexOf(true)
+
+      if (lastCheckedIndex === index) {
+        // If clicking the last checked box, uncheck all
+        for (let i = 0; i < newFieldData.length; i++) {
+          newFieldData[i] = false
+        }
+      } else {
+        // Otherwise, check up to the clicked box
+        for (let i = 0; i < newFieldData.length; i++) {
+          newFieldData[i] = i <= index
+        }
+      }
+      setSheetData((prev) => ({ ...prev, [field]: newFieldData }))
     }
 
     return (

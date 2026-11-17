@@ -1,4 +1,3 @@
-import { isExtraReferenceField, REFERENCE_EXTRA_LABELS } from "./extra-values";
 import type { SheetData } from "@/lib/sheet-data";
 import type { ProfessionPreset } from "@/character/profession-setup/catalog";
 import { getCompactCardTitle } from "@/card/display/compact-card";
@@ -46,11 +45,6 @@ export function referenceValues(sheet: SheetData): Record<string, string> {
     result[`exp.${i + 1}.name`] = sheet.experience[i] ?? "";
     result[`exp.${i + 1}.bonus`] = signed(sheet.experienceValues?.[i] ?? "");
     result[`pack.${i}`] = sheet.inventory[i] ?? "";
-  }
-  for (const [field, value] of Object.entries(
-    sheet.referenceFieldValues ?? {},
-  )) {
-    if (isExtraReferenceField(field)) result[field] = value;
   }
   const slots = {
     main: sheet.equipment.weaponSlots.primary,
@@ -142,7 +136,6 @@ export function getReferenceBox(
 
 export function referenceFieldLabel(name: string): string {
   const clean = name.replace(/^[12]:/, "");
-  if (isExtraReferenceField(clean)) return REFERENCE_EXTRA_LABELS[clean];
   const labels: Record<string, string> = {
     name: "姓名",
     ancestry: "种族",

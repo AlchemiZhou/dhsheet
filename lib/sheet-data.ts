@@ -170,7 +170,6 @@ export interface NotebookData {
 }
 
 export interface SheetData {
-  referenceFieldValues?: Record<string, string>
   professionStory?: import("@/character/profession-setup/story").ProfessionStory
   schemaVersion: number
   // 通用属性
