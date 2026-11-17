@@ -82,7 +82,7 @@ export function DomainCardLabel({
             textAnchor="middle"
             fontFamily="Arial Black, Arial, sans-serif"
             fontWeight="900"
-            fontSize={(label.level?.length || 1) > 1 ? 21 : 25}
+            fontSize={(label.level?.length || 1) > 1 ? 19 : 23}
             fill={ink}
             stroke={ink}
             strokeWidth=".3"
