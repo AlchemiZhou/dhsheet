@@ -12,7 +12,7 @@ import { useTextModeStore } from '@/lib/text-mode-store'
 import { PrintPageRenderer } from '@/components/print/print-page-renderer'
 
 describe('beast form page registration', () => {
-  it('renders the real multi-page group before adventure notes and both card decks using in-memory data', async () => {
+  it('renders the real multi-page group after the combined card sheets and before adventure notes using in-memory data', async () => {
     const source = await loadBuiltinCardRuntimeSource({ disabledSourceIds: [] })
     useCardStore.setState({ initialized: true, loading: false, error: null,
       cards: new Map(source.cards.map(card => [card.id, card])), batches: new Map([[source.sourceId, source.batch]]) })
@@ -25,16 +25,15 @@ describe('beast form page registration', () => {
     const { container } = render(<PrintPageRenderer sheetData={sheet} />)
     const groups = Array.from(container.firstElementChild!.children)
     expect(groups.map(group => group.classList[0])).toEqual([
-      'page-one', 'page-two', 'page-three', 'page-iknis', 'page-beast-forms', 'page-adventure-notes', 'page-four', 'page-five',
+      'page-one', 'page-two', 'page-four', 'page-three', 'page-iknis', 'page-beast-forms', 'page-adventure-notes',
     ])
-    expect(groups[4].querySelectorAll('.beast-form-sheet')).toHaveLength(4)
-    expect(groups[4].querySelectorAll('article')).toHaveLength(24)
-    expect(groups[6]).toHaveTextContent('Print check')
-    expect(groups[7]).toHaveTextContent('Print check')
-    expect(groups[7]).toHaveClass('last-printed-page')
+    expect(groups[5].querySelectorAll('.beast-form-sheet')).toHaveLength(4)
+    expect(groups[5].querySelectorAll('article')).toHaveLength(24)
+    expect(groups[2].querySelectorAll('.card-item-text')).toHaveLength(2)
+    expect(groups[6]).toHaveClass('last-printed-page')
   })
 
-  it('is an optional single tab and prints before adventure notes and both card groups', () => {
+  it('is an optional single tab and prints before adventure notes and after cards', () => {
     const sheet = { ...defaultSheetData, pageVisibility: {
       rangerCompanion: true, armorTemplate: true, adventureNotes: true, beastForms: true, martialStances: false,
     } }
@@ -42,7 +41,7 @@ describe('beast form page registration', () => {
     sheet.cards = [card, card]
     sheet.inventory_cards = [card]
     expect(getVisiblePages(sheet).map(page => page.id)).toEqual([
-      'page1', 'page2', 'page3', 'page4', 'beast-forms', 'adventure-notes', 'focused-cards', 'inventory-cards',
+      'page1', 'page2', 'character-cards', 'page3', 'page4', 'beast-forms', 'adventure-notes',
     ])
     expect(getTabPages(sheet).filter(page => page.id === 'beast-forms')).toHaveLength(1)
     expect(getPageDefinition('beast-forms')?.printComponent).toBeDefined()

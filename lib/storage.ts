@@ -1,24 +1,7 @@
 import { downloadCharacterFile } from "./download-character-file";
-import {
-  getStandardCardsByTypeAsync,
-  CardType, // Import CardType
-} from "@/card";
+import { characterExportTitle } from "@/character/storage/export-title";
 import { prepareSheetForExport } from "@/character/storage/sheet-image-projection";
 import type { SheetData } from "./sheet-data";
-
-// Moved getCardClass to module scope - now async
-const getCardClass = async (cardId: string | undefined, cardType: CardType): Promise<string> => {
-  if (!cardId) return '()';
-  try {
-    const cardsOfType = await getStandardCardsByTypeAsync(cardType);
-    const card = cardsOfType.find((c) => c.id === cardId);
-    // Assuming card.class is a string. If it can be a number, convert to String.
-    return card && card.class ? String(card.class) : '()';
-  } catch (error) {
-    console.error('Error getting card class:', error);
-    return '()';
-  }
-};
 
 // 导出角色数据为JSON文件
 export async function exportCharacterData(formData: SheetData): Promise<void> {
@@ -28,18 +11,7 @@ export async function exportCharacterData(formData: SheetData): Promise<void> {
       return;
     }
 
-    // getCardClass is now defined at module scope and is async
-
-    const name = formData.name || '()';
-    // Use ...Ref.id for getting card class - now with await
-    const ancestry1Class = await getCardClass(formData.ancestry1Ref?.id, CardType.Ancestry);
-    const professionClass = await getCardClass(formData.professionRef?.id, CardType.Profession);
-    const ancestry2Class = await getCardClass(formData.ancestry2Ref?.id, CardType.Ancestry);
-    const communityClass = await getCardClass(formData.communityRef?.id, CardType.Community);
-    const level = formData.level ? String(formData.level) : '()';
-
-    const exportFileDefaultName = `${name}-${professionClass}-${ancestry1Class}-${ancestry2Class}-${communityClass}-LV${level}.json`;
-
+    const exportFileDefaultName = characterExportTitle(formData) + '.json';
     const portableData = await prepareSheetForExport(formData);
     const dataStr = JSON.stringify(portableData, null, 2);
     downloadCharacterFile(new Blob([dataStr], { type: 'application/json;charset=utf-8' }), exportFileDefaultName)

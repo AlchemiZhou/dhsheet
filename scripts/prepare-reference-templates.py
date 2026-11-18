@@ -39,7 +39,9 @@ for ident,name in NAMES.items():
  def weapon(prefix):return {'name':values.get(prefix+'.name',''),'trait':values.get(prefix+'.use',''),'damage':values.get(prefix+'.damage',''),'feature': '\n'.join(str(values.get(prefix+s,'')or'')for s in ['.feature','.feature2']).strip()}
  manifest[ident]={'name':name,'pages':pages,'attributes':{k:str(values.get('total.'+k,'')or'')for k in ['agility','strength','finesse','instinct','presence','knowledge']},'weapons':{'primary':weapon('main'),'secondary':weapon('off')},'armor':{'name':values.get('armor.name',''),'threshold':values.get('armor.threshold',''),'rating':values.get('armor.rating',''),'feature':values.get('armor.feature','')},'background':questions[0],'connections':questions[1]}
  manifest[ident]['ink']=ink
- manifest[ident]['description']=next(c['职业特性']for c in source_cards if c['名称']==name)
+ source_card=next(c for c in source_cards if c['名称']==name)
+ manifest[ident]['description']=source_card['职业特性']
+ manifest[ident]['hopeFeature']=source_card['希望特性']
  print(ident,[(assets/f'{ident}-{i+1}.webp').stat().st_size//1024 for i in range(2)],'KiB',flush=True)
  if ident=='druid':
   # The form's original LXGW WenKai font, with its embedded license metadata.

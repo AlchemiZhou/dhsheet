@@ -10,8 +10,7 @@ import { embedReferencePrintFonts, readPrintAssetDataUrl } from '@/character/pri
  */
 
 import { SheetData } from './sheet-data'
-import { CardType, getStandardCardsByTypeAsync } from '@/card'
-import { StandardCard } from '@/card/card-types'
+import { characterExportTitle } from '@/character/storage/export-title'
 import { prepareSheetForExport } from '@/character/storage/sheet-image-projection'
 import { UnifiedProgressModalManager } from '@/components/ui/unified-progress-modal'
 import { embeddedStyles, hasEmbeddedStyles, getStylesInfo } from './embedded-styles'
@@ -36,43 +35,6 @@ interface HTMLExportOptions {
   includeStyles?: boolean
   compressHTML?: boolean
   filename?: string
-}
-
-/**
- * 获取卡牌类别信息（本地环境安全版本）
- */
-async function getCardClass(cardId: string | undefined, cardType: CardType): Promise<string> {
-  if (!cardId) return '()'
-
-  try {
-    const cardsOfType: StandardCard[] = await getStandardCardsByTypeAsync(cardType)
-    const card = cardsOfType.find((c: StandardCard) => c.id === cardId)
-    return card && card.class ? String(card.class) : '()'
-  } catch (error) {
-    console.error('Error getting card class:', error)
-
-    // 在本地环境下，可能无法访问卡牌数据，返回ID作为后备
-    if (isLocalFileEnvironment()) {
-      console.warn(`本地环境下无法获取卡牌数据，使用ID作为后备: ${cardId}`)
-      return cardId.substring(0, 8) + '...' // 返回截断的ID
-    }
-
-    return '()'
-  }
-}
-
-/**
- * 生成HTML文档标题
- */
-async function generateDocumentTitle(formData: SheetData): Promise<string> {
-  const name = formData.name || '()'
-  const ancestry1Class = await getCardClass(formData.ancestry1Ref?.id, CardType.Ancestry)
-  const professionClass = await getCardClass(formData.professionRef?.id, CardType.Profession)
-  const ancestry2Class = await getCardClass(formData.ancestry2Ref?.id, CardType.Ancestry)
-  const communityClass = await getCardClass(formData.communityRef?.id, CardType.Community)
-  const level = formData.level || '()'
-
-  return `${name}-${professionClass}-${ancestry1Class}-${ancestry2Class}-${communityClass}-LV${level}`
 }
 
 /**
@@ -632,7 +594,7 @@ function extractPrintPreviewHTML(onProgress?: ProgressCallback): Promise<string>
  */
 async function generateFullHTML(formData: SheetData, options: HTMLExportOptions = {}, onProgress?: ProgressCallback): Promise<string> {
   try {
-    const title = await generateDocumentTitle(formData)
+    const title = characterExportTitle(formData)
     const extractedHTML = await extractPrintPreviewHTML(onProgress)
     const styles = options.includeStyles !== false ? extractPageStyles() : ''
     const sourceUrl = /^https?:$/.test(window.location.protocol)
@@ -692,7 +654,7 @@ async function generateFileName(formData: SheetData, options: HTMLExportOptions 
     return options.filename.endsWith('.html') ? options.filename : `${options.filename}.html`
   }
 
-  const title = await generateDocumentTitle(formData)
+  const title = characterExportTitle(formData)
   return `${title}.html`
 }
 

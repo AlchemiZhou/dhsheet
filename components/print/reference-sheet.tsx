@@ -313,11 +313,15 @@ export function ReferenceSheet({
   sheet,
   id,
   page,
+  customRules = false,
+  customHope = false,
   onOverflow,
 }: {
   sheet: SheetData;
   id: ProfessionThemeId;
   page: 1 | 2;
+  customRules?: boolean;
+  customHope?: boolean;
   onOverflow: (entry: PrintOverflow | undefined, key: string) => void;
 }) {
   const preset = PROFESSION_PRESETS[id] as ProfessionPreset;
@@ -356,6 +360,18 @@ export function ReferenceSheet({
           alt={`${preset.name}第${page}页原版版式`}
           loading="eager"
         />
+        {page === 1 && (customRules || customHope) && (
+          <>
+            <svg className="reference-story-mask" viewBox={`0 0 ${width} ${height}`} aria-hidden="true">
+              {customRules && <rect x="5" y="620" width="252" height="186" fill="white" />}
+              {customHope && <rect x="5" y="316" width="252" height="34" fill="white" />}
+            </svg>
+            {customRules && <Field box={box([12, 623, 252, 802], 9)} name="1:profession.rules" prose minFontSize={7.5}
+              value={(sheet.cards[0].description || '').replace(/(\*{1,3})([^*\n]+)\1/g, '$2')} onOverflow={onOverflow} />}
+            {customHope && <Field box={box([12, 317, 252, 349], 8)} name="1:profession.hope" prose minFontSize={7}
+              value={(sheet.cards[0].professionSpecial?.希望特性 || '').replace(/(\*{1,3})([^*\n]+)\1/g, '$2')} onOverflow={onOverflow} />}
+          </>
+        )}
         {page === 2 && sheet.characterImage && (
           <CharacterPortrait image={sheet.characterImage} />
         )}

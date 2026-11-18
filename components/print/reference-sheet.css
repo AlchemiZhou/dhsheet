@@ -202,3 +202,30 @@
     break-after: page;
   }
 }
+
+.printed-card-sheet .truncate {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+@media screen {
+  .printed-card-sheet + .printed-card-sheet {
+    margin-top: 20px;
+  }
+}
+@media print {
+  .print-all-pages .page-four.sheet-content-page {
+    padding: 0 !important;
+  }
+  .print-all-pages .printed-card-sheets {
+    display: block;
+    width: 210mm;
+  }
+  .print-all-pages .sheet-content-page .printed-card-sheet {
+    box-sizing: content-box;
+    padding: 5mm 5mm 0 !important;
+  }
+  .printed-card-sheet + .printed-card-sheet {
+    page-break-before: always;
+    break-before: page;
+  }
+}

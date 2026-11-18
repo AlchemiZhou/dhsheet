@@ -2,6 +2,7 @@
 import { getDomainCardLabel } from "@/card/display/domain-label"
 import { DomainCardLabel } from "./domain-card-label"
 import { useCardArtworkStore } from '@/lib/card-artwork-store'
+import { getBuiltinStandardCards } from '@/card'
 import { CardContent } from './card-content'
 
 import { StandardCard, ExtendedStandardCard, isVariantCard, getVariantRealType, CardType } from "@/card/card-types"
@@ -39,30 +40,29 @@ export function PrintImageCard({ card }: PrintImageCardProps) {
 
 function IllustratedPrintImageCard({ card }: PrintImageCardProps) {
     const [imageSrc, setImageSrc] = React.useState<string | null>(null)
-    const [imageError, setImageError] = React.useState(false)
-
-    // 获取图片 URL
-    React.useEffect(() => {
-        setImageError(false)
-        const loadImageUrl = async () => {
-            const url = await getCardImageUrlAsync(card, false)
-            setImageSrc(url)
-        }
-        loadImageUrl()
+    const [textOnly, setTextOnly] = React.useState(false)
+    const recoverArtwork = React.useCallback((failedUrl: string | null) => {
+        const matches = getBuiltinStandardCards().filter(candidate =>
+            candidate.type === card.type && candidate.class === card.class &&
+            candidate.name === card.name && candidate.imageUrl)
+        const replacement = matches.length === 1 ? getCardImageUrl(matches[0]) : undefined
+        if (replacement && replacement !== failedUrl) setImageSrc(replacement)
+        else setTextOnly(true)
     }, [card])
-
-    // 图片加载失败时使用备用图片
     React.useEffect(() => {
-        if (imageError && !imageSrc?.includes('empty-card.webp')) {
-            const url = getCardImageUrl(card, true)
-            setImageSrc(url)
-        }
-    }, [imageError, card, imageSrc])
+        let active = true
+        setTextOnly(false)
+        setImageSrc(null)
+        getCardImageUrlAsync(card).then(url => {
+            if (active) {
+                if (url === getCardImageUrl(card, true)) recoverArtwork(url)
+                else setImageSrc(url)
+            }
+        }).catch(() => { if (active) recoverArtwork(null) })
+        return () => { active = false }
+    }, [card, recoverArtwork])
 
-    if (!card) {
-        return null
-    }
-
+    if (textOnly) return <div className="border rounded p-2 bg-white text-xs h-full flex flex-col"><CardContent card={card} /></div>
     const displayName = card.name || "未命名卡牌"
     const displayDescription = card.description || "无描述。"
     const displayItem1 = getDomainCardLabel(card)?.name || card.cardSelectDisplay?.item1 || ""
@@ -81,7 +81,7 @@ function IllustratedPrintImageCard({ card }: PrintImageCardProps) {
                         fill
                         className="w-full h-full object-cover object-[center_20%]"
                         sizes="30vw"
-                        onError={() => setImageError(true)}
+                        onError={() => recoverArtwork(imageSrc)}
                         priority
                     />
                 )}

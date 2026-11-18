@@ -13,11 +13,12 @@ import './layout/mobile-sheet.css'
 import { BeastFormsPrintPages } from '@/components/beast-forms/beast-forms-print-pages'
 import { BeastFormsNavigationProvider } from '@/components/beast-forms/beast-forms-navigation'
 import { useBeastFormPages } from '@/components/beast-forms/use-beast-form-pages'
-import { isEmptyCard, type StandardCard } from "@/card/card-types"
+import { getPrintableCards } from "@/character/print-reference/cards"
+import { type StandardCard } from "@/card/card-types"
 import { CardDrawer } from "@/components/card-drawer"
 import { showFadeNotification } from "@/components/ui/fade-notification"
 import { CardSelectionModal } from "@/components/modals/card-selection-modal"
-import { CharacterSheetPageFour, CharacterSheetPageFive } from "@/components/character-sheet-page-card-print"
+import { CharacterSheetPageFour } from "@/components/character-sheet-page-card-print"
 import ArmorTemplatePage from "@/components/character-sheet-page-iknis"
 import { CharacterCreationGuide } from "@/components/guide/character-creation-guide"
 import { AnnouncementsModal } from "@/components/modals/announcements-modal"
@@ -164,36 +165,13 @@ registerPages([
     showInTabs: true
   },
   {
-    id: 'focused-cards',
-    label: '聚焦卡组',
+    id: 'character-cards',
+    label: '角色卡牌',
     component: CharacterSheetPageFour,
     printClass: 'page-four',
-    visibility: {
-      type: 'data',
-      dataCheck: (data) => {
-        // 检查聚焦卡组（排除第一张卡）
-        return data.cards && data.cards.length > 1 &&
-          data.cards.slice(1).some(card => card && !isEmptyCard(card))
-      }
-    },
-    printOrder: 7,
-    showInTabs: false  // 不在Tab中显示
-  },
-  {
-    id: 'inventory-cards',
-    label: '库存卡组',
-    component: CharacterSheetPageFive,
-    printClass: 'page-five',
-    visibility: {
-      type: 'data',
-      dataCheck: (data) => {
-        // 检查库存卡组
-        return !!(data.inventory_cards && data.inventory_cards.length > 0 &&
-          data.inventory_cards.some(card => card && !isEmptyCard(card)))
-      }
-    },
-    printOrder: 8,
-    showInTabs: false  // 不在Tab中显示
+    visibility: { type: 'data', dataCheck: sheet => getPrintableCards(sheet).length > 0 },
+    printOrder: 2.5,
+    showInTabs: false
   },
   {
     id: 'beast-forms',

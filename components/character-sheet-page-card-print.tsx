@@ -2,10 +2,11 @@
 import { useCardArtworkStore } from '@/lib/card-artwork-store'
 
 import React, { useMemo } from "react"
-import { isEmptyCard, StandardCard } from "@/card/card-types"
+import { type StandardCard } from "@/card/card-types"
 import { PrintImageCard } from "@/components/ui/print-image-card"
 import { CardContent } from "@/components/ui/card-content"
 import { useTextModeStore } from "@/lib/text-mode-store"
+import { getPrintableCards } from "@/character/print-reference/cards"
 import { useSheetStore } from "@/lib/sheet-store"
 
 /**
@@ -78,80 +79,19 @@ const CardDeckPrintSection: React.FC<CardDeckPrintSectionProps> = ({ cards, titl
     )
 }
 
-/**
- * 通用卡牌打印页面组件
- *
- * 纯渲染组件，过滤空卡牌后渲染。
- */
-interface CardPrintPageProps {
-    title: string
-    cards: StandardCard[]
-    className?: string
-}
+/** Print the loadout and vault in slot order on the same nine-card sheets. */
+export function CharacterSheetPageFour() {
+    const sheet = useSheetStore(state => state.sheetData)
+    if (!sheet) return null
 
-export const CharacterSheetCardPrintPage: React.FC<CardPrintPageProps> = ({
-    title,
-    cards,
-    className = ""
-}) => {
-    // 过滤空卡牌
-    const validCards = useMemo(() => {
-        return cards.filter((card: StandardCard) => !isEmptyCard(card))
-    }, [cards])
-
-    if (validCards.length === 0) {
-        return null
-    }
-
-    return (
-        <div className="w-full max-w-[210mm] mx-auto">
-            <div
-                className={`a4-page bg-white text-gray-800 shadow-lg print:shadow-none rounded-md p-4 print:p-0 ${className}`}
-                style={{ width: "210mm" }}
-            >
-                <CardDeckPrintSection cards={validCards} title={title} />
+    const cards = getPrintableCards(sheet)
+    const pages = []
+    for (let start = 0; start < cards.length; start += 9) {
+        pages.push(
+            <div className="a4-page printed-card-sheet bg-white p-4" key={start}>
+                <CardDeckPrintSection cards={cards.slice(start, start + 9)} title="角色卡牌" />
             </div>
-        </div>
-    )
+        )
+    }
+    return <div className="printed-card-sheets w-full max-w-[210mm] mx-auto">{pages}</div>
 }
-
-/**
- * 聚焦卡组打印页面
- */
-export const CharacterSheetPageFour: React.FC = () => {
-    const { sheetData: formData } = useSheetStore()
-
-    const focusedCards = useMemo(() => {
-        const allCards = formData?.cards || []
-        return allCards.slice(1) // 跳过序号 0 的卡牌
-    }, [formData?.cards])
-
-    return (
-        <CharacterSheetCardPrintPage
-            title="聚焦卡组"
-            cards={focusedCards}
-            className="character-sheet-page-four"
-        />
-    )
-}
-
-/**
- * 库存卡组打印页面
- */
-export const CharacterSheetPageFive: React.FC = () => {
-    const { sheetData: formData } = useSheetStore()
-
-    const inventoryCards = useMemo(() => {
-        return formData?.inventory_cards || []
-    }, [formData?.inventory_cards])
-
-    return (
-        <CharacterSheetCardPrintPage
-            title="库存卡组"
-            cards={inventoryCards}
-            className="character-sheet-page-five"
-        />
-    )
-}
-
-export default CharacterSheetCardPrintPage

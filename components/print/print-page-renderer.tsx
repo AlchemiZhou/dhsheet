@@ -53,11 +53,16 @@ export function PrintPageRenderer({
   const referenceEnabled = referencePrint ?? preferredReferencePrint;
   const profession = sheetData.cards?.[0];
   const preset = getProfessionPreset(profession);
-  // Modified/custom profession rules continue to use their complete live sheet.
+  // Only reuse named templates for the same profession. Print the saved rules over
+  // the template when a pack supplies its own wording.
+  const knownName = Boolean(preset && profession?.name === preset.name);
+  const customRules = Boolean(preset && knownName && profession?.description !== processCardDescription(preset.description));
+  const savedHope = profession?.professionSpecial?.希望特性;
+  const customHope = knownName && typeof savedHope === "string" && savedHope !== preset?.hopeFeature;
   const templateId =
     referenceEnabled &&
     preset &&
-    profession?.description === processCardDescription(preset.description)
+    (customRules || profession?.description === processCardDescription(preset.description))
       ? resolveProfessionPresetId(profession)
       : undefined;
   const legacyNotes = [sheetData.characterMotivation];
@@ -103,6 +108,8 @@ export function PrintPageRenderer({
               ) : referencePage ? (
                 <ReferenceSheet
                   sheet={sheetData}
+                  customRules={customRules}
+                  customHope={customHope}
                   id={templateId!}
                   page={page.id === "page1" ? 1 : 2}
                   onOverflow={reportOverflow}

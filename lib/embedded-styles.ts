@@ -1,6 +1,6 @@
 /**
  * 自动生成的CSS内容文件
- * 生成时间: 2026-11-17T09:41:23.053Z
+ * 生成时间: 2026-11-18T04:44:53.572Z
  * 
  * 该文件包含了应用的所有CSS样式，用于HTML导出功能
  * 请勿手动编辑此文件，它会在构建时自动生成
@@ -11,7 +11,7 @@
 
 /**
  * 完整的CSS内容（包含Tailwind CSS和应用样式）
- * 大小: 183.74 KB
+ * 大小: 184.28 KB
  */
 export const embeddedStyles = `*, ::before, ::after {
   --tw-border-spacing-x: 0;
@@ -5008,6 +5008,33 @@ html {
   }
 }
 
+.printed-card-sheet .truncate {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+@media screen {
+  .printed-card-sheet + .printed-card-sheet {
+    margin-top: 20px;
+  }
+}
+@media print {
+  .print-all-pages .page-four.sheet-content-page {
+    padding: 0 !important;
+  }
+  .print-all-pages .printed-card-sheets {
+    display: block;
+    width: 210mm;
+  }
+  .print-all-pages .sheet-content-page .printed-card-sheet {
+    box-sizing: content-box;
+    padding: 5mm 5mm 0 !important;
+  }
+  .printed-card-sheet + .printed-card-sheet {
+    page-break-before: always;
+    break-before: page;
+  }
+}
+
 .domain-card-label { display:inline-flex; align-items:center; gap:4px; flex-shrink:0; max-width:100%; min-width:0; padding:1px 3px 0; border-top:2px solid var(--card-domain-color); color:#292929; background:#fff; font:11px/1.2 Arial,sans-serif; vertical-align:middle; }
 .domain-label-art { display:block; width:14px; height:22px; object-fit:contain; flex-shrink:0; }
 .domain-label-name { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:7em; font-weight:600; }
@@ -6635,10 +6662,6 @@ html {
     background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
   }
 
-  .print\\:p-0 {
-    padding: 0px;
-  }
-
   .print\\:py-1 {
     padding-top: 4px;
     padding-bottom: 4px;
@@ -6765,7 +6788,7 @@ export function getStylesInfo() {
     size: embeddedStyles.length,
     sizeKB: (embeddedStyles.length / 1024).toFixed(2),
     sizeMB: (embeddedStyles.length / 1024 / 1024).toFixed(2),
-    generated: '2026-11-17T09:41:23.054Z',
+    generated: '2026-11-18T04:44:53.573Z',
     compressed: false
   };
 }

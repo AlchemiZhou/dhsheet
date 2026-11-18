@@ -11,7 +11,7 @@ vi.mock('@/lib/page-registry', () => ({ getVisiblePages: () => [
   { id: 'page1', printClass: 'page-one', component: () => <div>完整在线布局</div> },
   { id: 'page2', printClass: 'page-two', component: () => <div>完整在线布局</div> },
 ] }))
-vi.mock('@/components/print/reference-sheet', () => ({ ReferenceSheet: () => <div data-native-layout /> }))
+vi.mock('@/components/print/reference-sheet', () => ({ ReferenceSheet: ({ customRules, sheet }: { customRules: boolean, sheet: typeof defaultSheetData }) => <div data-native-layout>{customRules && sheet.cards[0].description}</div> }))
 afterEach(cleanup)
 const sheet = () => {
   const value = structuredClone(defaultSheetData)
@@ -30,6 +30,13 @@ describe('explicit reference snapshot layout', () => {
   it('still preserves custom profession rules instead of replacing them with a builtin template', () => {
     const value = sheet()
     value.cards![0].description = processCardDescription('我的自定义职业规则')
+    const { container } = render(<PrintPageRenderer sheetData={value} referencePrint />)
+    expect(container.querySelectorAll('[data-native-layout]')).toHaveLength(2)
+    expect(container.textContent).toContain('我的自定义职业规则')
+  })
+  it('keeps the live layout for a profession without a matching template', () => {
+    const value = sheet()
+    Object.assign(value.cards[0], { name: '测试职业', class: '测试职业', id: 'custom', description: '独有规则' })
     const { container } = render(<PrintPageRenderer sheetData={value} referencePrint />)
     expect(container.querySelectorAll('[data-native-layout]')).toHaveLength(0)
     expect(container.textContent).toContain('完整在线布局')

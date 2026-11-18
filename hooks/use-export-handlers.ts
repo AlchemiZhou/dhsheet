@@ -1,6 +1,6 @@
 import { useCallback, useRef } from 'react'
 import { flushSync } from 'react-dom'
-import { getStandardCardById } from '@/card'
+import { characterExportTitle } from '@/character/storage/export-title'
 import { exportToHTML } from '@/lib/html-exporter'
 import { exportCharacterData } from '@/lib/storage'
 import { APP_TITLE } from '@/lib/seo'
@@ -84,27 +84,7 @@ export function useExportHandlers({
   // 打印所有页面
   const handlePrintAll = useCallback(async () => {
     quickPrint.current = false
-    const getCardClass = (cardId: string | undefined): string => {
-      if (!cardId) return '()'
-      try {
-        const card = getStandardCardById(cardId)
-        return card && card.class ? String(card.class) : '()'
-      } catch (error) {
-        console.error('Error getting card class:', error)
-        return '()'
-      }
-    }
-
-    const name = formData.name || '()'
-    const level = formData.level || '()'
-
-    const ancestry1Class = getCardClass(formData.ancestry1Ref?.id)
-    const professionClass = getCardClass(formData.professionRef?.id)
-    const ancestry2Class = getCardClass(formData.ancestry2Ref?.id)
-    const communityClass = getCardClass(formData.communityRef?.id)
-
-    const title = `${name}-${professionClass}-${ancestry1Class}-${ancestry2Class}-${communityClass}-LV${level}`
-    document.title = title
+    document.title = characterExportTitle(formData)
     setIsPrintingAll(true)
 
     // 等待 React 完成渲染
