@@ -17,8 +17,8 @@ async function waitForPrintImages(): Promise<void> {
   }
 }
 
-/** Commit the requested palette before the browser captures its print document. */
-export async function printSheetPDF(
+/** Commit the requested palette and wait for the mounted print assets. */
+export async function preparePrintDocument(
   mode: PDFPrintMode = "color",
 ): Promise<void> {
   flushSync(() =>
@@ -27,6 +27,10 @@ export async function printSheetPDF(
   await document.fonts?.ready;
   await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
   await waitForPrintImages();
+}
+
+export async function printSheetPDF(mode: PDFPrintMode = "color"): Promise<void> {
+  await preparePrintDocument(mode);
   if (typeof window.print !== "function") {
     throw new Error("此浏览器没有提供打印功能。可导出 HTML 后，在支持打印的浏览器中打开。");
   }

@@ -9,6 +9,7 @@ interface PrintReadyCheckerProps {
   onPrintReady?: () => void
   /** 跳过等待时的回调 */
   onSkipWaiting?: () => void
+  showProgress?: boolean
   children?: React.ReactNode
 }
 
@@ -21,6 +22,7 @@ interface PrintReadyCheckerProps {
 export function PrintReadyChecker({
   onPrintReady,
   onSkipWaiting,
+  showProgress = true,
   children
 }: PrintReadyCheckerProps) {
   const { isReady, progress, timedOut, forceReady } = usePrintContext()
@@ -36,6 +38,10 @@ export function PrintReadyChecker({
 
   // 监听就绪状态
   useEffect(() => {
+    if (!showProgress) {
+      if (progressModal.isVisible()) progressModal.close()
+      return
+    }
     if (isReady) {
       // 已就绪，关闭弹窗并通知
       if (progressModal.isVisible()) {
@@ -59,11 +65,11 @@ export function PrintReadyChecker({
         "跳过加载"
       )
     }
-  }, [isReady, progress.loaded, progress.total, onPrintReady, onSkipWaiting, handleSkipWaiting, progressModal])
+  }, [isReady, progress.loaded, progress.total, onPrintReady, onSkipWaiting, handleSkipWaiting, progressModal, showProgress])
 
   // 更新进度消息（不重新显示弹窗）
   useEffect(() => {
-    if (!isReady && progressModal.isVisible() && progress.total > 0) {
+    if (showProgress && !isReady && progressModal.isVisible() && progress.total > 0) {
       progressModal.updateLoading(`正在加载图片 ${progress.loaded}/${progress.total}...`)
     }
   }, [progress.loaded, progress.total, isReady, progressModal])

@@ -1,10 +1,11 @@
-import { useCallback, useRef } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import { flushSync } from 'react-dom'
 import { characterExportTitle } from '@/character/storage/export-title'
 import { exportToHTML } from '@/lib/html-exporter'
 import { exportCharacterData } from '@/lib/storage'
 import { APP_TITLE } from '@/lib/seo'
 import type { SheetData } from '@/lib/sheet-data'
+import type { PDFFileState } from '@/components/modals/pdf-file-dialog'
 import { printSheetPDF, type PDFPrintMode } from '@/character/print-reference/print-document'
 
 // 配置常量
@@ -73,6 +74,9 @@ export function useExportHandlers({
 }: UseExportHandlersProps) {
 
   const quickPrint = useRef(false)
+  const generatingPDF = useRef(false)
+  const requestedPDFMode = useRef<PDFPrintMode>('color')
+  const [pdfFileState, setPDFFileState] = useState<PDFFileState | null>(null)
   const onAfterPrint = useCallback(() => {
     if (quickPrint.current) {
       quickPrint.current = false
@@ -136,6 +140,35 @@ export function useExportHandlers({
     }
   }, [handlePrintAll, setIsPrintingAll])
 
+  const handlePDFFile = useCallback(async (mode: PDFPrintMode = 'color', fromPreview = false) => {
+    if (generatingPDF.current) return
+    generatingPDF.current = true
+    requestedPDFMode.current = mode
+    try {
+      flushSync(() => {
+        setPDFFileState({ status: 'generating', page: 0 })
+        if (!fromPreview) setIsPrintingAll(true)
+      })
+      const { createSheetPDFFile } = await import('@/character/print-reference/pdf-file')
+      const file = await createSheetPDFFile(mode, characterExportTitle(formData), page => {
+        setPDFFileState({ status: 'generating', page })
+      })
+      setPDFFileState({ status: 'ready', file })
+    } catch (error) {
+      console.error('[ExportHandlers] PDF file generation failed', error)
+      setPDFFileState({ status: 'failed', message: error instanceof Error ? error.message : String(error) })
+    } finally {
+      generatingPDF.current = false
+      if (!fromPreview) setIsPrintingAll(false)
+    }
+  }, [formData, setIsPrintingAll])
+
+  const closePDFFile = useCallback(() => setPDFFileState(null), [])
+  const printPDFFileFallback = useCallback(() => {
+    closePDFFile()
+    void handleQuickExportPDF(requestedPDFMode.current)
+  }, [closePDFFile, handleQuickExportPDF])
+
   // 快速 HTML 导出
   const handleQuickExportHTML = useCallback(async () => {
     try {
@@ -158,6 +191,10 @@ export function useExportHandlers({
     handleExportHTML,
     handleExportJSON,
     handleQuickExportPDF,
+    handlePDFFile,
+    pdfFileState,
+    closePDFFile,
+    printPDFFileFallback,
     handleQuickExportHTML,
     handleQuickExportJSON: handleExportJSON,
     onAfterPrint,

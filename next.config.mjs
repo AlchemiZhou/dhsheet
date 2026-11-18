@@ -39,6 +39,10 @@ const nextConfig = {
   // distributions. Compile them for the same browsers as application code.
   transpilePackages: [
     'uuid',
+    'html2canvas-pro',
+    'jspdf',
+    'fast-png',
+    'iobuffer',
     'dexie',
     '@radix-ui/react-slot',
     '@radix-ui/react-id',

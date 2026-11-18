@@ -42,6 +42,7 @@ import { useDualPageStore } from "@/lib/dual-page-store"
 import { registerPages, getTabPages } from "@/lib/page-registry"
 import { PageDisplay } from "@/components/layout/page-display"
 import { BottomDock } from "@/components/layout/bottom-dock"
+import { PDFFileDialog } from "@/components/modals/pdf-file-dialog"
 import { PrintPageRenderer } from "@/components/print/print-page-renderer"
 import { printSheetPDF } from '@/character/print-reference/print-document'
 import { SaveSwitcher } from "@/components/ui/save-switcher"
@@ -280,10 +281,16 @@ export default function HomeClientApp() {
     handleExportHTML,
     handleExportJSON,
     handleQuickExportPDF,
+    handlePDFFile,
+    pdfFileState,
+    closePDFFile,
+    printPDFFileFallback,
     handleQuickExportHTML,
     handleQuickExportJSON,
     onAfterPrint,
   } = useExportHandlers({ formData, setIsPrintingAll, setReferencePrintOverride })
+
+  const isPDFDialogOpen = Boolean(pdfFileState)
 
   // 客户端挂载检测
   useEffect(() => {
@@ -541,6 +548,7 @@ export default function HomeClientApp() {
   // 键盘快捷键 - 页面切换 + 存档切换 + ESC退出预览
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
+      if (isPDFDialogOpen) return
       // ESC键退出导出预览
       if (event.key === 'Escape' && isPrintingAll) {
         event.preventDefault()
@@ -617,7 +625,7 @@ export default function HomeClientApp() {
     return () => {
       document.removeEventListener('keydown', handleKeyDown)
     }
-  }, [characterList, currentCharacterId, characterManagementModalOpen, isPrintingAll, isGuideOpen, currentTabValue, formData?.pageVisibility])
+  }, [characterList, currentCharacterId, characterManagementModalOpen, isPrintingAll, isPDFDialogOpen, isGuideOpen, currentTabValue, formData?.pageVisibility])
 
   // 已移除聚焦卡牌变更处理函数 - 功能由双卡组系统取代
 
@@ -670,6 +678,8 @@ export default function HomeClientApp() {
     )
   }
 
+  const pdfFileDialog = <PDFFileDialog state={pdfFileState} onClose={closePDFFile} onPrint={printPDFFileFallback} />
+
   if (isPrintingAll) {
     const handleSkipWaiting = () => {
       console.log('[App] 用户选择跳过图片加载等待，页面将立即显示')
@@ -679,12 +689,12 @@ export default function HomeClientApp() {
       <CurrentCharacterIdContext.Provider value={currentCharacterId}>
         <BeastFormsNavigationProvider key={currentCharacterId}>
         <PrintProvider containerRef={printContainerRef}>
-          <PrintReadyChecker onSkipWaiting={handleSkipWaiting}>
+          <PrintReadyChecker onSkipWaiting={handleSkipWaiting} showProgress={!isPDFDialogOpen}>
             <div className="print-all-pages sheet-print-preview">
               <PrintHelper onAfterPrint={onAfterPrint} />
 
               {/* 顶部提示横条 - 只在屏幕上显示，打印时隐藏 */}
-              <div className="fixed top-0 left-0 right-0 z-[70] print:hidden">
+              <div className={isPDFDialogOpen ? "hidden" : "fixed top-0 left-0 right-0 z-[70] print:hidden"}>
                 <div
                   className="bg-black bg-opacity-50 text-white px-6 py-3 text-center cursor-pointer hover:bg-opacity-70 transition-all duration-200"
                   onClick={() => setIsPrintingAll(false)}
@@ -701,7 +711,7 @@ export default function HomeClientApp() {
               <BottomDock
                 mode="preview"
                 isMobile={isMobile}
-                onExportPDF={mode => printSheetPDF(mode).catch(error => {
+                onExportPDF={mode => isMobile ? handlePDFFile(mode, true) : printSheetPDF(mode).catch(error => {
                   alert('PDF导出失败：' + (error instanceof Error ? error.message : String(error)))
                 })}
                 onExportHTML={handleExportHTML}
@@ -719,6 +729,7 @@ export default function HomeClientApp() {
               </div>
             </div>
           </PrintReadyChecker>
+          {pdfFileDialog}
         </PrintProvider>
         </BeastFormsNavigationProvider>
       </CurrentCharacterIdContext.Provider>
@@ -861,7 +872,7 @@ export default function HomeClientApp() {
         onPrintAll={handlePrintAll}
         onOpenSealDiceExport={() => setSealDiceExportModalOpen(true)}
         onQuickExportJSON={handleQuickExportJSON}
-        onQuickExportPDF={handleQuickExportPDF}
+        onQuickExportPDF={isMobile ? handlePDFFile : handleQuickExportPDF}
         onQuickExportHTML={handleQuickExportHTML}
         onOpenCharacterManagement={() => setCharacterManagementModalOpen(true)}
         onQuickCreateArchive={handleQuickCreateArchive}
@@ -869,6 +880,8 @@ export default function HomeClientApp() {
         hasUnreadAnnouncements={hasUnreadAnnouncements}
         onOpenAnnouncements={openAnnouncementsModal}
       />
+
+      {pdfFileDialog}
 
       {/* 快捷键提示 */}
       {!isMobile && showShortcutHint && (
