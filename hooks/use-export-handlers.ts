@@ -1,7 +1,6 @@
 import { useCallback, useRef, useState } from 'react'
 import { flushSync } from 'react-dom'
 import { characterExportTitle } from '@/character/storage/export-title'
-import { exportToHTML } from '@/lib/html-exporter'
 import { exportCharacterData } from '@/lib/storage'
 import { APP_TITLE } from '@/lib/seo'
 import type { SheetData } from '@/lib/sheet-data'
@@ -104,6 +103,7 @@ export function useExportHandlers({
       flushSync(() => setReferencePrintOverride(true))
       await document.fonts?.ready
       await new Promise<void>(resolve => requestAnimationFrame(() => resolve()))
+      const { exportToHTML } = await import('@/lib/html-exporter')
       await exportToHTML(formData)
       console.log('[ExportHandlers] HTML 导出完成')
     } catch (error) {

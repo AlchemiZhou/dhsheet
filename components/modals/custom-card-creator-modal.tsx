@@ -24,7 +24,11 @@ import {
 } from "@/lib/sheet-custom-card-types"
 import { useCardFormPreview } from "@/hooks/use-card-form-preview"
 import { PreviewPanel } from "./custom-card-creator-modal/PreviewPanel"
-import MarkdownEditor from "@/components/card-editor/markdown-editor"
+import dynamic from "next/dynamic"
+
+const MarkdownEditor = dynamic(() => import("@/components/card-editor/markdown-editor"), {
+  loading: () => <p role="status">正在加载卡牌编辑器…</p>,
+})
 
 interface CustomCardCreatorModalProps {
   isOpen: boolean
