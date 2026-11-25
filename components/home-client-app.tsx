@@ -48,7 +48,7 @@ import { printSheetPDF } from '@/character/print-reference/print-document'
 import { SaveSwitcher } from "@/components/ui/save-switcher"
 import { MemoryAlert } from "@/components/memory-alert"
 import { memoryMonitor } from "@/lib/memory-monitor"
-import { saveCharacterSheet } from "@/character/storage/character-save-storage"
+import { saveCharacterEdits } from "@/character/storage/character-save-storage"
 import {
   announcements,
   isLatestAnnouncementRead,
@@ -413,31 +413,13 @@ export default function HomeClientApp() {
   }
 
 
-  // 自动保存当前角色数据（带防抖和更深层的变更检测）
   useEffect(() => {
-    if (!isLoading && currentCharacterId && formData) {
-      const saveTimeout = setTimeout(() => {
-        void saveCharacterSheet(currentCharacterId, formData)
-          .then(() => {
-            console.log(`[App] Auto-saved character: ${currentCharacterId}`)
-          })
-          .catch((error) => {
-            console.error(`[App] Error auto-saving character ${currentCharacterId}:`, error)
-            alert('自动保存失败')
-          })
-      }, 300)
-
-      return () => clearTimeout(saveTimeout)
-    }
+    if (isLoading || !currentCharacterId || !formData) return
+    void saveCharacterEdits(currentCharacterId, formData).catch(error => {
+      console.error(`[App] Error auto-saving character ${currentCharacterId}:`, error)
+      alert('自动保存失败')
+    })
   }, [formData, currentCharacterId, isLoading])
-
-
-
-
-
-
-
-
 
   // Effect for handling "Print All Pages" - 移除自动打印功能
   // useEffect(() => {
@@ -644,9 +626,9 @@ export default function HomeClientApp() {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center px-6 text-center">
         <div className="max-w-lg rounded-lg border border-red-200 bg-red-50 p-6 text-red-900">
-          <h1 className="text-xl font-semibold">存档图片迁移失败</h1>
+          <h1 className="text-xl font-semibold">角色存档暂时无法打开</h1>
           <p className="mt-3 text-sm leading-6">
-            为了避免旧图片继续占用 localStorage，应用需要先完成一次存档图片迁移。当前迁移失败，已停止加载角色存档。
+            请保留此浏览器的网站数据，重新加载后再试。
           </p>
           <p className="mt-3 break-words rounded bg-white/70 p-3 text-left text-xs">
             {migrationError.message}

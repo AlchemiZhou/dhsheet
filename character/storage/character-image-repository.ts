@@ -30,7 +30,7 @@ export async function saveCharacterImage(input: {
 }
 
 export async function getCharacterImage(key: string): Promise<CharacterImageRecord | null> {
-  if (!isCharacterImageIndexedDBAvailable()) return null
+  if (!isCharacterImageIndexedDBAvailable()) throw new Error('角色图片存储暂时不可用，请保留网站数据并重试。')
   return (await characterImageDb.characterImages.get(key)) ?? null
 }
 

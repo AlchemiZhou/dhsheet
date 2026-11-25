@@ -163,6 +163,20 @@ describe('home autosave image storage', () => {
     await clearAllCharacterImages()
   })
 
+  it('keeps the last edit when the user leaves immediately after typing', () => {
+    sheetStoreState.sheetData = { ...sheetData, characterImage: '', name: '原名' }
+    try {
+      const { rerender, unmount } = render(<HomeClientApp />)
+      sheetStoreState.sheetData = { ...sheetStoreState.sheetData, name: '刚修改的名字' }
+      rerender(<HomeClientApp />)
+      unmount()
+      const readName = () => JSON.parse(localStorage.getItem(CHARACTER_DATA_PREFIX + 'current-character') || '{}').name
+      expect(readName()).toBe('刚修改的名字')
+    } finally {
+      sheetStoreState.sheetData = sheetData
+    }
+  })
+
   it('does not autosave embedded data URLs directly into character localStorage', async () => {
     render(<HomeClientApp />)
 

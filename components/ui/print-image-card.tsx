@@ -73,7 +73,7 @@ function IllustratedPrintImageCard({ card }: PrintImageCardProps) {
     return (
         <div className="flex flex-col overflow-hidden rounded-lg border border-gray-400 bg-white h-full shadow-sm print-card" data-card-domain={card.type === CardType.Domain ? "true" : undefined}>
             {/* 图片容器 */}
-            <div className="relative w-full aspect-[1.6] overflow-hidden bg-gray-100 print-card-artwork">
+            <div className="relative w-full aspect-[1.6] overflow-hidden bg-gray-100 print-card-artwork" data-pending-artwork={imageSrc ? undefined : displayName}>
                 {imageSrc && (
                     <Image
                         src={imageSrc}

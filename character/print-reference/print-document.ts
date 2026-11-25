@@ -9,9 +9,10 @@ async function waitForPrintImages(): Promise<void> {
   while (true) {
     const pending = Array.from(document.querySelectorAll<HTMLImageElement>(".print-pages-scroll-content img"))
       .find(image => !image.complete || !image.naturalWidth);
-    if (!pending) return;
+    const artwork = document.querySelector<HTMLElement>(".print-pages-scroll-content [data-pending-artwork]");
+    if (!pending && !artwork) return;
     if (Date.now() >= deadline) {
-      throw new Error("「" + (pending.alt || "角色卡图片") + "」尚未加载成功，请等待图片显示后重试。");
+      throw new Error("「" + (pending?.alt || artwork?.dataset.pendingArtwork || "角色卡图片") + "」尚未加载成功，请等待图片显示后重试。");
     }
     await new Promise<void>(resolve => setTimeout(resolve, 100));
   }

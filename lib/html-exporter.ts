@@ -451,7 +451,7 @@ async function embedSnapshotImages(root: HTMLElement, originals: Map<HTMLImageEl
  * 等待所有图片加载完成
  */
 function waitForImagesLoaded(): Promise<void> {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     console.log('[HTML导出] 等待图片加载完成...')
     
     let checkCount = 0
@@ -459,7 +459,16 @@ function waitForImagesLoaded(): Promise<void> {
     
     const checkPrintContext = () => {
       checkCount++
-      
+      const artwork = document.querySelector<HTMLElement>('.print-all-pages [data-pending-artwork]')
+      if (artwork) {
+        if (checkCount >= maxChecks) {
+          reject(new Error('「' + artwork.dataset.pendingArtwork + '」的卡图尚未就绪，请稍后再试。'))
+        } else {
+          setTimeout(checkPrintContext, 100)
+        }
+        return
+      }
+
       const printContextElement = document.querySelector('[data-print-context]')
       if (printContextElement) {
         const allImagesLoaded = printContextElement.getAttribute('data-all-images-loaded') === 'true'
@@ -620,7 +629,7 @@ async function generateFullHTML(formData: SheetData, options: HTMLExportOptions 
   <script>
     ${generateStorageDisableScript()}
     ${generateCheckboxScript()}
-    ${generateInitScript(formData)}
+    ${generateInitScript(formData, options.compressHTML)}
   </script>
   
   <div class="no-print" style="position: fixed; bottom: 10px; left: 10px; font-size: 12px; color: #999; pointer-events: auto; z-index: 1000; line-height: 1.4;">
@@ -630,20 +639,10 @@ async function generateFullHTML(formData: SheetData, options: HTMLExportOptions 
 </body>
 </html>`
 
-    return options.compressHTML ? compressHTML(html) : html
+    return html
   } catch (error) {
     throw new Error(`HTML生成失败: ${error instanceof Error ? error.message : '未知错误'}`)
   }
-}
-
-/**
- * 压缩HTML（移除多余空白）
- */
-function compressHTML(html: string): string {
-  return html
-    .replace(/\s+/g, ' ')
-    .replace(/>\s+</g, '><')
-    .replace(/^\s+|\s+$/g, '')
 }
 
 /**
@@ -1100,9 +1099,9 @@ function generateStorageDisableScript(): string {
 /**
  * 生成初始化脚本
  */
-function generateInitScript(formData: SheetData): string {
+function generateInitScript(formData: SheetData, compact = false): string {
   // Keep markup and the legacy import delimiter inside JSON string values.
-  const portableJSON = JSON.stringify(formData, null, 2)
+  const portableJSON = JSON.stringify(formData, null, compact ? undefined : 2)
     .replace(/</g, '\\u003c')
     .replace(/;/g, '\\u003b')
   return `

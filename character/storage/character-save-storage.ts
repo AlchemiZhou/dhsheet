@@ -79,9 +79,35 @@ async function restoreImageSnapshots(
   }))
 }
 
+// The editor commits image changes separately. A hydrated field with its own
+// stored reference can be stripped without re-encoding the portrait on every edit.
+const pendingEdits = new Map<string, Promise<unknown>>()
+
+export async function saveCharacterEdits(characterId: string, sheet: SheetData): Promise<void> {
+  const write = () => {
+    const stored = { ...sheet }
+    for (const { field, role } of IMAGE_FIELDS) {
+      if (!isImageDataUrl(stored[field])) continue
+      if (sheet.imageAssets?.[field]?.key !== characterImageKey(characterId, role)) {
+        // Legacy/runtime callers can still provide a new, as yet unowned image.
+        return saveCharacterSheet(characterId, sheet)
+      }
+      stored[field] = ''
+    }
+    saveCharacterById(characterId, stored)
+  }
+  const previous = pendingEdits.get(characterId)
+  const operation = previous ? previous.catch(() => {}).then(write) : write()
+  if (!operation) return
+  pendingEdits.set(characterId, operation)
+  try {
+    await operation
+  } finally {
+    if (pendingEdits.get(characterId) === operation) pendingEdits.delete(characterId)
+  }
+}
+
 export async function saveCharacterSheet(characterId: string, sheetData: SheetData): Promise<SheetData> {
-  const characterStorageKey = `${CHARACTER_DATA_PREFIX}${characterId}`
-  const previousRawCharacter = localStorage.getItem(characterStorageKey)
   const snapshots = await snapshotWritableImageRecords(characterId, sheetData)
   let projection: SheetStorageProjectionResult
 
@@ -101,16 +127,6 @@ export async function saveCharacterSheet(characterId: string, sheetData: SheetDa
     saveCharacterById(characterId, projection.storedSheet)
   } catch (error) {
     try {
-      if (previousRawCharacter === null) {
-        localStorage.removeItem(characterStorageKey)
-      } else {
-        localStorage.setItem(characterStorageKey, previousRawCharacter)
-      }
-    } catch (rollbackError) {
-      console.error(`[Character] Failed to rollback character data for ${characterId}:`, rollbackError)
-    }
-
-    try {
       await restoreImageSnapshots(projection.writtenImageKeys, snapshots)
     } catch (rollbackError) {
       console.error(`[CharacterImage] Failed to rollback images for ${characterId}:`, rollbackError)
@@ -126,6 +142,7 @@ export async function loadCharacterSheet(
   characterId: string,
   options: LoadCharacterSheetOptions = {},
 ): Promise<SheetData | null> {
+  await pendingEdits.get(characterId)
   const raw = localStorage.getItem(`${CHARACTER_DATA_PREFIX}${characterId}`)
   if (!raw) return null
 
@@ -152,6 +169,7 @@ export async function loadCharacterSheet(
 }
 
 export async function deleteCharacterSave(characterId: string): Promise<boolean> {
+  await pendingEdits.get(characterId)?.catch(() => {})
   const deleted = deleteCharacterById(characterId)
   if (!deleted) return false
 

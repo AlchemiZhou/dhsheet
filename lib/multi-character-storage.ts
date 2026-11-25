@@ -34,36 +34,18 @@ export function generateCharacterId(): string {
 
 // ===== 角色列表管理 =====
 export function loadCharacterList(): CharacterList {
-  try {
-    const stored = localStorage.getItem(CHARACTER_LIST_KEY);
-    if (!stored) {
-      return {
-        characters: [],
-        activeCharacterId: null,
-        lastUpdated: new Date().toISOString()
-      };
-    }
-
-    const parsed = JSON.parse(stored);
-    // 基本结构验证
-    if (!parsed || typeof parsed !== 'object' || !Array.isArray(parsed.characters)) {
-      console.error('[CharacterList] Invalid structure, returning default');
-      return {
-        characters: [],
-        activeCharacterId: null,
-        lastUpdated: new Date().toISOString()
-      };
-    }
-
-    return parsed;
-  } catch (error) {
-    console.error('[CharacterList] Load failed (Fast Fail):', error);
-    return {
-      characters: [],
-      activeCharacterId: null,
-      lastUpdated: new Date().toISOString()
-    };
+  const stored = localStorage.getItem(CHARACTER_LIST_KEY);
+  if (stored === null) {
+    return { characters: [], activeCharacterId: null, lastUpdated: new Date().toISOString() };
   }
+
+  const list: CharacterList = JSON.parse(stored);
+  if (!Array.isArray(list?.characters) || !list.characters.every(character =>
+    typeof character?.id === 'string' && character.id.length > 0
+  )) {
+    throw new Error('角色存档列表格式异常，请保留网站数据。');
+  }
+  return list;
 }
 
 export function saveCharacterList(list: CharacterList): void {
@@ -150,9 +132,12 @@ export function removeCharacterFromMetadataList(characterId: string): void {
 
 // ===== 单个角色数据管理 =====
 export function saveCharacterById(id: string, data: SheetData): void {
+  const key = CHARACTER_DATA_PREFIX + id;
+  const previous = localStorage.getItem(key);
+  let wroteSheet = false;
   try {
-    const key = CHARACTER_DATA_PREFIX + id;
     localStorage.setItem(key, JSON.stringify(data));
+    wroteSheet = true;
 
     // 不再同步更新元数据中的角色名称
     // 只更新最后修改时间
@@ -163,6 +148,10 @@ export function saveCharacterById(id: string, data: SheetData): void {
       saveCharacterList(list);
     }
   } catch (error) {
+    if (wroteSheet) {
+      if (previous === null) localStorage.removeItem(key);
+      else localStorage.setItem(key, previous);
+    }
     console.error(`[Character] Save failed for ${id} (Fast Fail):`, error);
     throw error; // 快速失败
   }
@@ -178,7 +167,7 @@ export function loadCharacterById(id: string): SheetData | null {
       return null;
     }
 
-    let parsed = JSON.parse(stored);
+    const parsed = JSON.parse(stored);
 
     // 基本验证
     if (!parsed || typeof parsed !== 'object') {
@@ -214,6 +203,7 @@ export function deleteCharacterById(id: string): boolean {
 
 // ===== 活动角色管理 =====
 export function setActiveCharacterId(id: string | null): void {
+  const previous = localStorage.getItem(ACTIVE_CHARACTER_ID_KEY);
   try {
     if (id === null) {
       localStorage.removeItem(ACTIVE_CHARACTER_ID_KEY);
@@ -226,6 +216,10 @@ export function setActiveCharacterId(id: string | null): void {
     list.activeCharacterId = id;
     saveCharacterList(list);
   } catch (error) {
+    if (localStorage.getItem(ACTIVE_CHARACTER_ID_KEY) !== previous) {
+      if (previous === null) localStorage.removeItem(ACTIVE_CHARACTER_ID_KEY);
+      else localStorage.setItem(ACTIVE_CHARACTER_ID_KEY, previous);
+    }
     console.error('[ActiveCharacter] Set failed (Fast Fail):', error);
     throw error;
   }
@@ -274,10 +268,32 @@ export function migrateToMultiCharacterStorage(): void {
   try {
     // 检查是否已迁移
     const existingList = localStorage.getItem(CHARACTER_LIST_KEY);
-    if (existingList) {
+    if (existingList !== null && loadCharacterList().characters.length > 0) {
       console.log('[Migration] Already migrated, skipping');
       return;
     }
+
+    // Recover intact saves before first-run migration or orphan cleanup can replace them.
+    const recovered: CharacterMetadata[] = [];
+    const now = new Date().toISOString();
+    for (let index = 0; index < localStorage.length; index++) {
+      const key = localStorage.key(index);
+      if (!key?.startsWith(CHARACTER_DATA_PREFIX) || key === CHARACTER_LIST_KEY) continue;
+      const id = key.slice(CHARACTER_DATA_PREFIX.length);
+      if (!id) continue;
+      const sheet = JSON.parse(localStorage.getItem(key)!);
+      recovered.push({ id, saveName: sheet?.name || `恢复的存档 ${recovered.length + 1}`,
+        order: recovered.length, createdAt: now, lastModified: now });
+    }
+    if (recovered.length) {
+      const activeId = getActiveCharacterId();
+      const activeCharacterId = recovered.find(entry => entry.id === activeId)?.id ?? recovered[0].id;
+      saveCharacterList({ characters: recovered, activeCharacterId, lastUpdated: now });
+      setActiveCharacterId(activeCharacterId);
+      return;
+    }
+
+    if (existingList !== null) return;
 
     // 加载旧数据
     const legacySheetData = localStorage.getItem(LEGACY_SHEET_DATA_KEY);

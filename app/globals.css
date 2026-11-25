@@ -100,11 +100,18 @@ html {
   }
 
   /* 打印卡牌专用样式 */
-  .print-card {
+  .card-item .print-card {
     border: 1.5px solid #666 !important;
     box-shadow: none !important;
     /* Physical size previously obtained by scaling a 95 mm card down. */
-    height: 90.5mm;
+    height: auto;
+    min-height: 90.5mm;
+    flex: 1 0 auto;
+    overflow: visible;
+  }
+
+  .print-card-artwork {
+    flex-shrink: 0;
   }
 
   .print-card-header {
@@ -283,7 +290,7 @@ html {
 
   .card-item {
     break-inside: avoid;
-    height: 100%;
+    height: auto;
     /* 移除固定高度限制，使用aspect-ratio保持比例 */
     min-height: auto;
     max-height: none;

@@ -28,6 +28,24 @@ describe('explicit PDF palettes', () => {
       vi.useRealTimers()
     }
   })
+  it('waits for a card whose artwork URL is still being resolved', async () => {
+    vi.useFakeTimers()
+    document.body.innerHTML = '<div class="print-pages-scroll-content"><div data-pending-artwork="领域卡"></div></div>'
+    try {
+      vi.stubGlobal('requestAnimationFrame', (callback: FrameRequestCallback) => { callback(0); return 0 })
+      const print = vi.spyOn(window, 'print').mockImplementation(() => {})
+      const pending = printSheetPDF()
+      await vi.advanceTimersByTimeAsync(500)
+      expect(print).not.toHaveBeenCalled()
+      document.querySelector('[data-pending-artwork]')!.remove()
+      await vi.advanceTimersByTimeAsync(100)
+      await pending
+      expect(print).toHaveBeenCalledOnce()
+    } finally {
+      document.body.innerHTML = ''
+      vi.useRealTimers()
+    }
+  })
   it('prints the requested palette after committing it, including when exporting color after mono', async () => {
     vi.stubGlobal('requestAnimationFrame', (callback: FrameRequestCallback) => { callback(0); return 0 })
     const palettes: string[] = []

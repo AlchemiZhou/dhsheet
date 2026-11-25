@@ -150,10 +150,11 @@ export function useExportHandlers({
         if (!fromPreview) setIsPrintingAll(true)
       })
       const { createSheetPDFFile } = await import('@/character/print-reference/pdf-file')
-      const file = await createSheetPDFFile(mode, characterExportTitle(formData), page => {
+      const title = characterExportTitle(formData)
+      const blob = await createSheetPDFFile(mode, title, page => {
         setPDFFileState({ status: 'generating', page })
       })
-      setPDFFileState({ status: 'ready', file })
+      setPDFFileState({ status: 'ready', blob, filename: title + '.pdf' })
     } catch (error) {
       console.error('[ExportHandlers] PDF file generation failed', error)
       setPDFFileState({ status: 'failed', message: error instanceof Error ? error.message : String(error) })

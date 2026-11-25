@@ -1,6 +1,6 @@
 /**
  * 自动生成的CSS内容文件
- * 生成时间: 2026-11-18T04:44:53.572Z
+ * 生成时间: 2026-11-25T06:51:46.508Z
  * 
  * 该文件包含了应用的所有CSS样式，用于HTML导出功能
  * 请勿手动编辑此文件，它会在构建时自动生成
@@ -11,7 +11,7 @@
 
 /**
  * 完整的CSS内容（包含Tailwind CSS和应用样式）
- * 大小: 184.28 KB
+ * 大小: 184.47 KB
  */
 export const embeddedStyles = `*, ::before, ::after {
   --tw-border-spacing-x: 0;
@@ -3718,11 +3718,18 @@ html {
   }
 
   /* 打印卡牌专用样式 */
-  .print-card {
+  .card-item .print-card {
     border: 1.5px solid #666 !important;
     box-shadow: none !important;
     /* Physical size previously obtained by scaling a 95 mm card down. */
-    height: 90.5mm;
+    height: auto;
+    min-height: 90.5mm;
+    flex: 1 0 auto;
+    overflow: visible;
+  }
+
+  .print-card-artwork {
+    flex-shrink: 0;
   }
 
   .print-card-header {
@@ -3898,7 +3905,7 @@ html {
 
   .card-item {
     break-inside: avoid;
-    height: 100%;
+    height: auto;
     /* 移除固定高度限制，使用aspect-ratio保持比例 */
     min-height: auto;
     max-height: none;
@@ -6680,6 +6687,9 @@ html {
 .\\[\\&\\:has\\(\\[role\\=checkbox\\]\\)\\]\\:pr-0:has([role=checkbox]) {
   padding-right: 0px;
 }
+.\\[\\&\\>button\\:last-child\\]\\:hidden>button:last-child {
+  display: none;
+}
 .\\[\\&\\>button\\]\\:hidden>button {
   display: none;
 }
@@ -6788,7 +6798,7 @@ export function getStylesInfo() {
     size: embeddedStyles.length,
     sizeKB: (embeddedStyles.length / 1024).toFixed(2),
     sizeMB: (embeddedStyles.length / 1024 / 1024).toFixed(2),
-    generated: '2026-11-18T04:44:53.573Z',
+    generated: '2026-11-25T06:51:46.509Z',
     compressed: false
   };
 }

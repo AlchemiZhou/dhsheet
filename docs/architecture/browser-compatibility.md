@@ -8,7 +8,7 @@ Theme validation uses `Object.prototype.hasOwnProperty.call`, avoiding an unnece
 
 Card-instance IDs use the existing `uuid` dependency's v4 generator. Where `crypto.randomUUID` is absent, it uses secure random bytes; it still fails if no secure random source exists. The `cardinst_` prefix and UUID format are unchanged.
 
-`public/startup-check.js` is an independent ES5 script, inlined in the document head before application chunks to capture failures before hydration. If the home-page startup placeholder remains and hydration has not reached the client-ready marker after 15 seconds, it displays a startup failure panel and local technical details (`STARTUP_TIMEOUT`, optionally `SCRIPT_LOAD_FAILED` / `RUNTIME_ERROR`, user agent and page path). It performs no storage writes, clearing, automatic reload or remote reporting. A later client-ready event removes the panel. Tests cover script failures, normal and delayed startup. No-JavaScript browsers receive a noscript message.
+`public/startup-check.js` is an independent ES5 script, inlined in the document head before application chunks to capture failures before hydration. If the home placeholder is still mounted after 15 seconds, it shows progress for pending application scripts. A script failure, runtime error or rejected promise is reported separately. Failed optional script downloads are ignored. A later client-ready event dismisses the notice. The retry link reloads the same origin with a fresh query parameter and keeps character storage. No-JavaScript browsers receive a noscript message.
 
 Compatibility checks simulate missing APIs and blocked app chunks in Chromium. They do not establish support for every legacy browser engine or for networks that cannot reach GitHub Pages.
 
@@ -21,6 +21,8 @@ The explicit Browserslist target includes Chromium 70, Firefox 67 and Safari 12.
 Some privacy-restricted WebViews expose `navigator.serviceWorker` but throw `SecurityError` when read or when registering. Worker retirement is optional to opening the character editor, so synchronous and asynchronous registration failures are logged with `[ServiceWorkerLifecycle]` and isolated from React effects. They do not trigger reloads, wipe caches or touch stored characters. Tests cover absent support, rejected registration, a throwing getter and a synchronous exception. Remove this isolation only when supported environments guarantee worker access.
 
 Startup diagnostics also capture unhandled promise rejections and error stacks locally; there is no automatic reporting or storage clearing. Device/brand-specific success still requires testing on those actual browsers.
+
+Older target engines may have FileReader but lack the promise-based Blob text and binary readers. The head prelude supplies only the missing methods for portrait hydration and file imports. Read failures reject the promise. The mobile PDF renderer uses standard append/remove DOM operations, and offers a Blob download if the browser cannot construct or share a File. Remove the Blob fallbacks when every supported engine implements both readers. The browser-compatibility and PDF dialog tests cover these paths.
 
 ## Domain ribbon identifiers
 

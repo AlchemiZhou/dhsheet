@@ -82,6 +82,38 @@ describe('character management image storage', () => {
     vi.unstubAllGlobals()
   })
 
+  it('rolls back the portrait and new save when importing the second image fails', async () => {
+    const { result } = await renderManagementHook()
+    const previousId = result.current.currentCharacterId
+    const previousList = storedCharacterList().characters
+    const previousFetch = globalThis.fetch
+    const bad = 'data:image/jpeg;base64,ZmFpbA=='
+    vi.stubGlobal('fetch', (input: RequestInfo | URL) =>
+      String(input) === bad ? Promise.reject(new Error('image read failed')) : previousFetch(input))
+    await act(async () => {
+      expect(await result.current.createImportedCharacterHandler('Partial', currentSheet({
+        characterImage: png, companionImage: bad,
+      }))).toBe(false)
+    })
+    expect(await listCharacterImages()).toHaveLength(0)
+    expect(storedCharacterList().characters).toEqual(previousList)
+    expect(result.current.currentCharacterId).toBe(previousId)
+  })
+
+  it('rolls back the entry when a new character cannot be written', async () => {
+    const { result } = await renderManagementHook()
+    const previousId = result.current.currentCharacterId
+    const previousList = storedCharacterList().characters
+    const original = localStorage.setItem.bind(localStorage)
+    vi.spyOn(localStorage, 'setItem').mockImplementation((key, value) => {
+      if (key !== CHARACTER_LIST_KEY && key.startsWith(CHARACTER_DATA_PREFIX)) throw new Error('quota')
+      original(key, value)
+    })
+    await act(async () => { expect(await result.current.createNewCharacterHandler('No space')).toBe(false) })
+    expect(storedCharacterList().characters).toEqual(previousList)
+    expect(result.current.currentCharacterId).toBe(previousId)
+  })
+
   it('imports base64 images into image assets and stores no embedded image payload', async () => {
     const { result } = await renderManagementHook()
 

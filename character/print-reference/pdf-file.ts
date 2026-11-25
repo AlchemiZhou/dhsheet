@@ -9,7 +9,7 @@ const PIXELS_PER_MM = 96 / 25.4
 const BODY_HEIGHT = Math.ceil(PAGE_HEIGHT * PIXELS_PER_MM)
 const VIEWPORT_WIDTH = 1200
 
-function usePrintStyles(css: string): string {
+function activatePrintStyles(css: string): string {
   return css.replace(/@media\s+print\b/g, '@media all')
     .replace(/@media\s+screen[^{}]*(?=\{)/g, '@media not all ')
 }
@@ -29,7 +29,7 @@ export async function createSheetPDFFile(
   mode: PDFPrintMode,
   name: string,
   onProgress: (page: number) => void,
-): Promise<File> {
+): Promise<Blob> {
   await preparePrintDocument(mode)
   const sheet = document.querySelector<HTMLElement>('.print-pages-scroll-content > .sheet-appearance')
   if (!sheet) throw new Error('未找到角色卡预览。')
@@ -46,7 +46,7 @@ export async function createSheetPDFFile(
     doc.documentElement.lang = 'zh-CN'
     const style = doc.createElement('style')
     const inlineCss = Array.from(sheet.querySelectorAll('style'), element => element.textContent).join('\n')
-    style.textContent = usePrintStyles(embeddedStyles + '\n' + inlineCss)
+    style.textContent = activatePrintStyles(embeddedStyles + '\n' + inlineCss)
     doc.head.appendChild(style)
     doc.body.style.margin = '0'
     const container = doc.createElement('div')
@@ -62,13 +62,14 @@ export async function createSheetPDFFile(
     for (const source of sourcePages(sheet)) {
       const content = doc.importNode(source, true)
       content.querySelectorAll('style').forEach(node => node.remove())
+      if (stage.firstChild) stage.removeChild(stage.firstChild)
       if (source.matches('.printed-card-sheet, .beast-form-sheet')) {
         const section = doc.createElement('div')
         section.className = source.matches('.printed-card-sheet') ? 'page-four sheet-content-page' : 'sheet-content-page'
         section.appendChild(content)
-        stage.replaceChildren(section)
+        stage.appendChild(section)
       } else {
-        stage.replaceChildren(content)
+        stage.appendChild(content)
       }
       // Translate the margins into layout space so they are included in the capture.
       content.getBoundingClientRect()
@@ -81,7 +82,8 @@ export async function createSheetPDFFile(
         const inset = top > 0 ? Math.round(5 * PIXELS_PER_MM) : 0
         let bottom = Math.min(top + BODY_HEIGHT - inset, fullHeight)
         if (bottom < fullHeight) {
-          const rowBreak = rowStarts.filter(start => start > top && start <= bottom).pop()
+          // Keep the heading with the first row, even for a row taller than A4.
+          const rowBreak = rowStarts.slice(1).filter(start => start > top && start <= bottom).pop()
           if (rowBreak !== undefined && rowBreak - top > 20) bottom = rowBreak
         }
         if (page > 0) pdf.addPage()
@@ -111,7 +113,7 @@ export async function createSheetPDFFile(
       }
     }
     if (!page) throw new Error('没有可导出的角色卡页面。')
-    return new File([pdf.output('blob')], name + '.pdf', { type: 'application/pdf' })
+    return pdf.output('blob')
   } finally {
     iframe.remove()
   }

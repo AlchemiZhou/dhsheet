@@ -38,7 +38,7 @@ describe('independent startup diagnostics', () => {
   it('reports blocked app scripts, offers an explicit reload and clears after delayed startup', () => {
     const check = loadCheck()
     check.events.get('error')?.({
-      target: { tagName: 'SCRIPT', src: 'https://example.com/dhsheet/_next/chunk.js' },
+      target: { tagName: 'SCRIPT', src: 'https://example.com/dhsheet/_next/static/chunks/app.js' },
     })
     check.expire()
     const panel = document.getElementById('dhsheet-startup-notice')!
@@ -56,6 +56,7 @@ describe('independent startup diagnostics', () => {
     document.head.appendChild(script)
     try {
       const check = loadCheck()
+      check.events.get('error')?.({ target: { tagName: 'SCRIPT', src: 'https://metrics.example/analytics.js' } })
       check.expire()
       const panel = document.getElementById('dhsheet-startup-notice')!
       const details = panel.querySelector('textarea')!

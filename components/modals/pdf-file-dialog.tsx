@@ -1,29 +1,32 @@
 'use client'
 
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { downloadCharacterFile } from '@/lib/download-character-file'
 
 export type PDFFileState =
   | { status: 'generating'; page: number }
-  | { status: 'ready'; file: File }
+  | { status: 'ready'; blob: Blob; filename: string }
   | { status: 'failed'; message: string }
 
-function supportsFileShare(file: File) {
+function getShareableFile(blob: Blob, filename: string): File | null {
+  if (typeof navigator.share !== 'function' || typeof navigator.canShare !== 'function') return null
   try {
-    return typeof navigator.share === 'function' && navigator.canShare?.({ files: [file] }) === true
+    const file = new File([blob], filename, { type: 'application/pdf' })
+    return navigator.canShare({ files: [file] }) ? file : null
   } catch {
-    return false
+    return null
   }
 }
 
-function FileActions({ file }: { file: File }) {
+function FileActions({ blob, filename }: { blob: Blob; filename: string }) {
   const [sharing, setSharing] = useState(false)
   const [shareFailed, setShareFailed] = useState(false)
-  const canShare = supportsFileShare(file)
+  const file = useMemo(() => getShareableFile(blob, filename), [blob, filename])
 
   async function sharePDF() {
+    if (!file) return
     setShareFailed(false)
     setSharing(true)
     try {
@@ -39,15 +42,15 @@ function FileActions({ file }: { file: File }) {
   return (
     <>
       <p className="text-sm text-muted-foreground" aria-live="polite">
-        {canShare && !shareFailed
+        {file && !shareFailed
           ? '在系统分享菜单里选择微信或 QQ。也可以先下载，再从聊天窗口发送文件。'
           : '请先下载 PDF，再从微信或 QQ 聊天窗口发送文件。'}
       </p>
       <DialogFooter>
-        <Button variant={canShare && !shareFailed ? 'outline' : 'default'} onClick={() => downloadCharacterFile(file, file.name)}>
+        <Button variant={file && !shareFailed ? 'outline' : 'default'} onClick={() => downloadCharacterFile(blob, filename)}>
           下载 PDF
         </Button>
-        {canShare && <Button disabled={sharing} onClick={sharePDF}>分享 PDF</Button>}
+        {file && <Button disabled={sharing} onClick={sharePDF}>分享 PDF</Button>}
       </DialogFooter>
     </>
   )
@@ -67,10 +70,10 @@ export function PDFFileDialog({ state, onClose, onPrint }: {
           <DialogDescription aria-live="polite">
             {state?.status === 'generating' && (state.page > 0 ? `正在排版第 ${state.page} 页…` : '正在准备角色卡…')}
             {state?.status === 'failed' && state.message}
-            {state?.status === 'ready' && <span className="break-all">{state.file.name}</span>}
+            {state?.status === 'ready' && <span className="break-all">{state.filename}</span>}
           </DialogDescription>
         </DialogHeader>
-        {state?.status === 'ready' && <FileActions file={state.file} />}
+        {state?.status === 'ready' && <FileActions blob={state.blob} filename={state.filename} />}
         {state?.status === 'failed' && <DialogFooter><Button onClick={onPrint}>使用系统打印</Button></DialogFooter>}
       </DialogContent>
     </Dialog>

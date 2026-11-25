@@ -8,12 +8,15 @@ import {
   CHARACTER_LIST_KEY,
   addCharacterToMetadataList,
   loadCharacterList,
+  migrateToMultiCharacterStorage,
+  cleanupOrphanedCharacterData,
 } from '@/lib/multi-character-storage'
 import {
   cleanupOrphanedCharacterImages,
   deleteCharacterSave,
   loadCharacterSheet,
   saveCharacterSheet,
+  saveCharacterEdits,
 } from '@/character/storage/character-save-storage'
 import {
   characterImageKey,
@@ -48,6 +51,58 @@ describe('character save storage boundary', () => {
   afterEach(() => {
     vi.restoreAllMocks()
     vi.unstubAllGlobals()
+  })
+
+  it('commits edits synchronously using the saved portrait reference', async () => {
+    const id = addCharacterToMetadataList('Portrait')!.id
+    const runtime = await saveCharacterSheet(id, sheet({ characterImage: png }))
+    const write = saveCharacterEdits(id, { ...runtime, name: '刚输入的名字' })
+    const raw = localStorage.getItem(CHARACTER_DATA_PREFIX + id)!
+    expect(JSON.parse(raw).name).toBe('刚输入的名字')
+    expect(raw).not.toContain('data:image/')
+    await write
+    expect((await loadCharacterSheet(id))?.characterImage).toBe(png)
+  })
+
+  it('applies a later edit after an outstanding unowned image write', async () => {
+    const id = addCharacterToMetadataList('Queued')!.id
+    const first = saveCharacterEdits(id, sheet({ characterImage: png }))
+    const second = saveCharacterEdits(id, sheet({ name: '最新', characterImage: jpeg }))
+    const loaded = await loadCharacterSheet(id)
+    await Promise.all([first, second])
+    expect(loaded?.name).toBe('最新')
+    expect(loaded?.characterImage).toBe(jpeg)
+  })
+
+  it('keeps image references when their database is unavailable', async () => {
+    const id = addCharacterToMetadataList('Image')!.id
+    await saveCharacterSheet(id, sheet({ characterImage: png }))
+    const raw = localStorage.getItem(CHARACTER_DATA_PREFIX + id)
+    vi.stubGlobal('indexedDB', undefined)
+    await expect(loadCharacterSheet(id)).rejects.toThrow('角色图片存储')
+    expect(localStorage.getItem(CHARACTER_DATA_PREFIX + id)).toBe(raw)
+  })
+
+  it.each(['{', '{"characters":[{}]}', ''])('preserves character data with a damaged index (%s)', broken => {
+    const key = CHARACTER_DATA_PREFIX + 'intact'
+    const raw = JSON.stringify(sheet())
+    localStorage.setItem(key, raw)
+    localStorage.setItem(CHARACTER_LIST_KEY, broken)
+    vi.spyOn(window, 'alert').mockImplementation(() => {})
+    expect(() => migrateToMultiCharacterStorage()).toThrow()
+    expect(cleanupOrphanedCharacterData()).toBe(0)
+    expect(localStorage.getItem(CHARACTER_LIST_KEY)).toBe(broken)
+    expect(localStorage.getItem(key)).toBe(raw)
+  })
+
+  it.each([null, '{"characters":[]}'] as const)('recovers existing entries when the index is missing or empty (%s)', index => {
+    if (index !== null) localStorage.setItem(CHARACTER_LIST_KEY, index)
+    const raw = JSON.stringify(sheet({ name: '已有角色' }))
+    localStorage.setItem(CHARACTER_DATA_PREFIX + 'intact', raw)
+    migrateToMultiCharacterStorage()
+    expect(loadCharacterList().characters).toMatchObject([{ id: 'intact', saveName: '已有角色' }])
+    expect(cleanupOrphanedCharacterData()).toBe(0)
+    expect(localStorage.getItem(CHARACTER_DATA_PREFIX + 'intact')).toBe(raw)
   })
 
   it('saves projected character data without embedded image payloads', async () => {

@@ -20,6 +20,21 @@ describe('early browser compatibility', () => {
     expect(result.globalThis).toBe(globalThis)
     expect(result.queueMicrotask).toBe(queueMicrotask)
   })
+  it('reads files on engines without Blob.arrayBuffer or Blob.text', async () => {
+    class LegacyBlob {}
+    type Readable = { text(): Promise<string>; arrayBuffer(): Promise<ArrayBuffer> }
+    const bytes = new Uint8Array([0, 255]).buffer
+    class Reader {
+      result: string | ArrayBuffer | null = null
+      onload = () => {}
+      readAsText() { this.result = '角色'; this.onload() }
+      readAsArrayBuffer() { this.result = bytes; this.onload() }
+    }
+    load({ Blob: LegacyBlob, FileReader: Reader })
+    const file = new LegacyBlob() as Readable
+    await expect(file.text()).resolves.toBe('角色')
+    await expect(file.arrayBuffer()).resolves.toBe(bytes)
+  })
   it('defines the global object before modules evaluate', () => {
     const result = load()
     expect(result.globalThis).toBe(result)

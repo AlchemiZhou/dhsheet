@@ -154,6 +154,19 @@ describe('character export image preparation', () => {
     expect(document.querySelector('.resource-print-value')?.classList.contains('hidden')).toBe(true)
   })
 
+  it('keeps reader scripts and user whitespace intact in a compact HTML export', async () => {
+    const name = '名字  有空格'
+    document.body.innerHTML = '<div class="print-all-pages"><pre>第一段  空格\n\n第二段</pre></div>'
+    const compact = await getHTMLContent(sheet({ name }), { includeStyles: false, compressHTML: true })
+    const normal = await getHTMLContent(sheet({ name }), { includeStyles: false })
+    expect(compact.length).toBeLessThan(normal.length)
+    const doc = new DOMParser().parseFromString(compact, 'text/html')
+    expect(doc.querySelector('pre')?.textContent).toBe('第一段  空格\n\n第二段')
+    expect(extractCharacterDataFromHTML(compact).data?.name).toBe(name)
+    const script = doc.querySelector('script')!.textContent!
+    expect(() => new Function(script)).not.toThrow()
+  })
+
   it('preserves paragraph breaks in editable story answers and continuation notes', async () => {
     document.body.innerHTML = '<div class="print-all-pages"><div class="reference-field">第一段\n\n第二段</div><section class="reference-continuation"><p>补充记录\n结尾</p></section></div>'
     const html = await getHTMLContent(sheet(), { includeStyles: false })

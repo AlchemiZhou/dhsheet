@@ -38,6 +38,7 @@
   window.addEventListener('error', function (event) {
     if (failure) return;
     if (event.target && event.target.tagName === 'SCRIPT') {
+      if (!appScript(event.target)) return;
       failure = 'SCRIPT_LOAD_FAILED: ' + (event.target.src || 'unknown script');
     } else if (event.message) {
       failure = 'RUNTIME_ERROR: ' + event.message + (event.error ? '\n' + describeError(event.error) : '');
