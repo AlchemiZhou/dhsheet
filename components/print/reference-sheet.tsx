@@ -1,4 +1,5 @@
 "use client";
+import { ReferenceBackground } from "./reference-background";
 import {
   useCallback,
   useEffect,
@@ -354,12 +355,7 @@ export function ReferenceSheet({
         <style
           data-reference-font={fontUrl}
         >{`@font-face{font-family:'Reference Ink';src:url('${fontUrl}') format('woff2');font-display:block}`}</style>
-        <img
-          className="reference-background"
-          src={`${getBasePath()}/print-templates/${id}-${page}.webp`}
-          alt={`${preset.name}第${page}页原版版式`}
-          loading="eager"
-        />
+        <ReferenceBackground asset={`${id}-${page}`} alt={`${preset.name}第${page}页原版版式`} />
         {page === 1 && (customRules || customHope) && (
           <>
             <svg className="reference-story-mask" viewBox={`0 0 ${width} ${height}`} aria-hidden="true">

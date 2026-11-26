@@ -1,4 +1,5 @@
 "use client";
+import { ReferenceBackground } from "./reference-background";
 import type { CSSProperties } from "react";
 import type { SheetData } from "@/lib/sheet-data";
 import { getBasePath } from "@/lib/utils";
@@ -65,11 +66,7 @@ export function ReferenceCompanionSheet({
         data-reference-font={font}
       >{`@font-face{font-family:'Reference Ink';src:url('${font}') format('woff2');font-display:block}`}</style>
       <div className="reference-canvas">
-        <img
-          className="reference-background"
-          src={`${getBasePath()}/print-templates/ranger-companion.webp`}
-          alt="游侠动物伙伴原版版式"
-        />
+        <ReferenceBackground asset="ranger-companion" alt="游侠动物伙伴原版版式" />
         {sheet.companionImage && (
           <img
             className="reference-companion-portrait"

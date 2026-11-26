@@ -9,10 +9,11 @@ const mocks = vi.hoisted(() => ({ exportToHTML: vi.fn() }))
 vi.mock('@/lib/html-exporter', () => ({ exportToHTML: mocks.exportToHTML }))
 vi.mock('@/card', () => ({ getStandardCardById: vi.fn() }))
 vi.mock('@/lib/storage', () => ({ exportCharacterData: vi.fn() }))
+const printContainerRef = { current: document.createElement('div') }
 function setup() {
   return renderHook(() => {
     const [layout, setReferencePrintOverride] = useState<boolean | undefined>()
-    const handlers = useExportHandlers({ formData: defaultSheetData, setIsPrintingAll: vi.fn(), setReferencePrintOverride })
+    const handlers = useExportHandlers({ printContainerRef, formData: defaultSheetData, setIsPrintingAll: vi.fn(), setReferencePrintOverride })
     return { layout, ...handlers }
   })
 }
@@ -36,7 +37,7 @@ describe('HTML layout selection', () => {
     await act(async () => { pending = result.current.handleExportHTML(); await Promise.resolve() })
     expect(result.current.layout).toBe(true)
     expect(useProfessionSetupPreferences.getState().referencePrint).toBe(false)
-    expect(mocks.exportToHTML).toHaveBeenCalledWith(defaultSheetData)
+    expect(mocks.exportToHTML).toHaveBeenCalledWith(defaultSheetData, { previewRoot: printContainerRef.current })
     await act(async () => { resolve(); await pending })
     expect(result.current.layout).toBeUndefined()
     expect(useProfessionSetupPreferences.getState().referencePrint).toBe(false)

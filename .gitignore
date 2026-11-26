@@ -46,3 +46,6 @@ docs/refs/
 
 # local card-pack regression fixtures
 .local-fixtures/
+
+# Built from the original A4 sheets for mobile PDF export
+/public/print-templates/mobile/

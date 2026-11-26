@@ -6,15 +6,29 @@ import { downloadCharacterFile } from '@/lib/download-character-file'
 
 vi.mock('@/lib/download-character-file', () => ({ downloadCharacterFile: vi.fn() }))
 const file = new File(['%PDF-1.7'], '角色卡.pdf', { type: 'application/pdf' })
-const ready = () => render(<PDFFileDialog state={{ status: 'ready', blob: file, filename: file.name }} onClose={vi.fn()} onPrint={vi.fn()} />)
+const ready = () => render(<PDFFileDialog state={{ status: 'ready', blob: file, filename: file.name }} onClose={vi.fn()} onRetry={vi.fn()} onPrint={vi.fn()} />)
 
 afterEach(() => {
   cleanup()
   vi.unstubAllGlobals()
+  vi.restoreAllMocks()
   vi.clearAllMocks()
 })
 
 describe('sharing a generated PDF', () => {
+  it('links directly to the generated file and releases the URL on close', () => {
+    const create = vi.spyOn(URL, 'createObjectURL').mockReturnValue('blob:test-pdf')
+    const revoke = vi.spyOn(URL, 'revokeObjectURL').mockImplementation(() => {})
+    const { unmount } = ready()
+    const link = screen.getByRole('link', { name: '打开 PDF' })
+    expect(link).toHaveAttribute('target', '_blank')
+    expect(link).toHaveAttribute('href', 'blob:test-pdf')
+    expect(link).not.toHaveAttribute('download')
+    expect(create).toHaveBeenCalledWith(file)
+    unmount()
+    expect(revoke).toHaveBeenCalledWith('blob:test-pdf')
+  })
+
   it('passes the PDF file to the system share sheet on a fresh tap', async () => {
     const share = vi.fn(async () => {})
     const canShare = vi.fn((data: ShareData) => data.files?.length === 1)

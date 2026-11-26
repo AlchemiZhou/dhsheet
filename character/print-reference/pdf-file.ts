@@ -3,6 +3,8 @@ import { jsPDF } from 'jspdf'
 import { embeddedStyles } from '@/lib/embedded-styles'
 import { preparePrintDocument, type PDFPrintMode } from './print-document'
 
+import { waitForPrintImages } from './print-images'
+
 const PAGE_WIDTH = 210
 const PAGE_HEIGHT = 297
 const PIXELS_PER_MM = 96 / 25.4
@@ -73,6 +75,7 @@ export async function createSheetPDFFile(
       }
       // Translate the margins into layout space so they are included in the capture.
       content.getBoundingClientRect()
+      await waitForPrintImages(content)
       await doc.fonts?.ready
       const rect = stage.getBoundingClientRect()
       const fullHeight = Math.max(Math.ceil(rect.height), stage.scrollHeight)

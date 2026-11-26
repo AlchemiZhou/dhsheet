@@ -1,22 +1,8 @@
+import { waitForPrintImages } from './print-images'
 import { flushSync } from "react-dom";
 import { useSheetAppearanceStore } from "@/lib/sheet-appearance-store";
 
 export type PDFPrintMode = "color" | "mono";
-
-/** Recheck the mounted images because card artwork may switch to a fallback. */
-async function waitForPrintImages(): Promise<void> {
-  const deadline = Date.now() + 10_000;
-  while (true) {
-    const pending = Array.from(document.querySelectorAll<HTMLImageElement>(".print-pages-scroll-content img"))
-      .find(image => !image.complete || !image.naturalWidth);
-    const artwork = document.querySelector<HTMLElement>(".print-pages-scroll-content [data-pending-artwork]");
-    if (!pending && !artwork) return;
-    if (Date.now() >= deadline) {
-      throw new Error("「" + (pending?.alt || artwork?.dataset.pendingArtwork || "角色卡图片") + "」尚未加载成功，请等待图片显示后重试。");
-    }
-    await new Promise<void>(resolve => setTimeout(resolve, 100));
-  }
-}
 
 /** Commit the requested palette and wait for the mounted print assets. */
 export async function preparePrintDocument(
@@ -27,7 +13,9 @@ export async function preparePrintDocument(
   );
   await document.fonts?.ready;
   await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
-  await waitForPrintImages();
+  const preview = document.querySelector('.print-pages-scroll-content');
+  if (!preview) throw new Error('未找到角色卡预览。');
+  await waitForPrintImages(preview);
 }
 
 export async function printSheetPDF(mode: PDFPrintMode = "color"): Promise<void> {

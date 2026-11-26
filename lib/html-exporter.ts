@@ -1,3 +1,4 @@
+import { waitForPrintImages } from '@/character/print-reference/print-images'
 import { downloadCharacterFile } from './download-character-file'
 import { embedReferencePrintFonts, readPrintAssetDataUrl } from '@/character/print-reference/embed-font'
 /**
@@ -32,6 +33,7 @@ declare global {
 }
 
 interface HTMLExportOptions {
+  previewRoot?: HTMLElement
   includeStyles?: boolean
   compressHTML?: boolean
   filename?: string
@@ -438,6 +440,7 @@ async function embedSnapshotImages(root: HTMLElement, originals: Map<HTMLImageEl
         if (!encoded.startsWith('data:image/')) throw new Error('图片未正确加载')
         cache.set(url, encoded)
       }
+      copy.removeAttribute('data-print-retry-src')
       copy.removeAttribute('srcset')
       copy.removeAttribute('sizes')
       copy.src = encoded
@@ -448,84 +451,17 @@ async function embedSnapshotImages(root: HTMLElement, originals: Map<HTMLImageEl
 }
 
 /**
- * 等待所有图片加载完成
- */
-function waitForImagesLoaded(): Promise<void> {
-  return new Promise((resolve, reject) => {
-    console.log('[HTML导出] 等待图片加载完成...')
-    
-    let checkCount = 0
-    const maxChecks = 100 // 最多等待10秒 (100 * 100ms)
-    
-    const checkPrintContext = () => {
-      checkCount++
-      const artwork = document.querySelector<HTMLElement>('.print-all-pages [data-pending-artwork]')
-      if (artwork) {
-        if (checkCount >= maxChecks) {
-          reject(new Error('「' + artwork.dataset.pendingArtwork + '」的卡图尚未就绪，请稍后再试。'))
-        } else {
-          setTimeout(checkPrintContext, 100)
-        }
-        return
-      }
-
-      const printContextElement = document.querySelector('[data-print-context]')
-      if (printContextElement) {
-        const allImagesLoaded = printContextElement.getAttribute('data-all-images-loaded') === 'true'
-        if (allImagesLoaded) {
-          console.log('[HTML导出] 所有图片已加载完成')
-          resolve()
-          return
-        }
-      }
-      
-      // 如果没有打印上下文，检查所有图片是否自然加载完成
-      const images = Array.from(document.querySelectorAll('.print-all-pages img'))
-      if (images.length === 0) {
-        console.log('[HTML导出] 没有找到图片，继续导出')
-        resolve()
-        return
-      }
-      
-      const loadedImages = images.filter(img => {
-        const image = img as HTMLImageElement
-        return image.complete && image.naturalWidth > 0
-      })
-      
-      console.log(`[HTML导出] 图片加载进度: ${loadedImages.length}/${images.length}`)
-      
-      if (loadedImages.length === images.length) {
-        console.log('[HTML导出] 所有图片已加载完成')
-        resolve()
-      } else if (checkCount >= maxChecks) {
-        console.warn('[HTML导出] 等待图片加载超时，继续导出')
-        resolve()
-      } else {
-        setTimeout(checkPrintContext, 100)
-      }
-    }
-    
-    checkPrintContext()
-  })
-}
-
-/**
  * 从打印预览页面提取HTML内容
  */
-function extractPrintPreviewHTML(onProgress?: ProgressCallback): Promise<string> {
+function extractPrintPreviewHTML(printContainer: HTMLElement, onProgress?: ProgressCallback): Promise<string> {
   return new Promise(async (resolve, reject) => {
     try {
-      const printContainer = document.querySelector('.print-all-pages')
-      if (!printContainer) {
-        throw new Error('未找到打印预览容器，请先进入打印预览模式')
-      }
-
-      // 等待所有图片加载完成
-      await waitForImagesLoaded()
+      await waitForPrintImages(printContainer)
 
       // 克隆容器以避免影响原页面
       await document.fonts?.ready
       const clonedContainer = printContainer.cloneNode(true) as HTMLElement
+      clonedContainer.className = 'print-all-pages'
       const liveImages = printContainer.querySelectorAll('img')
       const originals = new Map(Array.from(clonedContainer.querySelectorAll('img'), (copy, index) => [copy, liveImages[index]] as const))
       await embedReferencePrintFonts(clonedContainer)
@@ -601,15 +537,22 @@ function extractPrintPreviewHTML(onProgress?: ProgressCallback): Promise<string>
 /**
  * 生成完整的HTML文档
  */
+function getPreviewRoot(options: HTMLExportOptions): HTMLElement {
+  const root = options.previewRoot ?? document.querySelector<HTMLElement>('.print-all-pages')
+  if (!root) throw new Error('未找到角色卡预览。')
+  return root
+}
+
 async function generateFullHTML(formData: SheetData, options: HTMLExportOptions = {}, onProgress?: ProgressCallback): Promise<string> {
   try {
     const title = characterExportTitle(formData)
-    const extractedHTML = await extractPrintPreviewHTML(onProgress)
+    const root = getPreviewRoot(options)
+    const extractedHTML = await extractPrintPreviewHTML(root, onProgress)
     const styles = options.includeStyles !== false ? extractPageStyles() : ''
     const sourceUrl = /^https?:$/.test(window.location.protocol)
       ? `${window.location.origin}${getBasePath()}/`
       : 'https://alchemizhou.github.io/dhsheet/'
-    const layout = document.querySelector('.print-all-pages .reference-sheet') ? 'reference' : 'live'
+    const layout = root.querySelector('.reference-sheet') ? 'reference' : 'live'
 
     const html = `<!DOCTYPE html>
 <html lang="zh-CN" data-version="2.0" data-exporter="daggerheart-character-sheet" data-layout="${layout}">
@@ -670,9 +613,7 @@ export async function exportToHTML(formData: SheetData, options: HTMLExportOptio
   let progressModal: UnifiedProgressModalManager | null = null
   
   try {
-    if (!document.querySelector('.print-all-pages')) {
-      throw new Error('请先进入打印预览模式再导出HTML。点击"打印预览"按钮后重试。')
-    }
+    const root = getPreviewRoot(options)
 
     // 简单的内存检查
     if (performance.memory && performance.memory.usedJSHeapSize > 1024 * 1024 * 1024) { // 1GB
@@ -680,8 +621,7 @@ export async function exportToHTML(formData: SheetData, options: HTMLExportOptio
     }
 
     // 先检查有多少图片需要转换
-    const images = Array.from(document.querySelectorAll('.print-all-pages img')) as HTMLImageElement[]
-    const imageCount = images.length
+    const imageCount = root.querySelectorAll('img').length
     
     console.log(`[HTML导出] 准备转换 ${imageCount} 张图片`)
     
@@ -693,7 +633,7 @@ export async function exportToHTML(formData: SheetData, options: HTMLExportOptio
     
     const prepareDownload = async () => {
       const portableFormData = await prepareSheetForExport(formData)
-      const html = await generateFullHTML(portableFormData, options, (current, total, message) => {
+      const html = await generateFullHTML(portableFormData, { ...options, previewRoot: root }, (current, total, message) => {
         progressModal?.updateProgress(current, total, message)
       })
       return { html, filename: await generateFileName(portableFormData, options) }
@@ -740,8 +680,7 @@ export async function exportToHTML(formData: SheetData, options: HTMLExportOptio
     downloadCharacterFile(new Blob([html], { type: 'text/html;charset=utf-8' }), filename)
   } catch (error) {
     console.error('[HTML导出] 导出过程中出错:', error)
-    const errorMessage = `HTML导出失败: ${error instanceof Error ? error.message : '未知错误'}`
-    throw new Error(errorMessage)
+    throw error
   } finally {
     // 确保所有资源都被清理
     progressModal = null
@@ -754,10 +693,6 @@ export async function exportToHTML(formData: SheetData, options: HTMLExportOptio
  */
 export async function previewHTML(formData: SheetData, options: HTMLExportOptions = {}): Promise<void> {
   try {
-    if (!document.querySelector('.print-all-pages')) {
-      throw new Error('请先进入打印预览模式再预览HTML。点击"打印预览"按钮后重试。')
-    }
-
     const portableFormData = await prepareSheetForExport(formData)
     const html = await generateFullHTML(portableFormData, options)
     const blob = new Blob([html], { type: 'text/html;charset=utf-8' })

@@ -90,24 +90,5 @@ export function PrintReadyChecker({
     }
   }, [progressModal])
 
-  // 设置 DOM 属性供 HTML 导出器使用
-  useEffect(() => {
-    let printContextElement = document.querySelector('[data-print-context]') as HTMLElement
-    if (!printContextElement) {
-      printContextElement = document.createElement('div')
-      printContextElement.setAttribute('data-print-context', 'true')
-      printContextElement.style.display = 'none'
-      document.body.appendChild(printContextElement)
-    }
-    printContextElement.setAttribute('data-all-images-loaded', isReady.toString())
-
-    return () => {
-      const el = document.querySelector('[data-print-context]')
-      if (el && document.body.contains(el)) {
-        document.body.removeChild(el)
-      }
-    }
-  }, [isReady])
-
   return <>{children}</>
 }

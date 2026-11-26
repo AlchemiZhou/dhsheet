@@ -8,7 +8,7 @@ import CharacterSheetPageThree from "@/components/character-sheet-page-ranger-co
 import CharacterSheetPageAdventureNotes from "@/components/character-sheet-page-adventure-notes"
 import CharacterSheetPageBeastForms from '@/components/character-sheet-page-beast-forms'
 import CharacterSheetPageMartialStances from '@/components/character-sheet-page-martial-stances'
-import { isMobileViewportDevice } from '@/lib/mobile-viewport'
+import { isMobileViewportDevice, prefersPDFFileExport } from '@/lib/mobile-viewport'
 import './layout/mobile-sheet.css'
 import { BeastFormsPrintPages } from '@/components/beast-forms/beast-forms-print-pages'
 import { BeastFormsNavigationProvider } from '@/components/beast-forms/beast-forms-navigation'
@@ -284,11 +284,12 @@ export default function HomeClientApp() {
     handlePDFFile,
     pdfFileState,
     closePDFFile,
+    retryPDFFile,
     printPDFFileFallback,
     handleQuickExportHTML,
     handleQuickExportJSON,
     onAfterPrint,
-  } = useExportHandlers({ formData, setIsPrintingAll, setReferencePrintOverride })
+  } = useExportHandlers({ printContainerRef, formData, setIsPrintingAll, setReferencePrintOverride })
 
   const isPDFDialogOpen = Boolean(pdfFileState)
 
@@ -660,7 +661,7 @@ export default function HomeClientApp() {
     )
   }
 
-  const pdfFileDialog = <PDFFileDialog state={pdfFileState} onClose={closePDFFile} onPrint={printPDFFileFallback} />
+  const pdfFileDialog = <PDFFileDialog state={pdfFileState} onClose={closePDFFile} onRetry={retryPDFFile} onPrint={printPDFFileFallback} />
 
   if (isPrintingAll) {
     const handleSkipWaiting = () => {
@@ -693,7 +694,7 @@ export default function HomeClientApp() {
               <BottomDock
                 mode="preview"
                 isMobile={isMobile}
-                onExportPDF={mode => isMobile ? handlePDFFile(mode, true) : printSheetPDF(mode).catch(error => {
+                onExportPDF={mode => prefersPDFFileExport(window) ? handlePDFFile(mode, true) : printSheetPDF(mode).catch(error => {
                   alert('PDF导出失败：' + (error instanceof Error ? error.message : String(error)))
                 })}
                 onExportHTML={handleExportHTML}
@@ -854,7 +855,7 @@ export default function HomeClientApp() {
         onPrintAll={handlePrintAll}
         onOpenSealDiceExport={() => setSealDiceExportModalOpen(true)}
         onQuickExportJSON={handleQuickExportJSON}
-        onQuickExportPDF={isMobile ? handlePDFFile : handleQuickExportPDF}
+        onQuickExportPDF={mode => prefersPDFFileExport(window) ? handlePDFFile(mode) : handleQuickExportPDF(mode)}
         onQuickExportHTML={handleQuickExportHTML}
         onOpenCharacterManagement={() => setCharacterManagementModalOpen(true)}
         onQuickCreateArchive={handleQuickCreateArchive}

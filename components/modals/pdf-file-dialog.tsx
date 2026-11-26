@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { downloadCharacterFile } from '@/lib/download-character-file'
@@ -25,6 +25,14 @@ function FileActions({ blob, filename }: { blob: Blob; filename: string }) {
   const [shareFailed, setShareFailed] = useState(false)
   const file = useMemo(() => getShareableFile(blob, filename), [blob, filename])
 
+  const [url, setUrl] = useState('')
+  useEffect(() => {
+    if (typeof URL.createObjectURL !== 'function') return
+    const href = URL.createObjectURL(blob)
+    setUrl(href)
+    return () => URL.revokeObjectURL(href)
+  }, [blob])
+
   async function sharePDF() {
     if (!file) return
     setShareFailed(false)
@@ -43,22 +51,24 @@ function FileActions({ blob, filename }: { blob: Blob; filename: string }) {
     <>
       <p className="text-sm text-muted-foreground" aria-live="polite">
         {file && !shareFailed
-          ? '在系统分享菜单里选择微信或 QQ。也可以先下载，再从聊天窗口发送文件。'
-          : '请先下载 PDF，再从微信或 QQ 聊天窗口发送文件。'}
+          ? '打开 PDF 即可查看角色卡。点「分享 PDF」可选择微信或 QQ。'
+          : '可打开 PDF 查看角色卡，也可以下载后从聊天窗口发送。'}
       </p>
       <DialogFooter>
-        <Button variant={file && !shareFailed ? 'outline' : 'default'} onClick={() => downloadCharacterFile(blob, filename)}>
+        {url && <Button asChild><a href={url} target="_blank" rel="noopener noreferrer">打开 PDF</a></Button>}
+        <Button variant="outline" onClick={() => downloadCharacterFile(blob, filename)}>
           下载 PDF
         </Button>
-        {file && <Button disabled={sharing} onClick={sharePDF}>分享 PDF</Button>}
+        {file && <Button variant="outline" disabled={sharing} onClick={sharePDF}>分享 PDF</Button>}
       </DialogFooter>
     </>
   )
 }
 
-export function PDFFileDialog({ state, onClose, onPrint }: {
+export function PDFFileDialog({ state, onClose, onRetry, onPrint }: {
   state: PDFFileState | null
   onClose: () => void
+  onRetry: () => void
   onPrint: () => void
 }) {
   const busy = state?.status === 'generating'
@@ -74,7 +84,10 @@ export function PDFFileDialog({ state, onClose, onPrint }: {
           </DialogDescription>
         </DialogHeader>
         {state?.status === 'ready' && <FileActions blob={state.blob} filename={state.filename} />}
-        {state?.status === 'failed' && <DialogFooter><Button onClick={onPrint}>使用系统打印</Button></DialogFooter>}
+        {state?.status === 'failed' && <DialogFooter>
+          <Button onClick={onRetry}>重新生成 PDF</Button>
+          <Button variant="outline" onClick={onPrint}>使用系统打印</Button>
+        </DialogFooter>}
       </DialogContent>
     </Dialog>
   )

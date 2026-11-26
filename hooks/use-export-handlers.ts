@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useRef, useState, type RefObject } from 'react'
 import { flushSync } from 'react-dom'
 import { characterExportTitle } from '@/character/storage/export-title'
 import { exportCharacterData } from '@/lib/storage'
@@ -7,66 +7,15 @@ import type { SheetData } from '@/lib/sheet-data'
 import type { PDFFileState } from '@/components/modals/pdf-file-dialog'
 import { printSheetPDF, type PDFPrintMode } from '@/character/print-reference/print-document'
 
-// 配置常量
-const WAIT_TIMEOUT = 10000  // 10 秒超时
-const CHECK_INTERVAL = 100  // 100ms 检查间隔
-const RENDER_DELAY = 300    // 渲染延迟
-
 interface UseExportHandlersProps {
+  printContainerRef: RefObject<HTMLElement | null>
   formData: SheetData
   setIsPrintingAll: (value: boolean) => void
   setReferencePrintOverride: (value: boolean | undefined) => void
 }
 
-/**
- * 等待所有图片加载完成
- *
- * 使用 DOM 查询直接检查图片状态，避免闭包问题。
- */
-function waitForAllImagesLoaded(): Promise<void> {
-  return new Promise((resolve) => {
-    const startTime = Date.now()
-
-    const checkImages = () => {
-      const images = document.querySelectorAll<HTMLImageElement>('.print-all-pages img')
-      const total = images.length
-
-      if (total === 0) {
-        // 没有图片，直接完成
-        setTimeout(resolve, RENDER_DELAY)
-        return
-      }
-
-      let loaded = 0
-      images.forEach(img => {
-        // img.complete 在加载成功、失败或无 src 时都为 true
-        if (img.complete) {
-          loaded++
-        }
-      })
-
-      const elapsed = Date.now() - startTime
-
-      if (loaded === total) {
-        // 所有图片加载完成
-        console.log(`[ExportHandlers] 所有图片加载完成 (${loaded}/${total})`)
-        setTimeout(resolve, RENDER_DELAY)
-      } else if (elapsed >= WAIT_TIMEOUT) {
-        // 超时
-        console.log(`[ExportHandlers] 图片加载超时 (${loaded}/${total})，继续执行`)
-        resolve()
-      } else {
-        // 继续等待
-        setTimeout(checkImages, CHECK_INTERVAL)
-      }
-    }
-
-    // 延迟启动，给组件渲染时间
-    setTimeout(checkImages, 200)
-  })
-}
-
 export function useExportHandlers({
+  printContainerRef,
   formData,
   setIsPrintingAll,
   setReferencePrintOverride,
@@ -74,7 +23,7 @@ export function useExportHandlers({
 
   const quickPrint = useRef(false)
   const generatingPDF = useRef(false)
-  const requestedPDFMode = useRef<PDFPrintMode>('color')
+  const lastPDFRequest = useRef<{ mode: PDFPrintMode; fromPreview: boolean }>({ mode: 'color', fromPreview: false })
   const [pdfFileState, setPDFFileState] = useState<PDFFileState | null>(null)
   const onAfterPrint = useCallback(() => {
     if (quickPrint.current) {
@@ -100,11 +49,16 @@ export function useExportHandlers({
       console.log('[ExportHandlers] 开始 HTML 导出')
       // HTML is the portable character-card view, independent of the user's
       // PDF layout preference. Restore that preference after taking the snapshot.
-      flushSync(() => setReferencePrintOverride(true))
+      flushSync(() => {
+        setIsPrintingAll(true)
+        setReferencePrintOverride(true)
+      })
+      const previewRoot = printContainerRef.current
+      if (!previewRoot) throw new Error('未找到角色卡预览。')
       await document.fonts?.ready
       await new Promise<void>(resolve => requestAnimationFrame(() => resolve()))
       const { exportToHTML } = await import('@/lib/html-exporter')
-      await exportToHTML(formData)
+      await exportToHTML(formData, { previewRoot })
       console.log('[ExportHandlers] HTML 导出完成')
     } catch (error) {
       console.error('[ExportHandlers] HTML 导出失败:', error)
@@ -112,7 +66,7 @@ export function useExportHandlers({
     } finally {
       setReferencePrintOverride(undefined)
     }
-  }, [formData, setReferencePrintOverride])
+  }, [formData, printContainerRef, setIsPrintingAll, setReferencePrintOverride])
 
   // JSON 导出
   const handleExportJSON = useCallback(async () => {
@@ -143,7 +97,7 @@ export function useExportHandlers({
   const handlePDFFile = useCallback(async (mode: PDFPrintMode = 'color', fromPreview = false) => {
     if (generatingPDF.current) return
     generatingPDF.current = true
-    requestedPDFMode.current = mode
+    lastPDFRequest.current = { mode, fromPreview }
     try {
       flushSync(() => {
         setPDFFileState({ status: 'generating', page: 0 })
@@ -164,19 +118,21 @@ export function useExportHandlers({
     }
   }, [formData, setIsPrintingAll])
 
+  const retryPDFFile = useCallback(() => {
+    const { mode, fromPreview } = lastPDFRequest.current
+    void handlePDFFile(mode, fromPreview)
+  }, [handlePDFFile])
+
   const closePDFFile = useCallback(() => setPDFFileState(null), [])
   const printPDFFileFallback = useCallback(() => {
     closePDFFile()
-    void handleQuickExportPDF(requestedPDFMode.current)
+    void handleQuickExportPDF(lastPDFRequest.current.mode)
   }, [closePDFFile, handleQuickExportPDF])
 
   // 快速 HTML 导出
   const handleQuickExportHTML = useCallback(async () => {
     try {
       console.log('[ExportHandlers] 快速 HTML 导出')
-      await handlePrintAll()
-      await waitForAllImagesLoaded()
-      await document.fonts?.ready
       await handleExportHTML()
     } catch (error) {
       console.error('[ExportHandlers] 快速 HTML 导出失败:', error)
@@ -185,7 +141,7 @@ export function useExportHandlers({
       setIsPrintingAll(false)
       document.title = APP_TITLE
     }
-  }, [handlePrintAll, handleExportHTML, setIsPrintingAll])
+  }, [handleExportHTML, setIsPrintingAll])
 
   return {
     handlePrintAll,
@@ -195,6 +151,7 @@ export function useExportHandlers({
     handlePDFFile,
     pdfFileState,
     closePDFFile,
+    retryPDFFile,
     printPDFFileFallback,
     handleQuickExportHTML,
     handleQuickExportJSON: handleExportJSON,
